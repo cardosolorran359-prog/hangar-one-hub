@@ -19,7 +19,8 @@ export const Route = createFileRoute("/diagnostico")({
 });
 
 function Diag() {
-  const orders = useStore((s) => s.orders.filter((o) => !["Entregue", "Cancelado"].includes(o.status)));
+  const allOrders = useStore((s) => s.orders);
+  const orders = allOrders.filter((o) => !["Entregue", "Cancelado"].includes(o.status));
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
   const [sel, setSel] = useState<string | null>(null);

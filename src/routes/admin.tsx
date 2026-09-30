@@ -23,7 +23,11 @@ const PLUGINS = [["Android", true], ["Apple", true], ["Samsung", false], ["Xiaom
 
 function Admin() {
   const user = useStore((s) => s.user);
-  const counts = useStore((s) => ({ c: s.customers.length, d: s.devices.length, o: s.orders.length, p: s.parts.length }));
+  const customers = useStore((s) => s.customers);
+  const devices = useStore((s) => s.devices);
+  const orders = useStore((s) => s.orders);
+  const parts = useStore((s) => s.parts);
+  const counts = { c: customers.length, d: devices.length, o: orders.length, p: parts.length };
 
   const exportBackup = () => {
     const blob = new Blob([JSON.stringify(getState(), null, 2)], { type: "application/json" });

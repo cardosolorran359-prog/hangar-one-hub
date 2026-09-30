@@ -29,10 +29,13 @@ const FLOW: OsStatus[] = ["Aberta", "Em diagnóstico", "Orçamento enviado", "Ap
 
 function OrderPage() {
   const { id } = Route.useParams();
-  const o = useStore((s) => s.orders.find((x) => x.id === id));
-  const c = useStore((s) => s.customers.find((x) => x.id === o?.customerId));
-  const d = useStore((s) => s.devices.find((x) => x.id === o?.deviceId));
+  const orders = useStore((s) => s.orders);
+  const customers = useStore((s) => s.customers);
+  const devices = useStore((s) => s.devices);
   const parts = useStore((s) => s.parts);
+  const o = orders.find((x) => x.id === id);
+  const c = customers.find((x) => x.id === o?.customerId);
+  const d = devices.find((x) => x.id === o?.deviceId);
   const [newItem, setNewItem] = useState({ desc: "", price: "" });
 
   if (!o) return <Empty icon={<X className="size-5" />} title="OS não encontrada"><Button asChild variant="outline" size="sm"><Link to="/ordens">Voltar</Link></Button></Empty>;

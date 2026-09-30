@@ -14,7 +14,7 @@ export const Route = createFileRoute("/orcamentos")({
 });
 
 function Budgets() {
-  const orders = useStore((s) => s.orders.filter((o) => o.budget.items.length));
+  const orders = useStore((s) => s.orders).filter((o) => o.budget.items.length);
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
   const sum = (a: string) => orders.filter((o) => o.budget.approval === a).reduce((x, o) => x + budgetTotal(o), 0);
