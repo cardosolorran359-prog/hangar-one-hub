@@ -23,7 +23,11 @@ const PLUGINS = [["Android", true], ["Apple", true], ["Samsung", false], ["Xiaom
 
 function Admin() {
   const user = useStore((s) => s.user);
-  const counts = useStore((s) => ({ c: s.customers.length, d: s.devices.length, o: s.orders.length, p: s.parts.length }));
+  const customers = useStore((s) => s.customers);
+  const devices = useStore((s) => s.devices);
+  const orders = useStore((s) => s.orders);
+  const parts = useStore((s) => s.parts);
+  const counts = { c: customers.length, d: devices.length, o: orders.length, p: parts.length };
 
   const exportBackup = () => {
     const blob = new Blob([JSON.stringify(getState(), null, 2)], { type: "application/json" });
@@ -70,7 +74,7 @@ function Admin() {
           <div className="mt-4 flex flex-wrap gap-2">
             <Button onClick={exportBackup}><Download className="size-4" /> Criar backup</Button>
             <Button variant="outline" asChild><label className="cursor-pointer"><Upload className="size-4" /> Restaurar<input type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files?.[0] && importBackup(e.target.files[0])} /></label></Button>
-            <Button variant="ghost" className="text-destructive" onClick={() => { if (confirm("Restaurar dados de demonstração? Os dados atuais serão perdidos.")) { resetData(); toast.success("Dados de demonstração restaurados"); } }}><RotateCcw className="size-4" /> Dados de demonstração</Button>
+            <Button variant="ghost" className="text-destructive" onClick={() => { if (confirm("Apagar todos os dados desta estação? Esta ação não pode ser desfeita.")) { resetData(); toast.success("Dados apagados"); } }}><RotateCcw className="size-4" /> Limpar todos os dados</Button>
           </div>
         </Panel>
 

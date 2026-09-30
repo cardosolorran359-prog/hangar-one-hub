@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Activity, Archive, BatteryCharging, Camera, Cpu, Download, FileText, HardDriveDownload, Info, MonitorSmartphone,
@@ -44,7 +44,8 @@ export function DeviceArea({ platform }: { platform: "android" | "apple" }) {
   const usb = useUsb();
   const connected = usb.phase === "connected" && usb.info?.platform === platform;
   const tools = platform === "android" ? ANDROID_TOOLS : APPLE_TOOLS;
-  const devices = useStore((s) => s.devices.filter((d) => d.platform === platform));
+  const allDevices = useStore((s) => s.devices);
+  const devices = useMemo(() => allDevices.filter((d) => d.platform === platform), [allDevices, platform]);
   const orders = useStore((s) => s.orders);
   const [fail, setFail] = useState<string | null>(null);
   const isApple = platform === "apple";
