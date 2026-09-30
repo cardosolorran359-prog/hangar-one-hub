@@ -1,0 +1,16 @@
+{
+  "name": "Hangar One — Mobile Repair",
+  "short_name": "Hangar One",
+  "description": "Bancada técnica para assistência de celulares",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0b111b",
+  "theme_color": "#0b111b",
+  "orientation": "landscape",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
