@@ -15,7 +15,7 @@ export function NewOrderDialog({ trigger }: { trigger?: React.ReactNode }) {
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
   const nav = useNavigate();
-  const [f, setF] = useState({ customerId: "", deviceId: "", service: "", problem: "", tech: TECHS[0], days: "3" });
+  const [f, setF] = useState({ customerId: "", deviceId: "", service: "", problem: "", tech: TECHS[0] as string, days: "3" });
   const custDevices = devices.filter((d) => d.customerId === f.customerId);
 
   const submit = () => {
@@ -32,7 +32,7 @@ export function NewOrderDialog({ trigger }: { trigger?: React.ReactNode }) {
     logActivity(`OS ${osNum(number)} aberta`, "info");
     toast.success(`OS ${osNum(number)} criada`);
     setOpen(false);
-    setF({ customerId: "", deviceId: "", service: "", problem: "", tech: TECHS[0], days: "3" });
+    setF({ customerId: "", deviceId: "", service: "", problem: "", tech: TECHS[0] as string, days: "3" });
     nav({ to: "/ordens/$id", params: { id: o.id } });
   };
 

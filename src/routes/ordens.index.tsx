@@ -33,7 +33,7 @@ function Orders() {
   const [g, setG] = useState("Todas");
   const [q, setQ] = useState("");
   const list = [...orders].sort((a, b) => b.number - a.number).filter((o) => {
-    if (g !== "Todas" && !GROUPS[g].includes(o.status)) return false;
+    if (g !== "Todas" && !(GROUPS[g] ?? []).includes(o.status)) return false;
     if (!q) return true;
     const c = customers.find((x) => x.id === o.customerId); const d = devices.find((x) => x.id === o.deviceId);
     return [osNum(o.number), c?.name, c?.phone, d?.model, d?.imei, o.service].join(" ").toLowerCase().includes(q.toLowerCase());
@@ -44,7 +44,7 @@ function Orders() {
       <PageHeader eyebrow="Operação" title="Ordens de serviço" desc="O centro operacional da assistência." actions={<NewOrderDialog />} />
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {Object.keys(GROUPS).map((k) => {
-          const n = k === "Todas" ? orders.length : orders.filter((o) => GROUPS[k].includes(o.status)).length;
+          const n = k === "Todas" ? orders.length : orders.filter((o) => (GROUPS[k] ?? []).includes(o.status)).length;
           return (
             <button key={k} onClick={() => setG(k)} className={cn("rounded-lg border px-3 py-1.5 text-sm transition-colors", g === k ? "border-primary/40 bg-primary/15 text-primary" : "border-border bg-panel text-muted-foreground hover:text-foreground")}>
               {k} <span className="ml-1 font-mono text-xs opacity-70">{n}</span>

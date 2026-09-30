@@ -43,7 +43,7 @@ export interface WorkOrder {
   budget: { items: BudgetItem[]; discount: number; warrantyDays: number; approval: Approval };
   checklist: Record<string, TestResult>;
   repair: { procedure: string; notes: string };
-  history: { at: string; status: OsStatus; note?: string; user: string }[];
+  history: { at: string; status: OsStatus; note?: string | undefined; user: string }[];
 }
 export interface Part {
   id: string; code: string; desc: string; category: string; compat: string; supplier: string;
