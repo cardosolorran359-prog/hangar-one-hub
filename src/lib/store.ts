@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 
 export type Platform = "android" | "apple" | "outro";
 export type TestResult = "ok" | "falha" | "nt" | "na";
@@ -131,12 +131,17 @@ export function setState(fn: (s: State) => State) {
 
 export function resetData() { setState(() => seed()); }
 
+const subscribe = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };
+
 export function useStore<T>(sel: (s: State) => T): T {
-  return useSyncExternalStore(
-    (l) => { listeners.add(l); return () => listeners.delete(l); },
-    () => sel(state),
-    () => sel(state),
-  );
+  const selRef = useRef(sel);
+  selRef.current = sel;
+  const cache = useRef<{ s: State; v: T } | null>(null);
+  const get = useCallback(() => {
+    if (!cache.current || cache.current.s !== state) cache.current = { s: state, v: selRef.current(state) };
+    return cache.current.v;
+  }, []);
+  return useSyncExternalStore(subscribe, get, get);
 }
 export const getState = () => state;
 
