@@ -10,16 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AndroidRouteImport } from './routes/android'
 import { Route as AparelhosRouteImport } from './routes/aparelhos'
 import { Route as AppleRouteImport } from './routes/apple'
 import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as EstoqueRouteImport } from './routes/estoque'
+import { Route as OrcamentosRouteImport } from './routes/orcamentos'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as OrdensIndexRouteImport } from './routes/ordens.index'
 import { Route as OrdensIdRouteImport } from './routes/ordens.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AndroidRoute = AndroidRouteImport.update({
@@ -42,6 +52,26 @@ const ClientesRoute = ClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiagnosticoRoute = DiagnosticoRouteImport.update({
+  id: '/diagnostico',
+  path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstoqueRoute = EstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrcamentosRoute = OrcamentosRouteImport.update({
+  id: '/orcamentos',
+  path: '/orcamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdensIndexRoute = OrdensIndexRouteImport.update({
   id: '/ordens/',
   path: '/ordens/',
@@ -55,29 +85,44 @@ const OrdensIdRoute = OrdensIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/android': typeof AndroidRoute
   '/aparelhos': typeof AparelhosRoute
   '/apple': typeof AppleRoute
   '/clientes': typeof ClientesRoute
+  '/diagnostico': typeof DiagnosticoRoute
+  '/estoque': typeof EstoqueRoute
+  '/orcamentos': typeof OrcamentosRoute
+  '/relatorios': typeof RelatoriosRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/android': typeof AndroidRoute
   '/aparelhos': typeof AparelhosRoute
   '/apple': typeof AppleRoute
   '/clientes': typeof ClientesRoute
+  '/diagnostico': typeof DiagnosticoRoute
+  '/estoque': typeof EstoqueRoute
+  '/orcamentos': typeof OrcamentosRoute
+  '/relatorios': typeof RelatoriosRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens': typeof OrdensIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/android': typeof AndroidRoute
   '/aparelhos': typeof AparelhosRoute
   '/apple': typeof AppleRoute
   '/clientes': typeof ClientesRoute
+  '/diagnostico': typeof DiagnosticoRoute
+  '/estoque': typeof EstoqueRoute
+  '/orcamentos': typeof OrcamentosRoute
+  '/relatorios': typeof RelatoriosRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
 }
@@ -85,38 +130,58 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/android'
     | '/aparelhos'
     | '/apple'
     | '/clientes'
+    | '/diagnostico'
+    | '/estoque'
+    | '/orcamentos'
+    | '/relatorios'
     | '/ordens/$id'
     | '/ordens/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/android'
     | '/aparelhos'
     | '/apple'
     | '/clientes'
+    | '/diagnostico'
+    | '/estoque'
+    | '/orcamentos'
+    | '/relatorios'
     | '/ordens/$id'
     | '/ordens'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/android'
     | '/aparelhos'
     | '/apple'
     | '/clientes'
+    | '/diagnostico'
+    | '/estoque'
+    | '/orcamentos'
+    | '/relatorios'
     | '/ordens/$id'
     | '/ordens/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   AndroidRoute: typeof AndroidRoute
   AparelhosRoute: typeof AparelhosRoute
   AppleRoute: typeof AppleRoute
   ClientesRoute: typeof ClientesRoute
+  DiagnosticoRoute: typeof DiagnosticoRoute
+  EstoqueRoute: typeof EstoqueRoute
+  OrcamentosRoute: typeof OrcamentosRoute
+  RelatoriosRoute: typeof RelatoriosRoute
   OrdensIdRoute: typeof OrdensIdRoute
   OrdensIndexRoute: typeof OrdensIndexRoute
 }
@@ -128,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/android': {
@@ -158,6 +230,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diagnostico': {
+      id: '/diagnostico'
+      path: '/diagnostico'
+      fullPath: '/diagnostico'
+      preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estoque': {
+      id: '/estoque'
+      path: '/estoque'
+      fullPath: '/estoque'
+      preLoaderRoute: typeof EstoqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orcamentos': {
+      id: '/orcamentos'
+      path: '/orcamentos'
+      fullPath: '/orcamentos'
+      preLoaderRoute: typeof OrcamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ordens/': {
       id: '/ordens/'
       path: '/ordens'
@@ -177,10 +277,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   AndroidRoute: AndroidRoute,
   AparelhosRoute: AparelhosRoute,
   AppleRoute: AppleRoute,
   ClientesRoute: ClientesRoute,
+  DiagnosticoRoute: DiagnosticoRoute,
+  EstoqueRoute: EstoqueRoute,
+  OrcamentosRoute: OrcamentosRoute,
+  RelatoriosRoute: RelatoriosRoute,
   OrdensIdRoute: OrdensIdRoute,
   OrdensIndexRoute: OrdensIndexRoute,
 }
