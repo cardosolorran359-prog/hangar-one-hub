@@ -193,7 +193,7 @@
 .bottom-center{min-width:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:64% 36%;gap:4px}
 .center-map{grid-column:1/3;animation-name:hud-map-in}
 .center-wave{grid-column:1/2}.center-chart{grid-column:2/3}
-.bottom-right{min-width:0;display:grid;grid-template-columns:58% 42%;grid-template-rows:57% 43%;gap:4px}
+.bottom-right{min-width:0;display:grid;grid-template-columns:58% 42%;grid-template-rows:57% 25% 18%;gap:4px}
 .right-chart{grid-column:1/3;animation-name:hud-panel-right}
 .right-data{grid-column:1/2;grid-row:2/3}
 .right-radar{grid-column:2/3;grid-row:2/3}
