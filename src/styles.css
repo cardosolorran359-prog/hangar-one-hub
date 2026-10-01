@@ -142,285 +142,7 @@
   animation: scan 3.2s linear infinite;
 }
 
-/* ---- Hangar One video login ---- */
-
-@keyframes login-in { from { opacity:0 } to { opacity:1 } }
-@keyframes login-panel-in {
-  from { opacity:0; transform:translate(-50%,-48%) scale(.985); filter:blur(4px) }
-  to { opacity:1; transform:translate(-50%,-50%) scale(1); filter:blur(0) }
-}
-@keyframes login-sweep {
-  from { transform:translateX(-140%) skewX(-18deg) }
-  to { transform:translateX(420%) skewX(-18deg) }
-}
-@keyframes login-pulse {
-  0%,100% { box-shadow:0 0 0 0 rgba(0,162,255,.04), 0 0 26px rgba(0,162,255,.08), inset 0 0 30px rgba(0,162,255,.025) }
-  50% { box-shadow:0 0 0 1px rgba(0,162,255,.04), 0 0 38px rgba(0,162,255,.16), inset 0 0 42px rgba(0,162,255,.055) }
-}
-@keyframes login-status {
-  0%,100% { opacity:.55 }
-  45% { opacity:1 }
-}
-@keyframes login-scan {
-  from { transform:translateY(-100%) }
-  to { transform:translateY(100%) }
-}
-@keyframes login-ready {
-  from { opacity:0 }
-  to { opacity:1 }
-}
-
-.login-app-ready {
-  min-height:100vh;
-  animation:login-ready .35s ease-out both;
-}
-
-.hangar-login {
-  position:fixed;
-  inset:0;
-  z-index:100;
-  overflow:hidden;
-  background:#020712;
-  color:#dff7ff;
-  font-family:"JetBrains Mono","Courier New",monospace;
-  animation:login-in .4s ease-out both;
-}
-
-.hangar-login__video {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  background:#020712;
-}
-
-.hangar-login__shade {
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 28%, rgba(0,3,12,.18) 66%, rgba(0,3,12,.62) 100%),
-    linear-gradient(180deg, rgba(0,8,20,.28), rgba(0,2,10,.34));
-}
-
-.hangar-login__scanlines {
-  position:absolute;
-  inset:-100% 0;
-  pointer-events:none;
-  opacity:.12;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent 0 3px,
-    rgba(120,210,255,.14) 4px
-  );
-  animation:login-scan 8s linear infinite;
-}
-
-.hangar-login__panel {
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:min(420px,calc(100vw - 36px));
-  transform:translate(-50%,-50%);
-  padding:28px 30px 22px;
-  box-sizing:border-box;
-  border:1px solid rgba(0,162,255,.46);
-  background:linear-gradient(180deg,rgba(2,13,28,.78),rgba(1,9,19,.88));
-  box-shadow:0 0 25px rgba(0,162,255,.16), inset 0 0 36px rgba(0,107,185,.045);
-  backdrop-filter:blur(7px);
-  animation:login-panel-in .8s .25s cubic-bezier(.2,.8,.2,1) both, login-pulse 4.2s 1.2s ease-in-out infinite;
-}
-
-.hangar-login__panel-glow {
-  position:absolute;
-  inset:-1px;
-  pointer-events:none;
-  border:1px solid rgba(53,184,255,.13);
-  box-shadow:0 0 36px rgba(0,145,255,.08);
-}
-
-.hangar-login__header,
-.hangar-login__footer {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  color:rgba(73,187,255,.58);
-  font-size:8px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-}
-.hangar-login__header i {
-  color:rgba(116,216,255,.38);
-  font-style:normal;
-}
-
-.hangar-login__status {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:20px;
-  color:rgba(73,187,255,.72);
-  font-size:8px;
-  letter-spacing:.17em;
-}
-.hangar-login__status-dot {
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#20b8ff;
-  box-shadow:0 0 10px rgba(32,184,255,.9);
-  animation:login-status 2.2s ease-in-out infinite;
-}
-
-.hangar-login h1 {
-  margin:18px 0 0;
-  color:#fff;
-  text-align:center;
-  font-family:"Chakra Petch","Arial Narrow",sans-serif;
-  font-size:27px;
-  font-weight:600;
-  line-height:1.05;
-  letter-spacing:.16em;
-  text-shadow:0 0 15px rgba(0,210,255,.42);
-}
-.hangar-login h1 strong {
-  color:#4ed0ff;
-  font-weight:700;
-}
-
-.hangar-login__subtitle {
-  margin:10px 0 25px;
-  color:rgba(111,200,240,.48);
-  text-align:center;
-  font-size:7px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-}
-
-.hangar-login__form {
-  display:grid;
-  gap:17px;
-}
-
-.hangar-login__form label {
-  display:grid;
-  gap:7px;
-}
-.hangar-login__form label > span {
-  color:#25a8f8;
-  font-size:8px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-.hangar-login__form input {
-  width:100%;
-  box-sizing:border-box;
-  padding:12px 13px;
-  border:1px solid rgba(0,162,255,.32);
-  border-radius:2px;
-  outline:none;
-  background:rgba(0,3,10,.7);
-  color:#e9fbff;
-  font:500 12px/1.2 "JetBrains Mono","Courier New",monospace;
-  transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
-}
-.hangar-login__form input::placeholder {
-  color:rgba(130,186,214,.32);
-}
-.hangar-login__form input:focus {
-  border-color:rgba(43,192,255,.82);
-  background:rgba(0,8,18,.78);
-  box-shadow:0 0 0 1px rgba(0,162,255,.14),0 0 16px rgba(0,162,255,.11),inset 0 0 14px rgba(0,162,255,.025);
-}
-
-.hangar-login__error {
-  margin:-5px 0 -4px;
-  color:#ff8b8b;
-  font-size:8px;
-  line-height:1.45;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-}
-
-.hangar-login__button {
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  width:100%;
-  min-height:44px;
-  overflow:hidden;
-  border:1px solid rgba(0,177,255,.65);
-  border-radius:2px;
-  background:linear-gradient(90deg,rgba(0,83,166,.82),rgba(0,188,255,.9));
-  color:#fff;
-  cursor:pointer;
-  font:700 12px/1 "Chakra Petch","Arial Narrow",sans-serif;
-  letter-spacing:.18em;
-  text-indent:.18em;
-  text-transform:uppercase;
-  box-shadow:0 0 18px rgba(0,162,255,.18);
-  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
-}
-.hangar-login__button:hover {
-  filter:brightness(1.08);
-  box-shadow:0 0 26px rgba(0,190,255,.36);
-  transform:translateY(-1px);
-}
-.hangar-login__button:active {
-  transform:translateY(0);
-}
-.hangar-login__button b {
-  position:absolute;
-  right:14px;
-  font:700 20px/1 "Courier New",monospace;
-  opacity:.75;
-}
-.hangar-login__button-sweep {
-  position:absolute;
-  inset:0 auto 0 -25%;
-  width:22%;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(210,247,255,.28),transparent);
-  animation:login-sweep 3.3s linear infinite;
-}
-
-.hangar-login__footer {
-  margin-top:20px;
-  padding-top:12px;
-  border-top:1px solid rgba(0,162,255,.12);
-}
-
-.login-corner {
-  position:absolute;
-  width:14px;
-  height:14px;
-  border-color:rgba(45,180,255,.75);
-}
-.login-corner--tl { left:-1px; top:-1px; border-left:2px solid; border-top:2px solid; }
-.login-corner--tr { right:-1px; top:-1px; border-right:2px solid; border-top:2px solid; }
-.login-corner--bl { left:-1px; bottom:-1px; border-left:2px solid; border-bottom:2px solid; }
-.login-corner--br { right:-1px; bottom:-1px; border-right:2px solid; border-bottom:2px solid; }
-
-@media (max-width: 640px) {
-  .hangar-login__panel { padding:23px 20px 18px; }
-  .hangar-login h1 { font-size:22px; }
-  .hangar-login__subtitle { margin-bottom:20px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hangar-login, .hangar-login *, .login-app-ready {
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
-  }
-}
-/* ---- Hangar One video login ---- */
+/* ---- Hangar One video entry ---- */
 
 @keyframes hangar-login-in {
   from { opacity:0; }
@@ -429,8 +151,8 @@
 
 @keyframes hangar-login-out {
   0% { opacity:1; transform:scale(1); filter:brightness(1); }
-  55% { opacity:1; transform:scale(1.008); filter:brightness(1.08); }
-  100% { opacity:0; transform:scale(1.025); filter:brightness(1.18); }
+  55% { opacity:1; transform:scale(1.006); filter:brightness(1.05); }
+  100% { opacity:0; transform:scale(1.02); filter:brightness(1.12); }
 }
 
 @keyframes hangar-button-in {
@@ -445,14 +167,10 @@
 
 @keyframes hangar-button-pulse {
   0%,100% {
-    box-shadow:
-      0 0 14px rgba(0,162,255,.10),
-      inset 0 0 14px rgba(0,162,255,.025);
+    box-shadow:0 0 14px rgba(0,162,255,.10), inset 0 0 14px rgba(0,162,255,.02);
   }
   50% {
-    box-shadow:
-      0 0 28px rgba(0,210,255,.25),
-      inset 0 0 22px rgba(0,162,255,.06);
+    box-shadow:0 0 30px rgba(0,210,255,.24), inset 0 0 20px rgba(0,162,255,.05);
   }
 }
 
@@ -473,8 +191,6 @@
   inset:0;
   z-index:90;
   overflow:hidden;
-  display:grid;
-  place-items:center;
   background:#000;
   animation:hangar-login-in .3s ease-out both;
 }
@@ -493,15 +209,6 @@
   background:#000;
 }
 
-.hangar-login__shade {
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 52%, rgba(0,162,255,.02), transparent 42%),
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22));
-}
-
 .hangar-login__button {
   position:absolute;
   z-index:5;
@@ -509,10 +216,10 @@
   bottom:10.5%;
   transform:translateX(-50%);
   min-width:350px;
-  padding:14px 30px 12px;
+  padding:14px 30px;
   border:1px solid rgba(0,178,255,.68);
   border-radius:2px;
-  background:rgba(1,12,25,.68);
+  background:rgba(1,12,25,.58);
   color:#eefaff;
   cursor:pointer;
   overflow:hidden;
@@ -525,7 +232,7 @@
 
 .hangar-login__button:hover {
   border-color:rgba(99,219,255,.95);
-  background:rgba(2,19,36,.78);
+  background:rgba(2,19,36,.70);
 }
 
 .hangar-login__button:focus-visible {
@@ -533,23 +240,12 @@
   outline-offset:4px;
 }
 
-.hangar-login__button-text,
-.hangar-login__button-sub {
+.hangar-login__button-text {
   position:relative;
   display:block;
-}
-
-.hangar-login__button-text {
-  font-size:16px;
+  font-size:15px;
   letter-spacing:.2em;
   text-indent:.2em;
-}
-
-.hangar-login__button-sub {
-  margin-top:5px;
-  color:rgba(93,200,255,.52);
-  font:600 6px/1 var(--font-mono);
-  letter-spacing:.19em;
 }
 
 .hangar-login__button-sweep {
@@ -565,7 +261,7 @@
   position:absolute;
   width:13px;
   height:13px;
-  border-color:rgba(77,199,255,.9);
+  border-color:rgba(77,199,255,.90);
 }
 
 .hangar-login__corner--tl {
@@ -586,6 +282,7 @@
     min-width:290px;
     bottom:8%;
   }
+
   .hangar-login__button-text {
     font-size:13px;
   }
