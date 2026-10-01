@@ -522,6 +522,7 @@
   padding: 8px;
 }
 .hud-mini-signal i {
+  --i: 0;
   width: 3px;
   height: 60%;
   transform-origin: center bottom;
