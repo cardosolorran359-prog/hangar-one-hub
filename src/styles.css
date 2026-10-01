@@ -905,6 +905,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hud-entry {
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+
   .hud-loader,
   .hud-loader *,
   .hud-app {
