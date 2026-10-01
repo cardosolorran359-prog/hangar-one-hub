@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/hangar/AppShell";
+import { HangarGate } from "@/components/hangar/HangarGate";
 
 function NotFoundComponent() {
   return (
