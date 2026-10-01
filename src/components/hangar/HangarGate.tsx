@@ -3,10 +3,18 @@ import { useEffect, useState, type ReactNode } from "react";
 const BUTTON_DELAY = 5200;
 const EXIT_DELAY = 820;
 
-const TOP = Array.from({ length: 30 }, (_, i) => ({
+const TOP_KINDS = [
+  "wave", "spectrum", "metrics", "bars", "dial", "dots",
+  "wave", "pulse", "spectrum", "metrics", "segmented", "signal",
+  "bars", "wave", "dial", "dots", "spectrum", "pulse",
+  "metrics", "signal", "wave", "segmented", "bars", "dial",
+  "dots", "wave", "spectrum", "metrics", "pulse", "signal",
+] as const;
+
+const TOP = TOP_KINDS.map((kind, i) => ({
   id: `t${i}`,
-  delay: `${0.08 + i * 0.06}s`,
-  kind: ["wave", "mini", "metrics", "bars", "wave", "dial"][i % 6],
+  delay: `${0.08 + i * 0.055}s`,
+  kind,
 }));
 
 function Panel({ className = "", delay, children }: { className?: string; delay: string; children: ReactNode }) {
@@ -56,6 +64,51 @@ function Bars() {
       {[28, 52, 42, 72, 48, 84, 36, 64, 54, 77, 46, 88, 58, 34, 70].map((h, i) => (
         <i key={i} style={{ "--h": `${h}%`, "--i": i } as React.CSSProperties} />
       ))}
+    </div>
+  );
+}
+
+function Spectrum() {
+  const bars = [18, 44, 72, 53, 88, 66, 36, 92, 57, 77, 43, 69, 31, 82, 51, 63];
+  return (
+    <div className="hud-spectrum" aria-hidden="true">
+      {bars.map((h, i) => <i key={i} style={{ "--h": `${h}%`, "--i": i } as React.CSSProperties} />)}
+    </div>
+  );
+}
+
+function DotMatrix() {
+  return (
+    <div className="hud-dotmatrix" aria-hidden="true">
+      {Array.from({ length: 48 }, (_, i) => <i key={i} style={{ "--i": i } as React.CSSProperties} />)}
+    </div>
+  );
+}
+
+function Segmented() {
+  return (
+    <div className="hud-segmented" aria-hidden="true">
+      <div className="hud-segmented__arc" />
+      <div className="hud-segmented__arc arc-2" />
+      <div className="hud-segmented__arc arc-3" />
+      <div className="hud-segmented__readout"><b>72.4</b><span>SYNC</span></div>
+    </div>
+  );
+}
+
+function Pulse() {
+  return (
+    <div className="hud-pulse" aria-hidden="true">
+      <span /><span /><span />
+      <i className="hud-pulse__beam" />
+    </div>
+  );
+}
+
+function SignalGrid() {
+  return (
+    <div className="hud-signal-grid" aria-hidden="true">
+      {Array.from({ length: 9 }, (_, i) => <i key={i} style={{ "--i": i } as React.CSSProperties} />)}
     </div>
   );
 }
@@ -209,7 +262,14 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <div className="hud-top">
               {TOP.map((item, i) => (
                 <Panel key={item.id} className={item.id} delay={item.delay}>
-                  {item.kind === "wave" ? <Wave variant={i} /> : item.kind === "mini" ? <Mini /> : item.kind === "metrics" ? <Metrics /> : item.kind === "bars" ? <Bars /> : <Dial />}
+                  {item.kind === "wave" ? <Wave variant={i} /> :
+                    item.kind === "spectrum" ? <Spectrum /> :
+                    item.kind === "metrics" ? <Metrics /> :
+                    item.kind === "bars" ? <Bars /> :
+                    item.kind === "dial" ? <Dial /> :
+                    item.kind === "dots" ? <DotMatrix /> :
+                    item.kind === "pulse" ? <Pulse /> :
+                    item.kind === "segmented" ? <Segmented /> : <SignalGrid />}
                 </Panel>
               ))}
             </div>
