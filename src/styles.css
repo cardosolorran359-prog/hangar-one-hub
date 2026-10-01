@@ -180,10 +180,53 @@
   to { width: 100%; }
 }
 
+@keyframes gate-ignite {
+  0% { opacity: 0; transform: scale(0.4); }
+  40% { opacity: 1; transform: scale(1.25); }
+  55% { opacity: 0.35; transform: scale(0.95); }
+  70% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+@keyframes gate-core {
+  0%, 100% { opacity: 0.45; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+@keyframes gate-laser {
+  0% { top: 8%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { top: 92%; opacity: 0; }
+}
+@keyframes gate-reticle {
+  0%, 12% { opacity: 0; transform: scale(1.6) rotate(0deg); }
+  22% { opacity: 1; transform: scale(1) rotate(0deg); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1) rotate(90deg); }
+}
+@keyframes gate-steam {
+  0% { opacity: 0; transform: translate3d(0,0,0) scale(0.6); }
+  25% { opacity: 0.35; }
+  100% { opacity: 0; transform: translate3d(-18px,-120px,0) scale(2.6); }
+}
+@keyframes gate-flash {
+  0% { opacity: 0; }
+  25% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
 .gate-clip {
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
 }
 
+.gate-stage {
+  width: max(100vw, 177.78vh);
+  height: max(100vh, 56.25vw);
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .gate-anim, .gate-anim * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .gate-stage { transform: none !important; }
 }
+
