@@ -1,14 +1,18 @@
-# Welcome to your Lovable project
+# Hangar One Console
+
+comece a criar o Hangar One baseado no documento anexado. Sistema de bancada técnica para assistência de celulares com suporte a PWA desktop, interface escura e industrial, central de dispositivos Android e Apple, e gestão de ordens de serviço. de esforce o maximo possivel para que fique bonito e funcional.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://hangar-one-hub.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4cd5f77b-d8e9-416e-a392-465486a53cb2).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +24,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
