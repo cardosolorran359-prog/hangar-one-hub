@@ -60,8 +60,8 @@ export function HangarGate({ children }: { children: ReactNode }) {
           />
 
           {/* Vinhetas e grade */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#05080d_92%)]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-[#05080d]/40 to-[#05080d]/70" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,#05080d_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-[#05080d]/15 to-[#05080d]/45" />
           <div
             className="absolute inset-0 opacity-[0.14] mix-blend-screen"
             style={{ backgroundImage: "repeating-linear-gradient(to bottom, color-mix(in oklab, var(--primary) 40%, transparent) 0 1px, transparent 1px 4px)" }}
