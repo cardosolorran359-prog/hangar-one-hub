@@ -142,7 +142,7 @@
   animation: scan 3.2s linear infinite;
 }
 
-/* ---- Hangar One video entry ---- */
+/* ---- Hangar One login: video + single action ---- */
 
 @keyframes hangar-login-in {
   from { opacity:0; }
@@ -150,28 +150,8 @@
 }
 
 @keyframes hangar-login-out {
-  0% { opacity:1; transform:scale(1); filter:brightness(1); }
-  55% { opacity:1; transform:scale(1.006); filter:brightness(1.05); }
-  100% { opacity:0; transform:scale(1.02); filter:brightness(1.12); }
-}
-
-@keyframes hangar-button-in {
-  from { opacity:0; transform:translate(-50%,8px); }
-  to { opacity:1; transform:translate(-50%,0); }
-}
-
-@keyframes hangar-button-sweep {
-  from { transform:translateX(-180%) skewX(-18deg); }
-  to { transform:translateX(520%) skewX(-18deg); }
-}
-
-@keyframes hangar-button-pulse {
-  0%,100% {
-    box-shadow:0 0 14px rgba(0,162,255,.10), inset 0 0 14px rgba(0,162,255,.02);
-  }
-  50% {
-    box-shadow:0 0 30px rgba(0,210,255,.24), inset 0 0 20px rgba(0,162,255,.05);
-  }
+  from { opacity:1; }
+  to { opacity:0; }
 }
 
 .hud-app {
@@ -189,14 +169,14 @@
 .hangar-login {
   position:fixed;
   inset:0;
-  z-index:90;
+  z-index:9999;
   overflow:hidden;
   background:#000;
-  animation:hangar-login-in .3s ease-out both;
+  animation:hangar-login-in .25s ease-out both;
 }
 
 .hangar-login--exiting {
-  animation:hangar-login-out .65s cubic-bezier(.2,.75,.18,1) forwards;
+  animation:hangar-login-out .5s ease forwards;
 }
 
 .hangar-login__video {
@@ -211,80 +191,53 @@
 
 .hangar-login__button {
   position:absolute;
-  z-index:5;
   left:50%;
-  bottom:10.5%;
+  bottom:8.5%;
   transform:translateX(-50%);
-  min-width:350px;
-  padding:14px 30px;
-  border:1px solid rgba(0,178,255,.68);
+  z-index:2;
+  min-width:340px;
+  padding:14px 28px;
+  border:1px solid rgba(0,183,255,.78);
   border-radius:2px;
-  background:rgba(1,12,25,.58);
-  color:#eefaff;
-  cursor:pointer;
-  overflow:hidden;
+  background:rgba(0,5,12,.48);
+  color:#dff8ff;
   font-family:var(--font-display);
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.2em;
   text-transform:uppercase;
-  animation:
-    hangar-button-in .8s .45s cubic-bezier(.2,.8,.2,1) both,
-    hangar-button-pulse 3.2s 1.3s ease-in-out infinite;
+  cursor:pointer;
+  box-shadow:0 0 18px rgba(0,174,255,.18);
+  text-shadow:0 0 10px rgba(0,198,255,.55);
+  backdrop-filter:blur(2px);
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
 }
 
 .hangar-login__button:hover {
-  border-color:rgba(99,219,255,.95);
-  background:rgba(2,19,36,.70);
+  background:rgba(0,17,31,.64);
+  border-color:rgba(80,214,255,.98);
+  box-shadow:0 0 28px rgba(0,194,255,.3);
+  transform:translateX(-50%) translateY(-1px);
+}
+
+.hangar-login__button:active {
+  transform:translateX(-50%) translateY(0);
 }
 
 .hangar-login__button:focus-visible {
-  outline:2px solid rgba(99,219,255,.95);
+  outline:2px solid rgba(100,220,255,.95);
   outline-offset:4px;
-}
-
-.hangar-login__button-text {
-  position:relative;
-  display:block;
-  font-size:15px;
-  letter-spacing:.2em;
-  text-indent:.2em;
-}
-
-.hangar-login__button-sweep {
-  position:absolute;
-  inset:0 auto 0 -30%;
-  width:22%;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(178,237,255,.28),transparent);
-  animation:hangar-button-sweep 3.8s linear infinite;
-}
-
-.hangar-login__corner {
-  position:absolute;
-  width:13px;
-  height:13px;
-  border-color:rgba(77,199,255,.90);
-}
-
-.hangar-login__corner--tl {
-  left:-1px; top:-1px; border-left:2px solid; border-top:2px solid;
-}
-.hangar-login__corner--tr {
-  right:-1px; top:-1px; border-right:2px solid; border-top:2px solid;
-}
-.hangar-login__corner--bl {
-  left:-1px; bottom:-1px; border-left:2px solid; border-bottom:2px solid;
-}
-.hangar-login__corner--br {
-  right:-1px; bottom:-1px; border-right:2px solid; border-bottom:2px solid;
 }
 
 @media (max-width:900px) {
   .hangar-login__button {
     min-width:290px;
-    bottom:8%;
-  }
-
-  .hangar-login__button-text {
-    font-size:13px;
+    bottom:7%;
+    font-size:12px;
   }
 }
 
@@ -293,7 +246,6 @@
   .hangar-login *,
   .hud-app {
     animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
     transition-duration:.01ms !important;
   }
 }
