@@ -1,144 +1,159 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-const LOADER_MS = 6200;
+const BUTTON_DELAY = 4400;
+const EXIT_DELAY = 850;
 
-const TOP_PANELS = [
-  { c: "p-tl", d: "0.35s", kind: "metrics" },
-  { c: "p-t1", d: "0.65s", kind: "wave" },
-  { c: "p-t2", d: "0.95s", kind: "wave" },
-  { c: "p-t3", d: "1.25s", kind: "metrics" },
-  { c: "p-t4", d: "1.55s", kind: "bars" },
-  { c: "p-tr", d: "1.85s", kind: "wave" },
+const TOP = [
+  ["top-a", "0.15s", "metrics"],
+  ["top-b", "0.32s", "wave"],
+  ["top-c", "0.48s", "mini"],
+  ["top-d", "0.64s", "wave"],
+  ["top-e", "0.8s", "metrics"],
+  ["top-f", "0.96s", "wave"],
+  ["top-g", "1.12s", "bars"],
+  ["top-h", "1.28s", "wave"],
+  ["top-i", "1.44s", "mini"],
+  ["top-j", "1.6s", "bars"],
+  ["top-k", "1.76s", "wave"],
+  ["top-l", "1.92s", "dial"],
 ] as const;
 
-const LOWER_PANELS = [
-  { c: "p-l-code", d: "2.05s", kind: "code" },
-  { c: "p-l-spark", d: "2.25s", kind: "spark" },
-  { c: "p-map", d: "2.45s", kind: "map" },
-  { c: "p-mid-chart", d: "2.7s", kind: "chart" },
-  { c: "p-mid-bars", d: "2.95s", kind: "bars" },
-  { c: "p-radar", d: "3.15s", kind: "radar" },
-  { c: "p-r-code", d: "3.35s", kind: "code" },
-  { c: "p-r-spark", d: "3.55s", kind: "spark" },
+const BOTTOM = [
+  ["bottom-code", "1.25s", "code"],
+  ["bottom-left-wave", "1.55s", "waveTall"],
+  ["bottom-map", "1.8s", "map"],
+  ["bottom-map-wave", "2.15s", "waveTall"],
+  ["bottom-chart", "2.05s", "chart"],
+  ["bottom-radar", "2.35s", "radar"],
+  ["bottom-data", "2.55s", "data"],
+  ["bottom-dial", "2.8s", "dial"],
+  ["bottom-bars", "3.05s", "bars"],
 ] as const;
-
-const MAP_PATH =
-  "M39 28 C52 18 67 14 81 19 C91 23 101 30 112 30 C121 30 129 24 138 25 C151 26 159 36 166 43 C174 51 182 54 189 60 C195 65 198 75 194 83 C188 93 178 95 169 90 C161 86 158 78 149 78 C140 78 136 91 126 97 C116 103 104 105 94 99 C86 94 83 84 74 82 C64 79 57 88 47 85 C37 82 34 70 28 63 C21 55 25 38 39 28 Z";
 
 function Panel({
   className,
   delay,
-  title,
   children,
 }: {
   className: string;
   delay: string;
-  title: string;
   children: ReactNode;
 }) {
   return (
-    <section
-      className={`hud-panel ${className}`}
-      style={{ "--hud-delay": delay } as React.CSSProperties}
-    >
-      <div className="hud-panel__head">
-        <span>{title}</span>
-        <span className="hud-led" />
+    <section className={`hud-panel ${className}`} style={{ "--hud-delay": delay } as React.CSSProperties}>
+      <div className="hud-panel__chrome">
+        <span className="hud-panel__ticks" />
+        <span className="hud-panel__led" />
       </div>
       {children}
     </section>
   );
 }
 
-function Wave({ dense = false }: { dense?: boolean }) {
-  const points = dense
-    ? "0,52 8,48 16,54 24,38 32,49 40,42 48,52 56,33 64,47 72,36 80,45 88,34 96,40 104,30 112,44 120,28 128,42 136,25 144,37 152,31"
-    : "0,45 10,39 18,45 26,41 34,46 42,34 50,42 58,23 66,39 74,30 82,45 90,36 98,42 106,28 114,39 122,21 130,35 138,16 146,31 154,22";
+function Wave({ tall = false, variant = 0 }: { tall?: boolean; variant?: number }) {
+  const paths = [
+    "M0 42 C8 38 15 45 22 42 S35 26 43 39 S57 48 65 34 S80 23 88 41 S102 47 110 31 S123 20 131 34 S145 48 154 25",
+    "M0 35 C12 18 19 49 29 31 S45 18 55 38 S71 53 82 27 S98 15 107 40 S125 47 136 24 S148 16 154 29",
+    "M0 47 C12 44 15 29 27 38 S42 52 51 34 S64 27 72 43 S86 49 97 24 S110 31 118 38 S133 42 142 19 S149 29 154 21",
+    "M0 24 C10 31 15 39 24 34 S38 20 47 36 S61 50 71 32 S82 13 92 28 S108 48 118 33 S131 18 142 31 S150 45 154 37",
+  ];
+  const d = paths[variant % paths.length];
   return (
-    <svg className="hud-wave" viewBox="0 0 154 60" preserveAspectRatio="none" aria-hidden="true">
-      <polyline points={points} fill="none" stroke="currentColor" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
-      <polyline points={points} fill="none" stroke="currentColor" strokeWidth="8" opacity=".08" vectorEffect="non-scaling-stroke" />
+    <svg className={tall ? "hud-wave hud-wave--tall" : "hud-wave"} viewBox="0 0 154 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d={d} pathLength="1" fill="none" className="hud-wave__ghost" />
+      <path d={d} pathLength="1" fill="none" className="hud-wave__line" />
+      <path d={d} pathLength="1" fill="none" className="hud-wave__spark" />
     </svg>
   );
 }
 
-function Spark({ tall = false }: { tall?: boolean }) {
-  const points = tall
-    ? "0,52 8,49 16,31 24,46 32,22 40,44 48,18 56,36 64,12 72,38 80,26 88,48 96,19 104,44 112,29 120,49 128,24 136,42 144,19 152,40"
-    : "0,42 8,35 16,38 24,30 32,36 40,24 48,33 56,26 64,31 72,19 80,34 88,28 96,38 104,22 112,35 120,25 128,31 136,17 144,28 152,21";
+function MiniSignal() {
   return (
-    <svg className="hud-wave" viewBox="0 0 154 60" preserveAspectRatio="none" aria-hidden="true">
-      <polyline points={points} fill="none" stroke="currentColor" strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
-    </svg>
+    <div className="hud-mini-signal" aria-hidden="true">
+      <i /><i /><i /><i /><i /><i /><i /><i /><i /><i />
+    </div>
   );
 }
 
 function Bars() {
   return (
     <div className="hud-bars" aria-hidden="true">
-      {[44, 72, 58, 88, 63, 94, 51, 76, 67, 98, 56, 84].map((h, i) => (
+      {[36, 62, 47, 76, 54, 88, 43, 71, 58, 93, 49, 81, 64, 38].map((h, i) => (
         <i key={i} style={{ "--h": `${h}%`, "--i": i } as React.CSSProperties} />
       ))}
     </div>
   );
 }
 
-function MetricGrid() {
+function Metrics() {
   return (
-    <div className="hud-metrics">
-      {[["SYNC", "98.4"], ["LOAD", "41.8"], ["TEMP", "36.2"], ["VOLT", "12.84"], ["DATA", "7.9"], ["LINK", "100"]].map(([l, v]) => (
-        <div key={l} className="hud-metric">
-          <span>{l}</span>
-          <strong>{v}</strong>
+    <div className="hud-metrics" aria-hidden="true">
+      {[
+        ["CPU", "42.8"],
+        ["RAM", "68.1"],
+        ["I/O", "7.44"],
+        ["NET", "981"],
+        ["SYS", "99.6"],
+        ["TEMP", "36.2"],
+      ].map(([name, value]) => (
+        <div className="hud-metric" key={name}>
+          <span>{name}</span>
+          <strong>{value}</strong>
         </div>
       ))}
     </div>
   );
 }
 
-function CodeLines() {
-  const rows = useMemo(
-    () =>
-      [
-        "const node = monitor.resolve();",
-        "stream.attach('/telemetry');",
-        "if (signal.ok) {",
-        "  sync.channels();",
-        "  render.matrix();",
-        "}",
-        "await diagnostics.flush();",
-        "return status.ready;",
-      ],
-    [],
+function Data() {
+  return (
+    <div className="hud-data" aria-hidden="true">
+      <div className="hud-data__row"><span>STREAM</span><b>ONLINE</b></div>
+      <div className="hud-data__row"><span>SYNC</span><b>100%</b></div>
+      <div className="hud-data__row"><span>PACKETS</span><b>24.8K</b></div>
+      <div className="hud-data__row"><span>LATENCY</span><b>04 ms</b></div>
+      <div className="hud-data__row"><span>CORE</span><b>STABLE</b></div>
+      <div className="hud-data__stripe" />
+      <div className="hud-data__stripe stripe-2" />
+      <div className="hud-data__stripe stripe-3" />
+    </div>
   );
+}
+
+function Code() {
+  const lines = [
+    "01  const node = monitor.resolve();",
+    "02  stream.attach('/telemetry');",
+    "03  signal.level = 0x7F;",
+    "04  calibrate.matrix();",
+    "05  if (channel.ready) {",
+    "06      sync.channels();",
+    "07      render.dashboard();",
+    "08  }",
+    "09  await diagnostics.flush();",
+    "10  return system.ready;",
+    "11  matrix.route('/core');",
+    "12  telemetry.commit();",
+    "13  archive.session();",
+  ];
   return (
     <div className="hud-code" aria-hidden="true">
-      {rows.map((row, i) => (
-        <div key={i} style={{ "--i": i } as React.CSSProperties}>
-          <span>{String(i + 1).padStart(2, "0")}</span>
-          <code>{row}</code>
-        </div>
-      ))}
+      <div className="hud-code__cursor" />
+      {lines.map((line, i) => <div key={i} style={{ "--i": i } as React.CSSProperties}><code>{line}</code></div>)}
     </div>
   );
 }
 
-function LineChart() {
+function Chart() {
   return (
     <div className="hud-chart" aria-hidden="true">
-      <svg viewBox="0 0 240 92" preserveAspectRatio="none">
-        <g className="grid-lines">
-          <path d="M0 18H240M0 46H240M0 74H240" />
-          <path d="M40 0V92M80 0V92M120 0V92M160 0V92M200 0V92" />
+      <svg viewBox="0 0 280 120" preserveAspectRatio="none">
+        <g className="hud-chart__grid">
+          <path d="M0 20H280M0 50H280M0 80H280M0 110H280" />
+          <path d="M35 0V120M70 0V120M105 0V120M140 0V120M175 0V120M210 0V120M245 0V120" />
         </g>
-        <path
-          className="chart-fill"
-          d="M0 73 C14 70 18 64 31 68 C43 71 52 55 63 59 C76 64 82 42 96 50 C108 58 116 33 130 41 C142 48 151 56 164 44 C179 30 185 38 199 28 C211 19 225 21 240 11 L240 92 L0 92 Z"
-        />
-        <path
-          className="chart-line"
-          d="M0 73 C14 70 18 64 31 68 C43 71 52 55 63 59 C76 64 82 42 96 50 C108 58 116 33 130 41 C142 48 151 56 164 44 C179 30 185 38 199 28 C211 19 225 21 240 11"
-        />
+        <path className="hud-chart__fill" d="M0 94 C17 92 25 71 41 80 C54 87 60 58 76 67 C92 76 101 45 116 55 C134 68 145 38 160 47 C178 58 189 71 206 48 C224 25 236 40 250 28 C263 18 270 22 280 12 L280 120 L0 120 Z" />
+        <path className="hud-chart__line" d="M0 94 C17 92 25 71 41 80 C54 87 60 58 76 67 C92 76 101 45 116 55 C134 68 145 38 160 47 C178 58 189 71 206 48 C224 25 236 40 250 28 C263 18 270 22 280 12" />
       </svg>
     </div>
   );
@@ -147,37 +162,45 @@ function LineChart() {
 function Radar() {
   return (
     <div className="hud-radar" aria-hidden="true">
-      <div className="hud-radar__rings" />
+      <div className="hud-radar__grid" />
       <div className="hud-radar__sweep" />
-      <span className="hud-radar__dot d1" />
-      <span className="hud-radar__dot d2" />
-      <span className="hud-radar__dot d3" />
+      <i className="hud-radar__dot dot-1" />
+      <i className="hud-radar__dot dot-2" />
+      <i className="hud-radar__dot dot-3" />
+    </div>
+  );
+}
+
+function Dial() {
+  return (
+    <div className="hud-dial" aria-hidden="true">
+      <div className="hud-dial__ticks">{Array.from({ length: 18 }, (_, i) => <i key={i} style={{ "--i": i } as React.CSSProperties} />)}</div>
+      <div className="hud-dial__ring" />
+      <div className="hud-dial__needle" />
+      <div className="hud-dial__hub" />
     </div>
   );
 }
 
 function WorldMap() {
   return (
-    <div className="hud-map">
-      <svg viewBox="0 0 220 120" aria-hidden="true">
-        <defs>
-          <filter id="map-glow">
-            <feGaussianBlur stdDeviation="1.7" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <path d={MAP_PATH} fill="currentColor" opacity=".08" />
-        <path d={MAP_PATH} fill="none" stroke="currentColor" strokeWidth="1.4" filter="url(#map-glow)" />
-        <path d="M84 29C97 37 104 44 110 53C117 62 119 74 126 80" />
-        <path d="M132 31C140 43 142 55 150 66" />
-        <path d="M53 47C65 51 73 57 82 68" />
+    <div className="hud-map" aria-hidden="true">
+      <svg viewBox="0 0 420 210" preserveAspectRatio="none">
+        <path className="continent c-na" d="M42 47 L68 32 L88 38 L99 52 L94 71 L78 73 L69 88 L51 78 L45 62 Z" />
+        <path className="continent c-sa" d="M108 88 L124 94 L132 119 L124 151 L113 174 L102 154 L106 130 L100 112 Z" />
+        <path className="continent c-eu" d="M171 44 L191 37 L210 42 L224 51 L215 60 L191 58 L178 66 L163 60 Z" />
+        <path className="continent c-af" d="M181 73 L206 67 L221 81 L215 104 L204 124 L191 141 L180 117 L171 94 Z" />
+        <path className="continent c-as" d="M219 43 L248 37 L277 49 L303 48 L328 61 L318 79 L286 75 L266 88 L245 78 L229 88 L217 70 Z" />
+        <path className="continent c-au" d="M306 132 L328 128 L350 139 L342 157 L315 159 L299 149 Z" />
+        <path className="continent c-gr" d="M334 31 L348 26 L357 35 L349 44 L337 42 Z" />
+        <path className="map-route route-1" d="M82 57 C143 30 226 42 315 69" />
+        <path className="map-route route-2" d="M119 136 C179 99 230 92 311 144" />
       </svg>
-      <div className="hud-map__pulse mp1" />
-      <div className="hud-map__pulse mp2" />
-      <div className="hud-map__pulse mp3" />
+      <span className="map-node n1" />
+      <span className="map-node n2" />
+      <span className="map-node n3" />
+      <span className="map-node n4" />
+      <span className="map-scan" />
     </div>
   );
 }
@@ -185,24 +208,27 @@ function WorldMap() {
 function Progress() {
   return (
     <div className="hud-progress">
-      <div className="hud-progress__head">
-        <span>BOOT SEQUENCE</span>
-        <strong>100%</strong>
-      </div>
-      <div className="hud-progress__track">
-        <div className="hud-progress__fill" />
-      </div>
+      <div className="hud-progress__label"><span>INITIALIZING CONTROL MATRIX</span><b>READY</b></div>
+      <div className="hud-progress__track"><i /></div>
     </div>
   );
 }
 
 export function HangarGate({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setReady(true), LOADER_MS);
+    const timer = window.setTimeout(() => setShowButton(true), BUTTON_DELAY);
     return () => window.clearTimeout(timer);
   }, []);
+
+  const enter = () => {
+    if (exiting) return;
+    setExiting(true);
+    window.setTimeout(() => setReady(true), EXIT_DELAY);
+  };
 
   return (
     <>
@@ -211,68 +237,78 @@ export function HangarGate({ children }: { children: ReactNode }) {
       </div>
 
       {!ready && (
-        <div className="hud-loader" role="status" aria-label="Inicializando Hangar One">
+        <div className={`hud-loader ${exiting ? "hud-loader--exiting" : ""}`} role="status" aria-label="Inicializando Hangar One">
           <div className="hud-loader__grid" />
-          <div className="hud-loader__vignette" />
+          <div className="hud-loader__noise" />
           <div className="hud-loader__scan" />
           <div className="hud-loader__frame">
-            <span className="corner corner-tl" />
-            <span className="corner corner-tr" />
-            <span className="corner corner-bl" />
-            <span className="corner corner-br" />
+            <span className="hud-corner hud-corner--tl" />
+            <span className="hud-corner hud-corner--tr" />
+            <span className="hud-corner hud-corner--bl" />
+            <span className="hud-corner hud-corner--br" />
 
-            <div className="hud-loader__topline">
+            <header className="hud-topline">
               <span>HANGAR ONE // MOBILE REPAIR</span>
-              <span className="hud-live"><b /> SYSTEM BOOT</span>
+              <span className="hud-topline__live"><i /> LIVE TELEMETRY</span>
               <span>STATION 01</span>
-            </div>
+            </header>
 
-            <div className="hud-loader__matrix">
-              {TOP_PANELS.map((panel) => (
-                <Panel key={panel.c} className={panel.c} delay={panel.d} title="TELEMETRY">
-                  {panel.kind === "metrics" ? <MetricGrid /> : panel.kind === "wave" ? <Wave /> : <Bars />}
-                </Panel>
-              ))}
-
-              {LOWER_PANELS.map((panel) => (
-                <Panel key={panel.c} className={panel.c} delay={panel.d} title="DATA STREAM">
-                  {panel.kind === "code" ? (
-                    <CodeLines />
-                  ) : panel.kind === "spark" ? (
-                    <Spark tall={panel.c === "p-r-spark"} />
-                  ) : panel.kind === "map" ? (
-                    <WorldMap />
-                  ) : panel.kind === "chart" ? (
-                    <LineChart />
-                  ) : panel.kind === "bars" ? (
-                    <Bars />
-                  ) : (
-                    <Radar />
-                  )}
+            <div className="hud-top">
+              {TOP.map(([name, delay, kind], index) => (
+                <Panel key={name} className={name} delay={delay}>
+                  {kind === "metrics" ? <Metrics /> : kind === "wave" ? <Wave variant={index} /> : kind === "mini" ? <MiniSignal /> : kind === "bars" ? <Bars /> : <Dial />}
                 </Panel>
               ))}
             </div>
 
-            <div className="hud-loader__center">
-              <div className="hud-core">
-                <span className="hud-core__ring r1" />
-                <span className="hud-core__ring r2" />
-                <span className="hud-core__ring r3" />
-                <span className="hud-core__pulse" />
+            <div className="hud-bottom">
+              {BOTTOM.map(([name, delay, kind], index) => (
+                <Panel key={name} className={name} delay={delay}>
+                  {kind === "code" ? <Code /> :
+                    kind === "waveTall" ? <Wave tall variant={index} /> :
+                    kind === "map" ? <WorldMap /> :
+                    kind === "chart" ? <Chart /> :
+                    kind === "radar" ? <Radar /> :
+                    kind === "data" ? <Data /> :
+                    kind === "dial" ? <Dial /> : <Bars />}
+                </Panel>
+              ))}
+            </div>
+
+            <div className="hud-center">
+              <div className="hud-center__crosshair">
+                <span className="ch-ring ring-1" />
+                <span className="ch-ring ring-2" />
+                <span className="ch-ring ring-3" />
+                <span className="ch-dot" />
+                <span className="ch-line ch-line-h" />
+                <span className="ch-line ch-line-v" />
               </div>
-              <div className="hud-loader__brand">HANGAR ONE</div>
-              <div className="hud-loader__sub">DIAGNOSTIC CONTROL INTERFACE</div>
+              <div className="hud-center__brand">HANGAR ONE</div>
+              <div className="hud-center__sub">DIAGNOSTIC CONTROL INTERFACE</div>
             </div>
 
-            <div className="hud-loader__bottom">
+            <div className={`hud-entry ${showButton ? "hud-entry--visible" : ""}`}>
+              <button type="button" onClick={enter} className="hud-entry__button">
+                <span className="hud-entry__beam" />
+                <span className="hud-entry__text">ENTRAR NO HANGAR ONE</span>
+                <span className="hud-entry__subtext">ACCESS CONTROL // PRESS TO CONTINUE</span>
+                <i className="hud-entry__corner c1" />
+                <i className="hud-entry__corner c2" />
+                <i className="hud-entry__corner c3" />
+                <i className="hud-entry__corner c4" />
+              </button>
+            </div>
+
+            <footer className="hud-footer">
               <Progress />
-              <div className="hud-loader__status">
+              <div className="hud-footer__status">
                 <span>LINK: ONLINE</span>
                 <span>CHANNELS: 24</span>
                 <span>CORE: STABLE</span>
-                <span>READY</span>
+                <b>WAITING FOR AUTHORIZATION</b>
               </div>
-            </div>
+            </footer>
           </div>
         </div>
       )}
