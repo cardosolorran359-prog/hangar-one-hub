@@ -1,16 +1,16 @@
 import { useState, type ReactNode } from "react";
 
-const EXIT_DELAY = 650;
+const EXIT_MS = 500;
 
 export function HangarGate({ children }: { children: ReactNode }) {
   const [exiting, setExiting] = useState(false);
   const [ready, setReady] = useState(false);
 
-  const enterHangar = () => {
+  function enterHangar() {
     if (exiting) return;
     setExiting(true);
-    window.setTimeout(() => setReady(true), EXIT_DELAY);
-  };
+    window.setTimeout(() => setReady(true), EXIT_MS);
+  }
 
   return (
     <>
@@ -19,9 +19,9 @@ export function HangarGate({ children }: { children: ReactNode }) {
       </div>
 
       {!ready && (
-        <div
-          className={`hangar-login ${exiting ? "hangar-login--exiting" : ""}`}
-          aria-label="Hangar One"
+        <section
+          className={exiting ? "hangar-login hangar-login--exiting" : "hangar-login"}
+          aria-label="Acesso ao Hangar One"
         >
           <video
             className="hangar-login__video"
@@ -34,18 +34,14 @@ export function HangarGate({ children }: { children: ReactNode }) {
           />
 
           <button
-            type="button"
             className="hangar-login__button"
+            type="button"
             onClick={enterHangar}
+            aria-label="Entrar no Hangar One"
           >
-            <span className="hangar-login__button-sweep" />
-            <span className="hangar-login__button-text">ENTRAR NO HANGAR ONE</span>
-            <i className="hangar-login__corner hangar-login__corner--tl" />
-            <i className="hangar-login__corner hangar-login__corner--tr" />
-            <i className="hangar-login__corner hangar-login__corner--bl" />
-            <i className="hangar-login__corner hangar-login__corner--br" />
+            ENTRAR NO HANGAR ONE
           </button>
-        </div>
+        </section>
       )}
     </>
   );
