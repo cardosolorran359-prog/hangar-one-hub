@@ -1,114 +1,121 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
-const PARTS = Array.from(
-  { length: 20 },
-  (_, i) => `/loader-reference-parts/part${String(i).padStart(2, "0")}.txt`,
-);
-
-const BUTTON_DELAY = 4400;
-const EXIT_DELAY = 850;
-
-async function buildReferenceVideo(): Promise<string> {
-  const chunks = await Promise.all(
-    PARTS.map(async (path) => {
-      const response = await fetch(path, { cache: "force-cache" });
-      if (!response.ok) throw new Error(`Loader part failed: ${path}`);
-      return response.text();
-    }),
-  );
-
-  const encoded = chunks.join("");
-  const binary = atob(encoded);
-  const bytes = new Uint8Array(binary.length);
-
-  for (let i = 0; i < binary.length; i += 1) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-
-  return URL.createObjectURL(new Blob([bytes], { type: "video/webm" }));
-}
+const LOGIN_VIDEO = "/hangar-one-login-background.mp4";
 
 export function HangarGate({ children }: { children: ReactNode }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoUrl, setVideoUrl] = useState("");
-  const [showButton, setShowButton] = useState(false);
-  const [exiting, setExiting] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState("");
+  const [key, setKey] = useState("");
+  const [error, setError] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    let alive = true;
-    let objectUrl = "";
-
-    buildReferenceVideo()
-      .then((url) => {
-        objectUrl = url;
-        if (!alive) {
-          URL.revokeObjectURL(url);
-          return;
-        }
-        setVideoUrl(url);
-      })
-      .catch((error) => console.error("Hangar One loader:", error));
-
-    return () => {
-      alive = false;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
+    const session = window.sessionStorage.getItem("hangar-one-auth");
+    if (session === "1") setAuthenticated(true);
   }, []);
 
-  useEffect(() => {
-    if (!videoUrl) return;
-    const timer = window.setTimeout(() => setShowButton(true), BUTTON_DELAY);
-    return () => window.clearTimeout(timer);
-  }, [videoUrl]);
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!user.trim() || !key.trim()) {
+      setError("IDENTIFICADOR E CHAVE DE SEGURANÇA SÃO OBRIGATÓRIOS.");
+      return;
+    }
 
-  useEffect(() => {
-    if (!videoUrl || !videoRef.current) return;
-    const video = videoRef.current;
-    video.currentTime = 0;
-    video.play().catch(() => undefined);
-  }, [videoUrl]);
-
-  const enter = () => {
-    if (exiting) return;
-    setExiting(true);
-    window.setTimeout(() => setReady(true), EXIT_DELAY);
+    setError("");
+    window.sessionStorage.setItem("hangar-one-auth", "1");
+    setAuthenticated(true);
   };
 
+  if (authenticated) {
+    return <div className="login-app-ready">{children}</div>;
+  }
+
   return (
-    <>
-      <div className={ready ? "hud-app hud-app--ready" : "hud-app"} aria-hidden={!ready}>
-        {children}
-      </div>
+    <main className="hangar-login">
+      <video
+        className="hangar-login__video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/hangar-one-login-poster.jpg"
+      >
+        <source src={LOGIN_VIDEO} type="video/mp4" />
+      </video>
 
-      {!ready && (
-        <div className={`reference-loader ${exiting ? "reference-loader--exiting" : ""}`} role="status" aria-label="Inicializando Hangar One">
-          {videoUrl && (
-            <video
-              ref={videoRef}
-              className="reference-loader__video"
-              src={videoUrl}
-              autoPlay
-              muted
-              playsInline
-              loop
-              preload="auto"
-            />
-          )}
+      <div className="hangar-login__shade" aria-hidden="true" />
+      <div className="hangar-login__scanlines" aria-hidden="true" />
 
-          <div className={`reference-loader__entry ${showButton ? "reference-loader__entry--visible" : ""}`}>
-            <button type="button" onClick={enter} className="reference-loader__button">
-              <span className="reference-loader__beam" />
-              <span>ENTRAR NO HANGAR ONE</span>
-              <small>ACCESS CONTROL // PRESS TO CONTINUE</small>
-              <i className="corner corner-tl" />
-              <i className="corner corner-tr" />
-              <i className="corner corner-bl" />
-              <i className="corner corner-br" />
-            </button>
-          </div>
+      <section className="hangar-login__panel" aria-labelledby="hangar-login-title">
+        <div className="hangar-login__panel-glow" aria-hidden="true" />
+
+        <div className="hangar-login__header">
+          <span>HANGAR ONE // SECURE ACCESS</span>
+          <i>SYS.01</i>
         </div>
-      )}
-    </>
+
+        <div className="hangar-login__status">
+          <span className="hangar-login__status-dot" />
+          <span>LINK ESTABLISHED</span>
+        </div>
+
+        <h1 id="hangar-login-title">
+          SYSTEM <strong>ONLINE</strong>
+        </h1>
+
+        <p className="hangar-login__subtitle">
+          AUTENTICAÇÃO DO TERMINAL DE BANCADA
+        </p>
+
+        <form onSubmit={handleSubmit} className="hangar-login__form">
+          <label>
+            <span>ACCESS ID / USER</span>
+            <input
+              type="text"
+              value={user}
+              onChange={(event) => {
+                setUser(event.target.value);
+                setError("");
+              }}
+              placeholder="Insira seu identificador..."
+              autoComplete="username"
+              autoFocus
+            />
+          </label>
+
+          <label>
+            <span>SECURITY KEY</span>
+            <input
+              type="password"
+              value={key}
+              onChange={(event) => {
+                setKey(event.target.value);
+                setError("");
+              }}
+              placeholder="••••••••"
+              autoComplete="current-password"
+            />
+          </label>
+
+          {error && <p className="hangar-login__error">{error}</p>}
+
+          <button type="submit" className="hangar-login__button">
+            <span className="hangar-login__button-sweep" />
+            <span>AUTENTICAR</span>
+            <b>›</b>
+          </button>
+        </form>
+
+        <div className="hangar-login__footer">
+          <span>CHANNEL: ENCRYPTED</span>
+          <span>READY</span>
+        </div>
+
+        <i className="login-corner login-corner--tl" />
+        <i className="login-corner login-corner--tr" />
+        <i className="login-corner login-corner--bl" />
+        <i className="login-corner login-corner--br" />
+      </section>
+    </main>
   );
 }
