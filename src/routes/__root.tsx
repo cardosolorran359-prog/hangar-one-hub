@@ -77,7 +77,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell><Outlet /></AppShell>
+      <HangarGate>
+        <AppShell><Outlet /></AppShell>
+      </HangarGate>
     </QueryClientProvider>
   );
 }
