@@ -33,8 +33,6 @@ export function HangarGate({ children }: { children: ReactNode }) {
             preload="auto"
           />
 
-          <div className="hangar-login__shade" />
-
           <button
             type="button"
             className="hangar-login__button"
@@ -42,7 +40,6 @@ export function HangarGate({ children }: { children: ReactNode }) {
           >
             <span className="hangar-login__button-sweep" />
             <span className="hangar-login__button-text">ENTRAR NO HANGAR ONE</span>
-            <span className="hangar-login__button-sub">SYSTEM ACCESS</span>
             <i className="hangar-login__corner hangar-login__corner--tl" />
             <i className="hangar-login__corner hangar-login__corner--tr" />
             <i className="hangar-login__corner hangar-login__corner--bl" />
