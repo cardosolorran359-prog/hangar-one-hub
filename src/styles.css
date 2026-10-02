@@ -4257,3 +4257,71 @@
   from{transform:rotate(0deg)}
   to{transform:rotate(360deg)}
 }
+
+
+/* ---- FINAL RING GEOMETRY CHECK: stroke proportions + motion ---- */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__band{
+  vector-effect:non-scaling-stroke!important;
+  stroke-linecap:butt!important;
+  filter:drop-shadow(0 0 2.5px currentColor)!important;
+}
+
+/* Keep the reference's physical thickness hierarchy. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"] .hud-ring-model__band{
+  stroke-width:16px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__band{
+  stroke-width:8px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-model__band{
+  stroke-width:6px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__band{
+  stroke-width:8px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"] .hud-ring-model__band{
+  stroke-width:4.8px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__band{
+  stroke-width:4px!important;
+}
+
+/* Outer armor rotates as a whole; inner rings counter-rotate at different speeds. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"]{
+  animation-duration:18s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"]{
+  animation-duration:13s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"]{
+  animation-duration:17s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"]{
+  animation-duration:11s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"]{
+  animation-duration:22s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"]{
+  animation-duration:14s!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"]{
+  animation-duration:9s!important;
+}
+
+/* The moving highlight is secondary to the real ring rotation. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__sweep{
+  animation-duration:3.8s!important;
+  filter:drop-shadow(0 0 3px currentColor)!important;
+  opacity:.72!important;
+}
+
+/* Let the white outer blocks read as solid metal rather than glowing dots. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-model__band{
+  filter:drop-shadow(0 0 4px rgba(224,244,242,.18))!important;
+}
+
+/* Restore opposite travel on reverse layers. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring--reverse{
+  animation-direction:reverse!important;
+}
