@@ -998,3 +998,43 @@
     animation: none !important;
   }
 }
+
+/* ---- Rotação robusta: a camada HTML gira, o SVG só desenha ---- */
+.hud-core > .hud-ring-wrap {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  transform-origin: center center;
+  animation-name: hud-core-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.hud-core > .hud-ring-wrap > .hud-ring {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  animation: none;
+  transform: none;
+}
+
+.hud-core > .hud-ring-wrap.hud-ring--reverse {
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring-wrap:not(.hud-ring--reverse) {
+  animation-direction: normal;
+}
+
+@keyframes hud-core-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-core > .hud-ring-wrap {
+    animation: none !important;
+  }
+}
