@@ -12,6 +12,7 @@ function Ring({
   thickness = 1.5,
   flow = false,
   pulse = false,
+  color = "cyan",
 }: {
   size: number;
   dash: string;
@@ -21,12 +22,25 @@ function Ring({
   thickness?: number;
   flow?: boolean;
   pulse?: boolean;
+  color?: "cyan" | "red" | "yellow" | "pink";
 }) {
+  const colorMap = {
+    cyan: "#00ffff",
+    red: "#ff2060",
+    yellow: "#ffff00",
+    pink: "#ff0080",
+  };
+
   const r = size / 2 - thickness;
   return (
     <div
       className={`hud-ring-wrap ${reverse ? "hud-ring--reverse" : ""}`}
-      style={{ width: size, height: size, animationDuration: `${duration}s`, opacity }}
+      style={{
+        width: size,
+        height: size,
+        animationDuration: `${duration}s`,
+        opacity,
+      }}
       aria-hidden
     >
       <svg
@@ -34,7 +48,9 @@ function Ring({
           "hud-ring",
           flow ? "hud-ring--flow" : "",
           pulse ? "hud-ring--pulse" : "",
-        ].filter(Boolean).join(" ")}
+        ]
+          .filter(Boolean)
+          .join(" ")}
         viewBox={`0 0 ${size} ${size}`}
         aria-hidden
       >
@@ -43,10 +59,13 @@ function Ring({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="currentColor"
+          stroke={colorMap[color]}
           strokeWidth={thickness}
           strokeDasharray={dash}
           strokeLinecap="round"
+          style={{
+            filter: `drop-shadow(0 0 10px ${colorMap[color]})`,
+          }}
         />
       </svg>
     </div>
@@ -76,8 +95,8 @@ function Ticks({ size, count, length, duration, reverse = false }: { size: numbe
               x2={rd(c + Math.cos(a) * r2)}
               y2={rd(c + Math.sin(a) * r2)}
               stroke="currentColor"
-              strokeWidth={major ? 2 : 1}
-              opacity={major ? 0.9 : 0.45}
+              strokeWidth={major ? 2.5 : 1.2}
+              opacity={major ? 1 : 0.6}
             />
           );
         })}
@@ -85,7 +104,6 @@ function Ticks({ size, count, length, duration, reverse = false }: { size: numbe
     </div>
   );
 }
-
 
 function Radar() {
   return (
@@ -159,6 +177,20 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <div className="hud-bg" aria-hidden />
           <div className="hud-scanlines" aria-hidden />
           <div className="hud-sweep" aria-hidden />
+          <div className="hud-particles" aria-hidden>
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div
+                key={i}
+                className="hud-particle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 8}s`,
+                  animationDuration: `${5 + Math.random() * 10}s`,
+                }}
+              />
+            ))}
+          </div>
 
           <span className="hud-corner hud-corner--tl" aria-hidden />
           <span className="hud-corner hud-corner--tr" aria-hidden />
@@ -172,33 +204,38 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <div className="hud-core" aria-hidden>
             <div className="hud-core__pulse hud-core__pulse--one" />
             <div className="hud-core__pulse hud-core__pulse--two" />
-            <div className="hangar-neon-ring hangar-neon-ring--1" />
-            <div className="hangar-neon-ring hangar-neon-ring--2" />
-            <div className="hangar-neon-ring hangar-neon-ring--3" />
-            <div className="hangar-neon-ring hangar-neon-ring--4" />
-            <div className="hangar-neon-ring hangar-neon-ring--5" />
-            <Ticks size={460} count={72} length={14} duration={60} />
-            <Ticks size={434} count={144} length={8} duration={48} reverse />
-            <Ring size={416} dash="1 22" duration={34} opacity={0.38} thickness={1} flow />
-            <Ring size={400} dash="4 10" duration={40} opacity={0.5} />
-            <Ring size={376} dash="72 14 3 14" duration={31} reverse opacity={0.62} thickness={1.2} flow pulse />
-            <Ring size={350} dash="8 18 42 16" duration={28} opacity={0.42} thickness={1} flow />
-            <Ring size={340} dash="60 18 8 18" duration={26} reverse opacity={0.8} thickness={2} />
-            <Ring size={316} dash="2 6" duration={22} opacity={0.34} thickness={1} />
-            <Ring size={292} dash="18 8" duration={20} reverse opacity={0.5} />
-            <Ring size={280} dash="2 6" duration={18} opacity={0.6} />
-            <Ring size={246} dash="92 16 12 14" duration={15} reverse opacity={0.54} thickness={1.4} flow pulse />
-            <Ring size={224} dash="5 14" duration={13} opacity={0.4} />
-            <Ring size={210} dash="120 30" duration={12} reverse opacity={0.9} thickness={2.5} />
-            <Ring size={188} dash="16 5 2 8" duration={10} opacity={0.54} flow />
-            <Ring size={166} dash="3 9" duration={9} reverse opacity={0.46} />
-            <Ring size={150} dash="30 12" duration={8} opacity={0.7} pulse />
+            <div className="hud-core__pulse hud-core__pulse--three" />
+
+            <Ticks size={520} count={72} length={18} duration={65} />
+            <Ticks size={480} count={144} length={10} duration={55} reverse />
+            <Ring size={460} dash="1 20" duration={40} opacity={0.9} thickness={2.5} flow color="red" />
+            <Ring size={440} dash="3 15" duration={45} opacity={0.8} thickness={2} color="cyan" />
+            <Ring size={420} dash="8 12 4 12" duration={38} reverse opacity={0.75} thickness={1.8} flow pulse color="pink" />
+            <Ring size={400} dash="6 14" duration={42} opacity={0.7} thickness={2} color="red" />
+            <Ring size={380} dash="60 18 8 18" duration={35} reverse opacity={0.85} thickness={2.2} flow color="cyan" />
+
+            <Ring size={360} dash="2 8" duration={32} opacity={0.65} thickness={1.5} color="red" />
+            <Ring size={340} dash="16 8" duration={30} reverse opacity={0.7} color="cyan" />
+            <Ring size={320} dash="4 10" duration={28} opacity={0.75} thickness={1.8} flow color="pink" />
+            <Ring size={300} dash="92 16 12 14" duration={25} reverse opacity={0.8} thickness={2} flow pulse color="red" />
+            <Ring size={280} dash="5 14" duration={23} opacity={0.65} color="cyan" />
+
+            <Ring size={260} dash="120 30" duration={20} reverse opacity={1} thickness={2.8} color="red" />
+            <Ring size={240} dash="16 5 2 8" duration={18} opacity={0.8} flow color="cyan" />
+            <Ring size={220} dash="3 9" duration={16} reverse opacity={0.9} color="pink" />
+            <Ring size={200} dash="30 12" duration={14} opacity={0.85} pulse color="red" />
+            <Ring size={180} dash="8 6" duration={12} opacity={0.8} color="cyan" />
+
             <div className="hud-core__orbit hud-core__orbit--outer">
-              <span className="hud-core__orbit-dot" />
+              <span className="hud-core__orbit-dot hud-core__orbit-dot--red" />
+            </div>
+            <div className="hud-core__orbit hud-core__orbit--middle">
+              <span className="hud-core__orbit-dot hud-core__orbit-dot--cyan" />
             </div>
             <div className="hud-core__orbit hud-core__orbit--inner">
-              <span className="hud-core__orbit-dot hud-core__orbit-dot--small" />
+              <span className="hud-core__orbit-dot hud-core__orbit-dot--small hud-core__orbit-dot--red" />
             </div>
+
             <div className="hud-core__center">
               <span className="hud-core__dot" />
               <span className="hud-core__label">HANGAR ONE</span>
