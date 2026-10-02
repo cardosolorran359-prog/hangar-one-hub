@@ -206,6 +206,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <div className="hud-core__pulse hud-core__pulse--two" />
             <div className="hud-core__pulse hud-core__pulse--three" />
 
+            {/* Outer rings with red/blue gradient effect */}
             <Ticks size={520} count={72} length={18} duration={65} />
             <Ticks size={480} count={144} length={10} duration={55} reverse />
             <Ring size={460} dash="1 20" duration={40} opacity={0.9} thickness={2.5} flow color="red" />
@@ -214,18 +215,21 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <Ring size={400} dash="6 14" duration={42} opacity={0.7} thickness={2} color="red" />
             <Ring size={380} dash="60 18 8 18" duration={35} reverse opacity={0.85} thickness={2.2} flow color="cyan" />
 
+            {/* Middle rings */}
             <Ring size={360} dash="2 8" duration={32} opacity={0.65} thickness={1.5} color="red" />
             <Ring size={340} dash="16 8" duration={30} reverse opacity={0.7} color="cyan" />
             <Ring size={320} dash="4 10" duration={28} opacity={0.75} thickness={1.8} flow color="pink" />
             <Ring size={300} dash="92 16 12 14" duration={25} reverse opacity={0.8} thickness={2} flow pulse color="red" />
             <Ring size={280} dash="5 14" duration={23} opacity={0.65} color="cyan" />
 
+            {/* Inner rings */}
             <Ring size={260} dash="120 30" duration={20} reverse opacity={1} thickness={2.8} color="red" />
             <Ring size={240} dash="16 5 2 8" duration={18} opacity={0.8} flow color="cyan" />
             <Ring size={220} dash="3 9" duration={16} reverse opacity={0.9} color="pink" />
             <Ring size={200} dash="30 12" duration={14} opacity={0.85} pulse color="red" />
             <Ring size={180} dash="8 6" duration={12} opacity={0.8} color="cyan" />
 
+            {/* Orbital elements */}
             <div className="hud-core__orbit hud-core__orbit--outer">
               <span className="hud-core__orbit-dot hud-core__orbit-dot--red" />
             </div>
@@ -236,6 +240,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
               <span className="hud-core__orbit-dot hud-core__orbit-dot--small hud-core__orbit-dot--red" />
             </div>
 
+            {/* Center */}
             <div className="hud-core__center">
               <span className="hud-core__dot" />
               <span className="hud-core__label">HANGAR ONE</span>
