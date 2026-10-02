@@ -3242,3 +3242,127 @@
     animation:none!important;
   }
 }
+
+
+/* ---- GLOBAL MOTION LAYER: atividade contínua, fina e controlada ---- */
+.hangar-login .hud-motion-grid{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+  opacity:.48;
+}
+.hangar-login .hud-motion-grid__beam{
+  position:absolute;
+  display:block;
+  opacity:0;
+}
+.hangar-login .hud-motion-grid__beam--h{
+  left:-18%;
+  width:28%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(81,132,255,.46),rgba(81,132,255,.08));
+  box-shadow:0 0 7px rgba(68,120,255,.18);
+  animation:hud-global-scan-h 4.8s linear infinite;
+}
+.hangar-login .hud-motion-grid__beam--v{
+  top:-20%;
+  width:1px;
+  height:30%;
+  background:linear-gradient(180deg,transparent,rgba(224,70,96,.34),rgba(224,70,96,.06));
+  box-shadow:0 0 7px rgba(224,70,96,.14);
+  animation:hud-global-scan-v 6.2s linear infinite;
+}
+@keyframes hud-global-scan-h{
+  0%{transform:translateX(0);opacity:0}
+  15%{opacity:.75}
+  55%{opacity:.28}
+  100%{transform:translateX(460%);opacity:0}
+}
+@keyframes hud-global-scan-v{
+  0%{transform:translateY(0);opacity:0}
+  18%{opacity:.65}
+  60%{opacity:.22}
+  100%{transform:translateY(420%);opacity:0}
+}
+
+/* Make the existing peripheral telemetry visibly update instead of only appearing once. */
+.hangar-login .hud-telemetry__row{
+  animation:hud-telemetry-pulse 3.8s ease-in-out infinite;
+}
+.hangar-login .hud-telemetry__row:nth-child(3){animation-delay:-.8s}
+.hangar-login .hud-telemetry__row:nth-child(4){animation-delay:-1.6s}
+.hangar-login .hud-telemetry__row:nth-child(5){animation-delay:-2.4s}
+@keyframes hud-telemetry-pulse{
+  0%,100%{opacity:.52;transform:translateX(0)}
+  45%{opacity:.95;transform:translateX(2px)}
+  52%{opacity:.68;transform:translateX(-1px)}
+}
+
+/* Progress bars breathe independently instead of staying visually frozen. */
+.hangar-login .hud-telemetry__bars span{
+  animation:hud-meter-rise 1.9s ease-in-out infinite;
+}
+.hangar-login .hud-telemetry__bars span:nth-child(2n){animation-delay:-.35s}
+.hangar-login .hud-telemetry__bars span:nth-child(3n){animation-delay:-.7s}
+.hangar-login .hud-telemetry__bars span:nth-child(5n){animation-delay:-1.1s}
+@keyframes hud-meter-rise{
+  0%,100%{transform:scaleY(.28);opacity:.25}
+  50%{transform:scaleY(1);opacity:.92}
+}
+
+/* Radar border itself pulses very gently, not only the sweep. */
+.hangar-login .hud-radar{
+  animation:hud-radar-frame 4.6s ease-in-out infinite;
+}
+@keyframes hud-radar-frame{
+  0%,100%{box-shadow:0 0 14px rgba(0,160,255,.05),inset 0 0 10px rgba(0,160,255,.04)}
+  50%{box-shadow:0 0 30px rgba(56,116,255,.16),inset 0 0 22px rgba(56,116,255,.10)}
+}
+
+/* The top analyzer has a periodic signal burst. */
+.hangar-login .hud-waveform__frame{
+  animation:hud-signal-frame 3.2s ease-in-out infinite;
+}
+@keyframes hud-signal-frame{
+  0%,100%{opacity:.54}
+  50%{opacity:1;box-shadow:0 0 18px rgba(73,126,255,.08)}
+}
+
+/* Gauges: needle-like highlight travels around the dial. */
+.hangar-login .hud-gauge__tick--1{
+  animation:hud-gauge-tick 3.6s cubic-bezier(.4,0,.2,1) infinite;
+}
+.hangar-login .hud-gauge__tick--2{
+  animation:hud-gauge-tick 3.6s cubic-bezier(.4,0,.2,1) infinite reverse;
+}
+@keyframes hud-gauge-tick{
+  0%,100%{transform:rotate(0deg);opacity:.34}
+  50%{transform:rotate(24deg);opacity:.86}
+}
+
+/* Button has an idle scanner once it becomes available. */
+.hangar-login__button--visible{
+  animation:hangar-button-in .55s cubic-bezier(.2,.8,.2,1) both,hud-button-scan 3.4s ease-in-out infinite .6s;
+}
+.hangar-login__button--visible::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:-1px;
+  width:25%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#79a9ff,transparent);
+  animation:hud-button-line 2.5s linear infinite;
+  pointer-events:none;
+}
+.hangar-login__button{position:absolute;overflow:hidden}
+@keyframes hud-button-scan{
+  0%,100%{box-shadow:0 0 18px rgba(54,107,255,.08),inset 0 0 18px rgba(70,120,255,.02)}
+  50%{box-shadow:0 0 30px rgba(54,107,255,.18),inset 0 0 20px rgba(70,120,255,.04)}
+}
+@keyframes hud-button-line{
+  0%{transform:translateX(-180%)}
+  100%{transform:translateX(520%)}
+}
