@@ -3399,3 +3399,57 @@
   from{transform:translateX(0) skewX(-18deg)}
   to{transform:translateX(720%) skewX(-18deg)}
 }
+
+
+/* ---- RING HOTFIX: centralização e rotação sem deslocamento ---- */
+.hangar-login .hud-core>.hud-ring-wrap{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  transform:translate(-50%,-50%) rotate(0deg)!important;
+  transform-origin:50% 50%!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:visible!important;
+  isolation:isolate;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+@keyframes hud-core-spin{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring--reverse{
+  animation-name:hud-core-spin-reverse-center!important;
+}
+@keyframes hud-core-spin-reverse-center{
+  from{transform:translate(-50%,-50%) rotate(360deg)}
+  to{transform:translate(-50%,-50%) rotate(0deg)}
+}
+
+/* Prevent the decorative overlays from visually sitting on top of the ring strokes. */
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__mechanical-underlay{
+  pointer-events:none;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__edge,
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__arc,
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__ticks,
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{
+  pointer-events:none;
+}
+
+/* Keep the core rings crisp instead of blending into a single bright disc. */
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{
+  mix-blend-mode:normal!important;
+}
