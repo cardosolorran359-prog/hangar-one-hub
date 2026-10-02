@@ -685,3 +685,131 @@
     padding-inline: 20px;
   }
 }
+
+/* ---- Camada orbital extra do HUD ---- */
+.hud-core__pulse {
+  position: absolute;
+  border: 1px solid rgba(90, 214, 255, 0.16);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: hud-pulse-ring 4.8s ease-out infinite;
+}
+
+.hud-core__pulse--one {
+  width: 178px;
+  height: 178px;
+  animation-delay: 0.8s;
+}
+
+.hud-core__pulse--two {
+  width: 236px;
+  height: 236px;
+  animation-delay: 2.4s;
+}
+
+.hud-core__orbit {
+  position: absolute;
+  border: 1px solid rgba(90, 214, 255, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: hud-orbit-spin linear infinite;
+}
+
+.hud-core__orbit--outer {
+  width: 330px;
+  height: 154px;
+  transform: rotate(-22deg);
+  animation-duration: 18s;
+}
+
+.hud-core__orbit--inner {
+  width: 250px;
+  height: 112px;
+  transform: rotate(36deg);
+  animation-duration: 12s;
+  animation-direction: reverse;
+  border-color: rgba(90, 214, 255, 0.08);
+}
+
+.hud-core__orbit-dot {
+  position: absolute;
+  top: 50%;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: #8fe9ff;
+  box-shadow:
+    0 0 7px rgba(0, 220, 255, 0.9),
+    0 0 18px rgba(0, 190, 255, 0.35);
+  animation: hud-orbit-dot 2.2s ease-in-out infinite;
+}
+
+.hud-core__orbit-dot--small {
+  width: 4px;
+  height: 4px;
+  box-shadow:
+    0 0 6px rgba(0, 220, 255, 0.9),
+    0 0 12px rgba(0, 190, 255, 0.28);
+  animation-duration: 1.8s;
+}
+
+@keyframes hud-pulse-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  12% {
+    opacity: 0.38;
+  }
+  55% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes hud-orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hud-core__orbit--inner {
+  animation-name: hud-orbit-spin-reverse;
+}
+
+@keyframes hud-orbit-spin-reverse {
+  from { transform: rotate(36deg); }
+  to { transform: rotate(-324deg); }
+}
+
+@keyframes hud-orbit-dot {
+  0%, 100% { opacity: 0.55; transform: translateY(-50%) scale(0.85); }
+  50% { opacity: 1; transform: translateY(-50%) scale(1.18); }
+}
+
+@media (max-width: 720px) {
+  .hud-core__orbit--outer {
+    width: 266px;
+    height: 126px;
+  }
+
+  .hud-core__orbit--inner {
+    width: 202px;
+    height: 96px;
+  }
+
+  .hud-core__pulse--one {
+    width: 150px;
+    height: 150px;
+  }
+
+  .hud-core__pulse--two {
+    width: 198px;
+    height: 198px;
+  }
+}
