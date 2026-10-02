@@ -3244,125 +3244,158 @@
 }
 
 
-/* ---- GLOBAL MOTION LAYER: atividade contínua, fina e controlada ---- */
-.hangar-login .hud-motion-grid{
-  position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-  overflow:hidden;
-  opacity:.48;
-}
-.hangar-login .hud-motion-grid__beam{
-  position:absolute;
-  display:block;
-  opacity:0;
-}
-.hangar-login .hud-motion-grid__beam--h{
-  left:-18%;
-  width:28%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(81,132,255,.46),rgba(81,132,255,.08));
-  box-shadow:0 0 7px rgba(68,120,255,.18);
-  animation:hud-global-scan-h 4.8s linear infinite;
-}
-.hangar-login .hud-motion-grid__beam--v{
-  top:-20%;
-  width:1px;
-  height:30%;
-  background:linear-gradient(180deg,transparent,rgba(224,70,96,.34),rgba(224,70,96,.06));
-  box-shadow:0 0 7px rgba(224,70,96,.14);
-  animation:hud-global-scan-v 6.2s linear infinite;
-}
-@keyframes hud-global-scan-h{
-  0%{transform:translateX(0);opacity:0}
-  15%{opacity:.75}
-  55%{opacity:.28}
-  100%{transform:translateX(460%);opacity:0}
-}
-@keyframes hud-global-scan-v{
-  0%{transform:translateY(0);opacity:0}
-  18%{opacity:.65}
-  60%{opacity:.22}
-  100%{transform:translateY(420%);opacity:0}
-}
+/* ---- MOTION PASS CLEAN: movimento nos elementos existentes, sem overlay ---- */
 
-/* Make the existing peripheral telemetry visibly update instead of only appearing once. */
+/* Telemetria lateral: cada linha faz uma leitura independente. */
 .hangar-login .hud-telemetry__row{
-  animation:hud-telemetry-pulse 3.8s ease-in-out infinite;
+  animation:hud-row-live 4.2s ease-in-out infinite!important;
 }
-.hangar-login .hud-telemetry__row:nth-child(3){animation-delay:-.8s}
-.hangar-login .hud-telemetry__row:nth-child(4){animation-delay:-1.6s}
-.hangar-login .hud-telemetry__row:nth-child(5){animation-delay:-2.4s}
-@keyframes hud-telemetry-pulse{
-  0%,100%{opacity:.52;transform:translateX(0)}
-  45%{opacity:.95;transform:translateX(2px)}
-  52%{opacity:.68;transform:translateX(-1px)}
+.hangar-login .hud-telemetry__row:nth-child(2){animation-delay:-.3s!important}
+.hangar-login .hud-telemetry__row:nth-child(3){animation-delay:-1.2s!important}
+.hangar-login .hud-telemetry__row:nth-child(4){animation-delay:-2.1s!important}
+.hangar-login .hud-telemetry__row:nth-child(5){animation-delay:-3s!important}
+@keyframes hud-row-live{
+  0%,100%{opacity:.48;transform:translateX(0)}
+  45%{opacity:1;transform:translateX(3px)}
+  52%{opacity:.66;transform:translateX(-1px)}
 }
 
-/* Progress bars breathe independently instead of staying visually frozen. */
+/* Barras da telemetria têm atividade própria. */
 .hangar-login .hud-telemetry__bars span{
-  animation:hud-meter-rise 1.9s ease-in-out infinite;
+  animation:hud-bar-live 1.75s ease-in-out infinite!important;
 }
-.hangar-login .hud-telemetry__bars span:nth-child(2n){animation-delay:-.35s}
-.hangar-login .hud-telemetry__bars span:nth-child(3n){animation-delay:-.7s}
-.hangar-login .hud-telemetry__bars span:nth-child(5n){animation-delay:-1.1s}
-@keyframes hud-meter-rise{
-  0%,100%{transform:scaleY(.28);opacity:.25}
-  50%{transform:scaleY(1);opacity:.92}
-}
-
-/* Radar border itself pulses very gently, not only the sweep. */
-.hangar-login .hud-radar{
-  animation:hud-radar-frame 4.6s ease-in-out infinite;
-}
-@keyframes hud-radar-frame{
-  0%,100%{box-shadow:0 0 14px rgba(0,160,255,.05),inset 0 0 10px rgba(0,160,255,.04)}
-  50%{box-shadow:0 0 30px rgba(56,116,255,.16),inset 0 0 22px rgba(56,116,255,.10)}
+.hangar-login .hud-telemetry__bars span:nth-child(2n){animation-delay:-.35s!important}
+.hangar-login .hud-telemetry__bars span:nth-child(3n){animation-delay:-.7s!important}
+.hangar-login .hud-telemetry__bars span:nth-child(5n){animation-delay:-1.05s!important}
+@keyframes hud-bar-live{
+  0%,100%{transform:scaleY(.28);opacity:.24}
+  50%{transform:scaleY(1);opacity:.90}
 }
 
-/* The top analyzer has a periodic signal burst. */
-.hangar-login .hud-waveform__frame{
-  animation:hud-signal-frame 3.2s ease-in-out infinite;
-}
-@keyframes hud-signal-frame{
-  0%,100%{opacity:.54}
-  50%{opacity:1;box-shadow:0 0 18px rgba(73,126,255,.08)}
-}
-
-/* Gauges: needle-like highlight travels around the dial. */
-.hangar-login .hud-gauge__tick--1{
-  animation:hud-gauge-tick 3.6s cubic-bezier(.4,0,.2,1) infinite;
-}
-.hangar-login .hud-gauge__tick--2{
-  animation:hud-gauge-tick 3.6s cubic-bezier(.4,0,.2,1) infinite reverse;
-}
-@keyframes hud-gauge-tick{
-  0%,100%{transform:rotate(0deg);opacity:.34}
-  50%{transform:rotate(24deg);opacity:.86}
-}
-
-/* Button has an idle scanner once it becomes available. */
-.hangar-login__button--visible{
-  animation:hangar-button-in .55s cubic-bezier(.2,.8,.2,1) both,hud-button-scan 3.4s ease-in-out infinite .6s;
-}
-.hangar-login__button--visible::after{
+/* Painel superior direito recebe um scan interno. */
+.hangar-login .hud-mini-panel{overflow:hidden}
+.hangar-login .hud-mini-panel::after{
   content:"";
   position:absolute;
   left:0;
-  top:-1px;
-  width:25%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,#79a9ff,transparent);
-  animation:hud-button-line 2.5s linear infinite;
+  right:0;
+  top:-12%;
+  height:20%;
+  background:linear-gradient(180deg,transparent,rgba(78,126,255,.13),transparent);
+  animation:hud-panel-scan-clean 4.8s linear infinite;
   pointer-events:none;
 }
-.hangar-login__button{position:absolute;overflow:hidden}
-@keyframes hud-button-scan{
-  0%,100%{box-shadow:0 0 18px rgba(54,107,255,.08),inset 0 0 18px rgba(70,120,255,.02)}
-  50%{box-shadow:0 0 30px rgba(54,107,255,.18),inset 0 0 20px rgba(70,120,255,.04)}
+@keyframes hud-panel-scan-clean{
+  from{transform:translateY(-20%)}
+  to{transform:translateY(620%)}
 }
-@keyframes hud-button-line{
-  0%{transform:translateX(-180%)}
-  100%{transform:translateX(520%)}
+
+/* Tracker/radar: varredura e brilho do quadro. */
+.hangar-login .hud-scope__title{
+  animation:hud-text-pulse 3.4s steps(2,end) infinite;
+}
+.hangar-login .hud-scope__meta{
+  animation:hud-meta-live 2.8s ease-in-out infinite;
+}
+@keyframes hud-text-pulse{
+  0%,84%,100%{opacity:.42}
+  88%{opacity:1}
+}
+@keyframes hud-meta-live{
+  0%,100%{opacity:.44;transform:translateX(0)}
+  50%{opacity:1;transform:translateX(2px)}
+}
+
+/* Waveform: as próprias barras e moldura respiram. */
+.hangar-login .hud-waveform__frame{
+  animation:hud-wave-frame 2.7s ease-in-out infinite;
+}
+.hangar-login .hud-waveform__bars i{
+  animation:hud-wave-bar 1.1s ease-in-out infinite!important;
+}
+@keyframes hud-wave-frame{
+  0%,100%{opacity:.48}
+  50%{opacity:1;box-shadow:0 0 18px rgba(70,120,255,.09)}
+}
+@keyframes hud-wave-bar{
+  0%,100%{transform:scaleY(.24);opacity:.28}
+  50%{transform:scaleY(1);opacity:.95}
+}
+
+/* Gráfico inferior: pulso na linha e nos eixos. */
+.hangar-login .hud-linegraph__path{
+  animation:hud-graph-live 5.4s ease-in-out infinite alternate!important;
+}
+@keyframes hud-graph-live{
+  from{stroke-dashoffset:1;opacity:.30}
+  35%{opacity:.82}
+  to{stroke-dashoffset:0;opacity:1}
+}
+
+/* Gauges: além da contagem inicial, o aro continua vivo depois do boot. */
+.hangar-login .hud-gauge__arc{
+  animation:hud-gauge-arc-live 5.2s linear infinite!important;
+}
+.hangar-login .hud-gauge__tick--1{
+  animation:hud-gauge-tick-clean 3.8s ease-in-out infinite!important;
+}
+.hangar-login .hud-gauge__tick--2{
+  animation:hud-gauge-tick-clean 3.8s ease-in-out infinite reverse!important;
+}
+@keyframes hud-gauge-arc-live{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes hud-gauge-tick-clean{
+  0%,100%{opacity:.30;transform:rotate(0deg)}
+  50%{opacity:.92;transform:rotate(20deg)}
+}
+
+/* Moldura da tela: pequenos sinais de vida, sem brilho exagerado. */
+.hangar-login .hud-corner{
+  animation:hud-corner-clean 4s ease-in-out infinite!important;
+}
+.hangar-login .hud-corner--tr{animation-delay:-1s!important}
+.hangar-login .hud-corner--br{animation-delay:-2s!important}
+.hangar-login .hud-corner--bl{animation-delay:-3s!important}
+@keyframes hud-corner-clean{
+  0%,100%{opacity:.32}
+  50%{opacity:.80}
+}
+
+/* Os elementos orbitais realmente se movem, em vez de apenas mudar opacidade. */
+.hangar-login .hud-orbit-details{
+  animation:hud-orbit-drift 18s linear infinite;
+}
+@keyframes hud-orbit-drift{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+.hangar-login .hud-signal-dot{
+  animation:hud-signal-live 1.9s ease-in-out infinite!important;
+}
+.hangar-login .hud-signal-dot--right{animation-delay:-.45s!important}
+.hangar-login .hud-signal-dot--bottom{animation-delay:-.9s!important}
+.hangar-login .hud-signal-dot--left{animation-delay:-1.35s!important}
+@keyframes hud-signal-live{
+  0%,100%{opacity:.28;transform:scale(.72)}
+  50%{opacity:1;transform:scale(1.18)}
+}
+
+/* Botão de entrada: scanner discreto no topo. */
+.hangar-login__button--visible::after{
+  content:"";
+  position:absolute;
+  left:-22%;
+  top:0;
+  width:18%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(117,162,255,.22),transparent);
+  transform:skewX(-18deg);
+  animation:hud-button-sweep-clean 3.6s linear infinite;
+  pointer-events:none;
+}
+@keyframes hud-button-sweep-clean{
+  from{transform:translateX(0) skewX(-18deg)}
+  to{transform:translateX(720%) skewX(-18deg)}
 }
