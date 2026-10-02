@@ -2925,3 +2925,71 @@
 .hangar-login .hud-core__side-node--right{border-color:rgba(232,74,99,.50)}
 .hangar-login .hud-core__side-node--right b{color:#ffd9df}
 .hangar-login .hud-core__side-node--left b{color:#d8e4ff}
+
+
+/* ---- CYBERPUNK CORE V5: CLEANER RINGS ---- */
+.hangar-login .hud-rayfield{opacity:.38!important}
+.hangar-login .hud-ray__beam{width:1px!important;opacity:.72}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__mechanical-underlay{
+  stroke-width:5.5px!important;
+  stroke:rgba(4,9,19,.98)!important;
+  filter:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{
+  stroke-width:3.8px!important;
+  stroke-linecap:butt!important;
+  opacity:.94!important;
+  filter:drop-shadow(0 0 2px currentColor)!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{
+  stroke-width:1.3px!important;
+  opacity:.38!important;
+  filter:drop-shadow(0 0 2px currentColor)!important;
+  animation-duration:6.8s!important;
+}
+
+/* Major red and blue rings get slightly more body; secondary rings stay quieter. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"] .hud-ring__body{
+  stroke-width:5px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"] .hud-ring__body{
+  stroke-width:3.2px!important;
+}
+
+/* More spacing between layers: let the dark chassis show through. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="440"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="400"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="360"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="320"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="280"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="240"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="200"]{
+  display:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="520"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="480"]{
+  opacity:.46!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"]{
+  opacity:.94!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"]{
+  opacity:.72!important;
+}
+
+/* Count-up readout should feel like a system boot, not an instant value. */
+.hangar-login .hud-gauge__dial strong{
+  transition:opacity .2s ease, transform .2s ease;
+}
