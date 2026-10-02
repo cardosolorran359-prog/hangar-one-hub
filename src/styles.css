@@ -3069,3 +3069,65 @@
 /* The video has more empty black space around the core. */
 .hangar-login .hud-core::before{opacity:.34!important}
 .hangar-login .hud-core::after{opacity:.42!important}
+
+
+/* ---- RING REFINEMENT V7: mechanical segmentation without neon bloom ---- */
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__locators{
+  transform-origin:50% 50%;
+  animation:hud-locator-turn 11s linear infinite;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring--reverse .hud-ring__locators{
+  animation-direction:reverse;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__locators rect{
+  shape-rendering:geometricPrecision;
+}
+@keyframes hud-locator-turn{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+/* Break the perfect concentric repetition with very subtle angular offsets. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"]{transform:translate(-50%,-50%) rotate(-3deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"]{transform:translate(-50%,-50%) rotate(5deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"]{transform:translate(-50%,-50%) rotate(-7deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"]{transform:translate(-50%,-50%) rotate(8deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"]{transform:translate(-50%,-50%) rotate(-5deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"]{transform:translate(-50%,-50%) rotate(9deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"]{transform:translate(-50%,-50%) rotate(-8deg)!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"]{transform:translate(-50%,-50%) rotate(6deg)!important}
+
+/* Keep the core dark and dimensional. */
+.hangar-login .hud-core__center{
+  padding:18px 30px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(3,9,21,.82) 0 57%,rgba(3,8,18,.36) 74%,transparent 75%);
+  box-shadow:0 0 40px rgba(29,55,110,.10);
+}
+.hangar-login .hud-core__dot{
+  width:8px;height:8px;
+}
+.hangar-login .hud-core__label{
+  font-size:21px;
+  letter-spacing:.31em;
+}
+
+/* Fewer rays visible through the gaps, with a denser pulse near the outer edge. */
+.hangar-login .hud-rayfield{opacity:.20!important}
+.hangar-login .hud-ray__beam{height:46%!important}
+.hangar-login .hud-ray:nth-child(2n) .hud-ray__beam{opacity:.60}
+.hangar-login .hud-ray:nth-child(5n) .hud-ray__beam{opacity:.42}
+
+/* Locator colors follow the ring accent without becoming glowing dots. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"] .hud-ring__locators rect{
+  fill:#d9485f!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"] .hud-ring__locators rect,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"] .hud-ring__locators rect{
+  fill:#5b86ef!important;
+}
