@@ -570,3 +570,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
 // V5 sync marker.
 
+
+// Ring V7 sync marker.
