@@ -350,3 +350,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+// Hangar One: acabamento dos anéis e raios radiais consolidado.
