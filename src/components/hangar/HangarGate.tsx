@@ -24,57 +24,68 @@ function Ring({
 }) {
   const r = size / 2 - thickness;
   return (
-    <svg
-      className={[
-        "hud-ring",
-        reverse ? "hud-ring--reverse" : "",
-        flow ? "hud-ring--flow" : "",
-        pulse ? "hud-ring--pulse" : "",
-      ].filter(Boolean).join(" ")}
+    <div
+      className={`hud-ring-wrap ${reverse ? "hud-ring--reverse" : ""}`}
       style={{ width: size, height: size, animationDuration: `${duration}s`, opacity }}
-      viewBox={`0 0 ${size} ${size}`}
       aria-hidden
     >
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={r}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={thickness}
-        strokeDasharray={dash}
-        strokeLinecap="round"
-      />
-    </svg>
+      <svg
+        className={[
+          "hud-ring",
+          flow ? "hud-ring--flow" : "",
+          pulse ? "hud-ring--pulse" : "",
+        ].filter(Boolean).join(" ")}
+        viewBox={`0 0 ${size} ${size}`}
+        aria-hidden
+      >
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={thickness}
+          strokeDasharray={dash}
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
   );
 }
 
-function Ticks({ size, count, length, duration }: { size: number; count: number; length: number; duration: number }) {
+function Ticks({ size, count, length, duration, reverse = false }: { size: number; count: number; length: number; duration: number; reverse?: boolean }) {
   const c = size / 2;
   const r1 = c - length;
   const r2 = c - 2;
   return (
-    <svg className="hud-ring" style={{ width: size, height: size, animationDuration: `${duration}s` }} viewBox={`0 0 ${size} ${size}`} aria-hidden>
-      {Array.from({ length: count }, (_, i) => {
-        const a = (i / count) * Math.PI * 2;
-        const major = i % (count / 4) === 0;
-        const rd = (n: number) => Math.round(n * 100) / 100;
-        return (
-          <line
-            key={i}
-            x1={rd(c + Math.cos(a) * r1)}
-            y1={rd(c + Math.sin(a) * r1)}
-            x2={rd(c + Math.cos(a) * r2)}
-            y2={rd(c + Math.sin(a) * r2)}
-            stroke="currentColor"
-            strokeWidth={major ? 2 : 1}
-            opacity={major ? 0.9 : 0.45}
-          />
-        );
-      })}
-    </svg>
+    <div
+      className={`hud-ring-wrap ${reverse ? "hud-ring--reverse" : ""}`}
+      style={{ width: size, height: size, animationDuration: `${duration}s` }}
+      aria-hidden
+    >
+      <svg className="hud-ring" viewBox={`0 0 ${size} ${size}`} aria-hidden>
+        {Array.from({ length: count }, (_, i) => {
+          const a = (i / count) * Math.PI * 2;
+          const major = i % (count / 4) === 0;
+          const rd = (n: number) => Math.round(n * 100) / 100;
+          return (
+            <line
+              key={i}
+              x1={rd(c + Math.cos(a) * r1)}
+              y1={rd(c + Math.sin(a) * r1)}
+              x2={rd(c + Math.cos(a) * r2)}
+              y2={rd(c + Math.sin(a) * r2)}
+              stroke="currentColor"
+              strokeWidth={major ? 2 : 1}
+              opacity={major ? 0.9 : 0.45}
+            />
+          );
+        })}
+      </svg>
+    </div>
   );
 }
+
 
 function Radar() {
   return (
