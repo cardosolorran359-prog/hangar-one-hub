@@ -150,12 +150,30 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <Telemetry side="right" />
 
           <div className="hud-core" aria-hidden>
+            <div className="hud-core__pulse hud-core__pulse--one" />
+            <div className="hud-core__pulse hud-core__pulse--two" />
             <Ticks size={460} count={72} length={14} duration={60} />
+            <Ticks size={434} count={144} length={8} duration={48} reverse />
+            <Ring size={416} dash="1 22" duration={34} opacity={0.38} thickness={1} />
             <Ring size={400} dash="4 10" duration={40} opacity={0.5} />
+            <Ring size={376} dash="72 14 3 14" duration={31} reverse opacity={0.62} thickness={1.2} />
+            <Ring size={350} dash="8 18 42 16" duration={28} opacity={0.42} thickness={1} />
             <Ring size={340} dash="60 18 8 18" duration={26} reverse opacity={0.8} thickness={2} />
+            <Ring size={316} dash="2 6" duration={22} opacity={0.34} thickness={1} />
+            <Ring size={292} dash="18 8" duration={20} reverse opacity={0.5} />
             <Ring size={280} dash="2 6" duration={18} opacity={0.6} />
+            <Ring size={246} dash="92 16 12 14" duration={15} reverse opacity={0.54} thickness={1.4} />
+            <Ring size={224} dash="5 14" duration={13} opacity={0.4} />
             <Ring size={210} dash="120 30" duration={12} reverse opacity={0.9} thickness={2.5} />
+            <Ring size={188} dash="16 5 2 8" duration={10} opacity={0.54} />
+            <Ring size={166} dash="3 9" duration={9} reverse opacity={0.46} />
             <Ring size={150} dash="30 12" duration={8} opacity={0.7} />
+            <div className="hud-core__orbit hud-core__orbit--outer">
+              <span className="hud-core__orbit-dot" />
+            </div>
+            <div className="hud-core__orbit hud-core__orbit--inner">
+              <span className="hud-core__orbit-dot hud-core__orbit-dot--small" />
+            </div>
             <div className="hud-core__center">
               <span className="hud-core__dot" />
               <span className="hud-core__label">HANGAR ONE</span>
