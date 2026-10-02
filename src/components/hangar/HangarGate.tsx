@@ -425,10 +425,10 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <Ticks size={520} count={72} length={18} duration={65} />
             <Ticks size={480} count={96} length={10} duration={55} reverse />
 
-            <Ring size={460} dash="110 28 40 16 72 20" duration={40} opacity={0.94} thickness={3.4} flow color="red" />
-            <Ring size={380} dash="150 30 38 18" duration={35} reverse opacity={0.92} flow color="red" />
+            <Ring size={340} dash="90 18 14 36" duration={30} opacity={0.76} color="cyan" />
             <Ring size={300} dash="120 20 55 24" duration={25} reverse opacity={0.90} flow pulse color="red" />
             <Ring size={260} dash="84 18 32 28" duration={20} opacity={0.82} thickness={2.8} color="cyan" />
+            <Ring size={220} dash="52 22 16 24" duration={16} reverse opacity={0.88} thickness={2.8} color="red" />
             <Ring size={180} dash="64 20 10 18" duration={12} opacity={0.84} thickness={2.3} color="cyan" />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
@@ -511,5 +511,3 @@ export function HangarGate({ children }: { children: ReactNode }) {
 }
 
 // V5 sync marker.
-
-// Sync marker: três fileiras removidas do núcleo.
