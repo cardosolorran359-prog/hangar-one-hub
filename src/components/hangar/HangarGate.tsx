@@ -1,16 +1,23 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-const EXIT_MS = 500;
+const BUTTON_DELAY = 8750;
+const EXIT_DELAY = 650;
 
 export function HangarGate({ children }: { children: ReactNode }) {
+  const [showButton, setShowButton] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [ready, setReady] = useState(false);
 
-  function enterHangar() {
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowButton(true), BUTTON_DELAY);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const enterHangar = () => {
     if (exiting) return;
     setExiting(true);
-    window.setTimeout(() => setReady(true), EXIT_MS);
-  }
+    window.setTimeout(() => setReady(true), EXIT_DELAY);
+  };
 
   return (
     <>
@@ -20,7 +27,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
       {!ready && (
         <section
-          className={exiting ? "hangar-login hangar-login--exiting" : "hangar-login"}
+          className={`hangar-login ${exiting ? "hangar-login--exiting" : ""}`}
           aria-label="Acesso ao Hangar One"
         >
           <video
@@ -34,10 +41,11 @@ export function HangarGate({ children }: { children: ReactNode }) {
           />
 
           <button
-            className="hangar-login__button"
             type="button"
             onClick={enterHangar}
-            aria-label="Entrar no Hangar One"
+            className={showButton ? "hangar-login__button hangar-login__button--visible" : "hangar-login__button"}
+            aria-hidden={!showButton}
+            tabIndex={showButton ? 0 : -1}
           >
             ENTRAR NO HANGAR ONE
           </button>
