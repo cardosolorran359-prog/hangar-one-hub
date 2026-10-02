@@ -4420,3 +4420,18 @@
   from{transform:translate(-50%,-50%) rotate(360deg)}
   to{transform:translate(-50%,-50%) rotate(0deg)}
 }
+
+
+/* ---- CORREÇÃO CIRÚRGICA: anel azul estático do núcleo ----
+   Somente o anel estático de fundo é reposicionado exatamente no centro
+   do .hud-core; nenhum outro anel ou elemento é alterado. */
+.hangar-login .hud-core::before{
+  inset:auto!important;
+  left:50%!important;
+  top:50%!important;
+  width:100%!important;
+  height:100%!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:50% 50%!important;
+  margin:0!important;
+}
