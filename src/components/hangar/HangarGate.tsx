@@ -1,6 +1,7 @@
+import hud from "@/assets/hangar-hud.mp4.asset.json";
 import { useEffect, useState, type ReactNode } from "react";
 
-const BUTTON_DELAY = 8750;
+const BUTTON_DELAY = 2500;
 const EXIT_DELAY = 650;
 
 export function HangarGate({ children }: { children: ReactNode }) {
@@ -32,7 +33,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
         >
           <video
             className="hangar-login__video"
-            src="/hangar-one-login-background.mp4"
+            src={hud.url}
             autoPlay
             muted
             loop
