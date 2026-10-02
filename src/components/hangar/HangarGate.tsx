@@ -25,10 +25,10 @@ function Ring({
   color?: "cyan" | "red" | "yellow" | "pink";
 }) {
   const colorMap = {
-    cyan: "#3f78ff",
-    red: "#e33b55",
-    yellow: "#6d8fdc",
-    pink: "#b92f49",
+    cyan: "#4b80ff",
+    red: "#c9344f",
+    yellow: "#718fce",
+    pink: "#a92f47",
   };
 
   const r = size / 2 - thickness;
@@ -61,25 +61,12 @@ function Ring({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="rgba(8,14,28,.92)"
-          strokeWidth={Math.max(thickness * 3.9, 6)}
+          stroke="rgba(4,8,18,.94)"
+          strokeWidth={Math.max(thickness * 2.6, 4.6)}
           strokeDasharray={dash}
           strokeLinecap="butt"
         />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 3.0, 4.8)}
-          strokeDasharray={dash}
-          strokeLinecap="round"
-          opacity={0.12}
-          style={{
-            filter: "drop-shadow(0 0 5px rgba(51,72,120,.45))",
-          }}
-        />
+
         <circle
           className="hud-ring__body"
           cx={size / 2}
@@ -87,13 +74,64 @@ function Ring({
           r={r}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 1.8, 3.2)}
+          strokeWidth={Math.max(thickness * 1.15, 2.2)}
           strokeDasharray={dash}
-          strokeLinecap="butt"
-          style={{
-            filter: "drop-shadow(0 0 3px rgba(38,56,95,.40))",
-          }}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
         />
+
+        <circle
+          className="hud-ring__edge"
+          cx={size / 2}
+          cy={size / 2}
+          r={r + 4}
+          fill="none"
+          stroke={colorMap[color]}
+          strokeWidth={1}
+          strokeDasharray="2 13"
+          strokeLinecap="round"
+          opacity={0.58}
+          vectorEffect="non-scaling-stroke"
+        />
+
+        <circle
+          className="hud-ring__arc"
+          cx={size / 2}
+          cy={size / 2}
+          r={r - 5}
+          fill="none"
+          stroke={colorMap[color]}
+          strokeWidth={Math.max(thickness * 0.7, 1.4)}
+          strokeDasharray={`${Math.max(58, size * 0.19)} ${Math.max(180, size * 0.58)}`}
+          strokeLinecap="round"
+          opacity={0.72}
+          vectorEffect="non-scaling-stroke"
+        />
+
+        <g className="hud-ring__ticks">
+          {Array.from({ length: 12 }, (_, i) => {
+            const a = (i / 12) * Math.PI * 2;
+            const rr = r + 9;
+            const inner = rr - (i % 3 === 0 ? 8 : 4);
+            const x1 = size / 2 + Math.cos(a) * inner;
+            const y1 = size / 2 + Math.sin(a) * inner;
+            const x2 = size / 2 + Math.cos(a) * rr;
+            const y2 = size / 2 + Math.sin(a) * rr;
+            return (
+              <line
+                key={i}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={colorMap[color]}
+                strokeWidth={i % 3 === 0 ? 1.5 : 1}
+                opacity={i % 3 === 0 ? 0.78 : 0.34}
+              />
+            );
+          })}
+        </g>
+
         {(flow || pulse) && (
           <circle
             className="hud-ring__highlight"
@@ -102,10 +140,10 @@ function Ring({
             r={r}
             fill="none"
             stroke={colorMap[color]}
-            strokeWidth={Math.max(thickness * 0.8, 1)}
-            strokeDasharray={`${Math.max(22, size * 0.09)} ${Math.max(90, size * 0.34)}`}
+            strokeWidth={1.4}
+            strokeDasharray={`${Math.max(22, size * 0.06)} ${Math.max(180, size * 0.52)}`}
             strokeLinecap="round"
-            opacity={0.95}
+            opacity={0.72}
           />
         )}
       </svg>
