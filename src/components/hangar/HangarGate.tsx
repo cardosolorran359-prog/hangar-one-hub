@@ -90,7 +90,6 @@ function Ring({
           strokeWidth={Math.max(thickness * 1.8, 3.2)}
           strokeDasharray={dash}
           strokeLinecap="butt"
-          className="hud-ring__body"
           style={{
             filter: "drop-shadow(0 0 3px rgba(38,56,95,.40))",
           }}
