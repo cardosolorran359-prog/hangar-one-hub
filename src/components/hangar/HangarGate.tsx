@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 
 const BUTTON_DELAY = 2200;
 const EXIT_DELAY = 650;
@@ -266,7 +266,7 @@ function HudGauge({ value, label }: { value: number; label: string }) {
   return (
     <div className="hud-gauge" aria-hidden>
       <div className="hud-gauge__dial">
-        <span className="hud-gauge__arc" style={{ "--value": `${value * 3.6}deg` } as React.CSSProperties} />
+        <span className="hud-gauge__arc" style={{ "--value": `${value * 3.6}deg` } as CSSProperties} />
         <span className="hud-gauge__tick hud-gauge__tick--1" />
         <span className="hud-gauge__tick hud-gauge__tick--2" />
         <strong>{value}%</strong>
@@ -304,8 +304,8 @@ export function HangarGate({ children }: { children: ReactNode }) {
 .hangar-login .hud-rayfield{position:absolute;left:50%;top:50%;width:620px;height:620px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;overflow:visible;opacity:.72;mix-blend-mode:screen}
 .hangar-login .hud-ray{position:absolute;inset:0;display:block;transform-origin:center center}
 .hangar-login .hud-ray__beam{position:absolute;left:50%;top:50%;width:1px;height:49%;transform:translateX(-50%);transform-origin:50% 0;background:linear-gradient(to bottom,rgba(0,255,255,.02) 0%,rgba(0,255,255,.56) 20%,rgba(0,255,255,.22) 58%,rgba(0,255,255,0) 100%);filter:drop-shadow(0 0 4px rgba(0,255,255,.45));clip-path:inset(96% 0 0 0);animation:hud-ray-surge 3.4s ease-in-out infinite}
-.hangar-login .hud-ray:nth-child(3n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(255,32,96,.02) 0%,rgba(255,32,96,.50) 20%,rgba(255,32,96,.20) 58%,rgba(255,32,96,0) 100%);filter:drop-shadow(0 0 4px rgba(255,32,96,.42))}
-.hangar-login .hud-ray:nth-child(5n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(255,255,0,.01) 0%,rgba(255,255,0,.40) 18%,rgba(255,255,0,.14) 58%,rgba(255,255,0,0) 100%);filter:drop-shadow(0 0 3px rgba(255,255,0,.34))}
+.hangar-login .hud-ray:nth-child(3n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(82,142,255,.02) 0%,rgba(82,142,255,.50) 20%,rgba(82,142,255,.20) 58%,rgba(82,142,255,0) 100%);filter:drop-shadow(0 0 4px rgba(82,142,255,.42))}
+.hangar-login .hud-ray:nth-child(5n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(190,215,255,.01) 0%,rgba(190,215,255,.40) 18%,rgba(190,215,255,.14) 58%,rgba(190,215,255,0) 100%);filter:drop-shadow(0 0 3px rgba(190,215,255,.34))}
 .hangar-login .hud-ray:nth-child(4n+2) .hud-ray__beam{animation-delay:-.8s}
 .hangar-login .hud-ray:nth-child(4n+3) .hud-ray__beam{animation-delay:-1.55s}
 .hangar-login .hud-ray:nth-child(4n) .hud-ray__beam{animation-delay:-2.2s}
