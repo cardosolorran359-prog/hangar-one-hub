@@ -24,18 +24,21 @@ function Ring({
   pulse?: boolean;
   color?: "cyan" | "red" | "yellow" | "pink";
 }) {
+  // Paleta do vídeo de referência: branco/ciano técnico + vermelho/âmbar.
   const colorMap = {
-    cyan: "#4b80ff",
-    red: "#c9344f",
-    yellow: "#718fce",
-    pink: "#a92f47",
+    cyan: "#d9f7ff",
+    red: "#ff3a24",
+    yellow: "#ffb347",
+    pink: "#ff6248",
   };
 
   const r = size / 2 - thickness;
+
   return (
     <div
-      className={`hud-ring-wrap ${reverse ? "hud-ring--reverse" : ""}`}
+      className={`hud-ring-wrap hud-ring-ref ${reverse ? "hud-ring--reverse" : ""} ${flow ? "hud-ring--flow" : ""} ${pulse ? "hud-ring--pulse" : ""}`}
       data-ring-size={size}
+      data-ring-color={color}
       style={{
         width: size,
         height: size,
@@ -44,106 +47,102 @@ function Ring({
       }}
       aria-hidden
     >
-      <svg
-        className={[
-          "hud-ring",
-          flow ? "hud-ring--flow" : "",
-          pulse ? "hud-ring--pulse" : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        viewBox={`0 0 ${size} ${size}`}
-        aria-hidden
-      >
+      <svg className="hud-ring hud-ring-ref__svg" viewBox={`0 0 ${size} ${size}`} aria-hidden>
+        {/* trilho escuro: dá profundidade e separação entre as camadas */}
         <circle
-          className="hud-ring__mechanical-underlay"
+          className="hud-ring-ref__track"
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="rgba(4,8,18,.94)"
-          strokeWidth={Math.max(thickness * 2.6, 4.6)}
+          stroke="rgba(2,6,12,.96)"
+          strokeWidth={Math.max(thickness * 2.8, 5)}
           strokeDasharray={dash}
           strokeLinecap="butt"
         />
 
+        {/* corpo principal do anel */}
         <circle
-          className="hud-ring__body"
+          className="hud-ring-ref__body"
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 1.15, 2.2)}
+          strokeWidth={Math.max(thickness * 1.8, 2.8)}
           strokeDasharray={dash}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           vectorEffect="non-scaling-stroke"
         />
 
+        {/* segunda linha técnica, mais fina e deslocada */}
         <circle
-          className="hud-ring__edge"
-          cx={size / 2}
-          cy={size / 2}
-          r={r + 4}
-          fill="none"
-          stroke={colorMap[color]}
-          strokeWidth={1}
-          strokeDasharray="2 13"
-          strokeLinecap="round"
-          opacity={0.58}
-          vectorEffect="non-scaling-stroke"
-        />
-
-        <circle
-          className="hud-ring__arc"
+          className="hud-ring-ref__line"
           cx={size / 2}
           cy={size / 2}
           r={r - 5}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 0.7, 1.4)}
-          strokeDasharray={`${Math.max(58, size * 0.19)} ${Math.max(180, size * 0.58)}`}
+          strokeWidth="1"
+          strokeDasharray="3 10 1 7"
           strokeLinecap="round"
-          opacity={0.72}
+          opacity=".72"
           vectorEffect="non-scaling-stroke"
         />
 
-        <g className="hud-ring__ticks">
-          {Array.from({ length: 12 }, (_, i) => {
-            const a = (i / 12) * Math.PI * 2;
-            const rr = r + 9;
-            const inner = rr - (i % 3 === 0 ? 8 : 4);
-            const x1 = size / 2 + Math.cos(a) * inner;
-            const y1 = size / 2 + Math.sin(a) * inner;
-            const x2 = size / 2 + Math.cos(a) * rr;
-            const y2 = size / 2 + Math.sin(a) * rr;
+        {/* segmentos largos destacados, como os blocos do anel externo do vídeo */}
+        <circle
+          className="hud-ring-ref__accent"
+          cx={size / 2}
+          cy={size / 2}
+          r={r + 4}
+          fill="none"
+          stroke={colorMap[color]}
+          strokeWidth={color === "cyan" ? 7 : 4.5}
+          strokeDasharray={
+            color === "cyan"
+              ? `${Math.max(64, size * .22)} ${Math.max(210, size * .70)}`
+              : `${Math.max(32, size * .11)} ${Math.max(250, size * .82)}`
+          }
+          strokeLinecap="butt"
+          opacity={color === "cyan" ? ".92" : ".78"}
+          vectorEffect="non-scaling-stroke"
+        />
+
+        {/* escala interna: marcadores que acompanham o giro da camada */}
+        <g className="hud-ring-ref__ticks">
+          {Array.from({ length: 24 }, (_, i) => {
+            const a = (i / 24) * Math.PI * 2;
+            const outer = r - 1;
+            const inner = outer - (i % 4 === 0 ? 12 : i % 2 === 0 ? 7 : 4);
             return (
               <line
                 key={i}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
+                x1={size / 2 + Math.cos(a) * inner}
+                y1={size / 2 + Math.sin(a) * inner}
+                x2={size / 2 + Math.cos(a) * outer}
+                y2={size / 2 + Math.sin(a) * outer}
                 stroke={colorMap[color]}
-                strokeWidth={i % 3 === 0 ? 1.5 : 1}
-                opacity={i % 3 === 0 ? 0.78 : 0.34}
+                strokeWidth={i % 4 === 0 ? 1.6 : 1}
+                opacity={i % 4 === 0 ? ".72" : ".28"}
               />
             );
           })}
         </g>
 
+        {/* ponteiro luminoso que percorre o anel */}
         {(flow || pulse) && (
           <circle
-            className="hud-ring__highlight"
+            className="hud-ring-ref__sweep"
             cx={size / 2}
             cy={size / 2}
-            r={r}
+            r={r - 2}
             fill="none"
             stroke={colorMap[color]}
-            strokeWidth={1.4}
-            strokeDasharray={`${Math.max(22, size * 0.06)} ${Math.max(180, size * 0.52)}`}
+            strokeWidth={2}
+            strokeDasharray={`${Math.max(20, size * .055)} ${Math.max(240, size * .78)}`}
             strokeLinecap="round"
-            opacity={0.72}
+            opacity=".9"
           />
         )}
       </svg>
@@ -549,6 +548,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
   );
 }
 
-// V5 sync marker.
 
 // Clean motion sync.
