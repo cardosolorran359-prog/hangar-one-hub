@@ -1038,3 +1038,83 @@
     animation: none !important;
   }
 }
+
+/* ---- FUTURISTIC LOGIN VISUALS ON ACTIVE HANGAR GATE ---- */
+/* Efeitos do FuturisticLogin.css aplicados à tela de entrada real (HangarGate). */
+.hangar-login {
+  --primary-neon: #00ffff;
+  --secondary-neon: #ff0080;
+  --tertiary-neon: #ffff00;
+  background:
+    radial-gradient(900px 600px at 50% 50%, rgba(0,255,255,.08), transparent 65%),
+    linear-gradient(135deg,#0a0e27 0%,#120a24 50%,#08111f 100%);
+  color: var(--primary-neon);
+}
+.hangar-login .hud-bg {
+  background:
+    radial-gradient(1000px 700px at 50% 50%,rgba(0,255,255,.10),transparent 64%),
+    radial-gradient(700px 500px at 20% 75%,rgba(255,0,128,.06),transparent 64%),
+    radial-gradient(760px 540px at 82% 24%,rgba(255,255,0,.045),transparent 62%),
+    linear-gradient(rgba(0,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,255,.035) 1px,transparent 1px);
+  background-size:auto,auto,auto,50px 50px,50px 50px;
+  animation:hangar-neon-grid-move 8s linear infinite;
+}
+@keyframes hangar-neon-grid-move {
+  from{background-position:center,center,center,0 0,0 0}
+  to{background-position:center,center,center,50px 50px,50px 50px}
+}
+.hangar-login .hud-core{perspective:1000px}
+.hangar-login .hud-core::before,
+.hangar-login .hud-core::after{
+  content:"";
+  position:absolute;
+  inset:52px;
+  border:1px solid rgba(0,255,255,.12);
+  border-radius:50%;
+  pointer-events:none;
+  animation:hangar-float-ring 20s linear infinite;
+}
+.hangar-login .hud-core::after{
+  inset:88px;
+  border-color:rgba(255,0,128,.10);
+  animation-duration:26s;
+  animation-direction:reverse;
+}
+@keyframes hangar-float-ring{
+  from{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(180deg) scale(1.025)}
+  to{transform:rotate(360deg) scale(1)}
+}
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(3),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(5),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(8),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(11),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(14),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(17){color:var(--primary-neon);filter:drop-shadow(0 0 4px rgba(0,255,255,.72))}
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(4),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(6),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(9),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(12),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(15),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18){color:var(--secondary-neon);filter:drop-shadow(0 0 4px rgba(255,0,128,.72))}
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(7),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(10),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(13),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(16){color:var(--tertiary-neon);filter:drop-shadow(0 0 4px rgba(255,255,0,.58))}
+.hangar-login .hud-core > .hud-ring-wrap{will-change:transform,filter}
+.hangar-login .hud-core__label{
+  color:#ecffff;
+  text-shadow:0 0 10px rgba(0,255,255,.92),2px 2px 0 rgba(255,0,128,.42),-2px -2px 0 rgba(255,255,0,.22);
+  animation:hangar-glitch-breathe 3s ease-in-out infinite;
+}
+@keyframes hangar-glitch-breathe{
+  0%,100%{text-shadow:0 0 10px rgba(0,255,255,.82),2px 2px 0 rgba(255,0,128,.34),-2px -2px 0 rgba(255,255,0,.18)}
+  50%{text-shadow:0 0 20px rgba(0,255,255,1),-2px -2px 0 rgba(255,0,128,.52),2px 2px 0 rgba(255,255,0,.30)}
+}
+@media (prefers-reduced-motion:reduce){
+  .hangar-login .hud-bg,
+  .hangar-login .hud-core::before,
+  .hangar-login .hud-core::after,
+  .hangar-login .hud-core__label{animation:none!important}
+}
