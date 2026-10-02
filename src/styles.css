@@ -4379,3 +4379,24 @@
 }
 
 /* A animação continua sendo a existente; apenas a leitura física fica mais forte. */
+
+
+/* ---- FIX ONLY: anel de marcação externo desalinhado ----
+   Os Ticks antigos usam o mesmo wrapper de rotação, mas não tinham
+   uma posição absoluta explícita. Centralizamos somente essa camada. */
+.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref){
+  position:absolute!important;
+  inset:0!important;
+  margin:auto!important;
+  transform-origin:50% 50%!important;
+  display:grid!important;
+  place-items:center!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref)>.hud-ring{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  transform:none!important;
+}
