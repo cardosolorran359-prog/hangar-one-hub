@@ -203,6 +203,28 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
       {!ready && (
         <section className={`hangar-login ${exiting ? "hangar-login--exiting" : ""}`} aria-label="Acesso ao Hangar One">
+          <style>{`/* HANGAR_ORBIT_RING_FINISH */
+.hangar-login .hud-rayfield{position:absolute;left:50%;top:50%;width:620px;height:620px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;overflow:visible;opacity:.72;mix-blend-mode:screen}
+.hangar-login .hud-ray{position:absolute;inset:0;display:block;transform-origin:center center}
+.hangar-login .hud-ray__beam{position:absolute;left:50%;top:50%;width:1px;height:49%;transform:translateX(-50%);transform-origin:50% 0;background:linear-gradient(to bottom,rgba(0,255,255,.02) 0%,rgba(0,255,255,.56) 20%,rgba(0,255,255,.22) 58%,rgba(0,255,255,0) 100%);filter:drop-shadow(0 0 4px rgba(0,255,255,.45));clip-path:inset(96% 0 0 0);animation:hud-ray-surge 3.4s ease-in-out infinite}
+.hangar-login .hud-ray:nth-child(3n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(255,32,96,.02) 0%,rgba(255,32,96,.50) 20%,rgba(255,32,96,.20) 58%,rgba(255,32,96,0) 100%);filter:drop-shadow(0 0 4px rgba(255,32,96,.42))}
+.hangar-login .hud-ray:nth-child(5n) .hud-ray__beam{background:linear-gradient(to bottom,rgba(255,255,0,.01) 0%,rgba(255,255,0,.40) 18%,rgba(255,255,0,.14) 58%,rgba(255,255,0,0) 100%);filter:drop-shadow(0 0 3px rgba(255,255,0,.34))}
+.hangar-login .hud-ray:nth-child(4n+2) .hud-ray__beam{animation-delay:-.8s}
+.hangar-login .hud-ray:nth-child(4n+3) .hud-ray__beam{animation-delay:-1.55s}
+.hangar-login .hud-ray:nth-child(4n) .hud-ray__beam{animation-delay:-2.2s}
+@keyframes hud-ray-surge{0%,100%{opacity:.18;clip-path:inset(96% 0 0 0)}16%{opacity:.82;clip-path:inset(26% 0 0 0)}42%{opacity:.44;clip-path:inset(0 0 0 0)}70%{opacity:.20;clip-path:inset(14% 0 0 0)}}
+.hangar-login .hud-core>.hud-ring-wrap{z-index:2}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring{overflow:visible}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{opacity:.92;vector-effect:non-scaling-stroke}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{transform-box:fill-box;transform-origin:center;stroke-linecap:round;filter:drop-shadow(0 0 7px currentColor);animation:hud-ring-highlight 4.2s linear infinite}
+.hangar-login .hud-core>.hud-ring-wrap:nth-child(7) .hud-ring__highlight,.hangar-login .hud-core>.hud-ring-wrap:nth-child(11) .hud-ring__highlight,.hangar-login .hud-core>.hud-ring-wrap:nth-child(15) .hud-ring__highlight{stroke-width:2.5}
+@keyframes hud-ring-highlight{from{stroke-dashoffset:0;opacity:.30}38%{opacity:1}to{stroke-dashoffset:-220;opacity:.28}}
+.hangar-login .hud-core__pulse--three{width:298px;height:298px;animation-delay:4s;animation-duration:6.2s;border-color:rgba(255,0,128,.12)}
+.hangar-login .hud-core__orbit--middle{width:286px;height:132px;transform:rotate(58deg);animation-duration:15s;border-color:rgba(0,255,255,.10)}
+.hangar-login .hud-core__orbit-dot--red{background:#ff2060;box-shadow:0 0 8px rgba(255,32,96,.95),0 0 18px rgba(255,32,96,.38)}
+.hangar-login .hud-core__orbit-dot--cyan{background:#00ffff;box-shadow:0 0 8px rgba(0,255,255,.95),0 0 18px rgba(0,255,255,.36)}
+@media(max-width:720px){.hangar-login .hud-rayfield{width:430px;height:430px;opacity:.58}.hangar-login .hud-core__pulse--three{width:248px;height:248px}.hangar-login .hud-core__orbit--middle{width:230px;height:106px}}
+@media(prefers-reduced-motion:reduce){.hangar-login .hud-ray__beam,.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{animation:none!important;clip-path:none;opacity:.35}}`}</style>
 \n          <div className="hud-bg" aria-hidden />
           <div className="hud-scanlines" aria-hidden />
           <div className="hud-sweep" aria-hidden />
