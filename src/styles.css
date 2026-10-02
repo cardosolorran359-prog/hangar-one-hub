@@ -2749,3 +2749,68 @@
   .hangar-login .hud-waveform{width:250px}
   .hangar-login .hud-scope,.hangar-login .hud-mini-panel,.hangar-login>.hud-gauge,.hangar-login .hud-bars,.hangar-login .hud-linegraph{display:none}
 }
+
+/* ---- AJUSTES FINAIS: MONOCROMIA AZUL + MICRO-RADIAIS ---- */
+.hangar-login .hud-core::before{
+  content:"";
+  position:absolute;
+  inset:-2%;
+  border-radius:50%;
+  z-index:1;
+  pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(103,151,255,.20) 0deg .7deg,transparent .7deg 15deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 54%,#000 54.5% 80%,transparent 80.5%);
+  mask:radial-gradient(circle,transparent 0 54%,#000 54.5% 80%,transparent 80.5%);
+  opacity:.72;
+}
+.hangar-login .hud-core::after{
+  content:"";
+  position:absolute;
+  inset:27%;
+  border-radius:50%;
+  z-index:5;
+  pointer-events:none;
+  border:1px solid rgba(127,170,255,.30);
+  box-shadow:0 0 22px rgba(58,112,255,.10),inset 0 0 16px rgba(58,112,255,.08);
+}
+.hangar-login .hud-core__orbit-dot--red,
+.hangar-login .hud-core__orbit-dot--cyan{
+  background:#76a3ff!important;
+  border-color:#76a3ff!important;
+  box-shadow:0 0 8px rgba(92,142,255,.90),0 0 18px rgba(92,142,255,.32)!important;
+}
+.hangar-login .hud-core__orbit--outer,
+.hangar-login .hud-core__orbit--middle,
+.hangar-login .hud-core__orbit--inner{
+  border-color:rgba(93,139,255,.18)!important;
+}
+.hangar-login .hud-orbit-arc--outer{
+  border-left-color:rgba(88,135,255,.72)!important;
+}
+.hangar-login .hud-orbit-arc--inner{
+  border-top-color:rgba(110,153,255,.52)!important;
+  border-bottom-color:rgba(159,190,255,.28)!important;
+  border-right-color:rgba(74,123,255,.36)!important;
+}
+.hangar-login .hud-orbit-marker,
+.hangar-login .hud-signal-dot,
+.hangar-login .hud-orbit-notch::before,
+.hangar-login .hud-orbit-notch::after{
+  border-color:#6f9fff!important;
+}
+.hangar-login .hud-signal-dot--right,
+.hangar-login .hud-signal-dot--bottom{
+  background:#79a6ff!important;
+  box-shadow:0 0 8px rgba(105,155,255,.92),0 0 16px rgba(105,155,255,.34)!important;
+}
+.hangar-login .hud-orbit-marker:nth-child(3),
+.hangar-login .hud-orbit-marker:nth-child(5),
+.hangar-login .hud-orbit-marker:nth-child(7),
+.hangar-login .hud-orbit-marker:nth-child(11){
+  background:rgba(100,150,255,.16)!important;
+  border-color:#6f9fff!important;
+  box-shadow:0 0 7px rgba(100,150,255,.72)!important;
+}
+.hangar-login .hud-core__pulse--three{
+  border-color:rgba(93,139,255,.12)!important;
+}
