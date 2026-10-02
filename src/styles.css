@@ -1209,3 +1209,76 @@
 }
 
 /* Hangar One: estado visual consolidado para sincronização com Lovable. */
+
+
+/* ---- FORÇA DE ANIMAÇÃO DO HUD DE ENTRADA ---- */
+/* Garante movimento visível dos anéis, sem depender da animação do SVG. */
+.hangar-login .hud-core > .hud-ring-wrap {
+  animation-name: hud-core-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(3) { animation-duration: 60s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(4) { animation-duration: 48s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(5) { animation-duration: 34s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(6) { animation-duration: 40s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(7) { animation-duration: 31s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(8) { animation-duration: 28s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(9) { animation-duration: 26s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(10) { animation-duration: 22s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(11) { animation-duration: 20s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(12) { animation-duration: 18s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(13) { animation-duration: 15s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(14) { animation-duration: 13s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(15) { animation-duration: 12s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(16) { animation-duration: 10s; animation-direction: reverse; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(17) { animation-duration: 9s; }
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18) { animation-duration: 8s; animation-direction: reverse; }
+
+/* Os cinco anéis neon externos também têm rotação independente. */
+.hangar-login .hangar-neon-ring--1 { animation: hangar-neon-rotate-1 20s linear infinite; }
+.hangar-login .hangar-neon-ring--2 { animation: hangar-neon-rotate-2 25s linear infinite; }
+.hangar-login .hangar-neon-ring--3 { animation: hangar-neon-rotate-3 30s linear infinite; }
+.hangar-login .hangar-neon-ring--4 { animation: hangar-neon-pulse 2s ease-in-out infinite; }
+.hangar-login .hangar-neon-ring--5 { animation: hangar-neon-spin-pulse 3s linear infinite; }
+
+/* Mesmo com reduced-motion ativo, preserve o movimento explícito solicitado para o HUD. */
+@media (prefers-reduced-motion: reduce) {
+  .hangar-login .hud-core > .hud-ring-wrap {
+    animation-name: hud-core-spin !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
+    animation-duration: 20s !important;
+  }
+
+  .hangar-login .hud-core > .hud-ring-wrap.hud-ring--reverse {
+    animation-direction: reverse !important;
+  }
+
+  .hangar-login .hangar-neon-ring--1 {
+    animation: hangar-neon-rotate-1 20s linear infinite !important;
+  }
+  .hangar-login .hangar-neon-ring--2 {
+    animation: hangar-neon-rotate-2 25s linear infinite !important;
+  }
+  .hangar-login .hangar-neon-ring--3 {
+    animation: hangar-neon-rotate-3 30s linear infinite !important;
+  }
+  .hangar-login .hangar-neon-ring--4 {
+    animation: hangar-neon-pulse 2s ease-in-out infinite !important;
+  }
+  .hangar-login .hangar-neon-ring--5 {
+    animation: hangar-neon-spin-pulse 3s linear infinite !important;
+  }
+
+  .hangar-login .hud-sweep,
+  .hangar-login .hud-radar__sweep,
+  .hangar-login .hud-radar__blip,
+  .hangar-login .hud-telemetry {
+    animation-iteration-count: infinite !important;
+    animation-duration: 4s !important;
+  }
+}
