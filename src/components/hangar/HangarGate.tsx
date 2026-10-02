@@ -400,8 +400,8 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <HudLineGraph />
           <HudGauge value={93} label="AUDIO / POWER" delay={0} />
           <div className="hud-gauges hud-gauges--bottom" aria-hidden>
-            <HudGauge value={99} label="CORE" delay={900} />
-            <HudGauge value={97} label="SYNC" delay={1800} />
+            <HudGauge value={99} label="CORE" delay={1200} />
+            <HudGauge value={97} label="SYNC" delay={2400} />
           </div>
 
           <div className="hud-core" aria-hidden>
