@@ -4435,3 +4435,32 @@
   transform-origin:50% 50%!important;
   margin:0!important;
 }
+
+
+/* ---- RING REFERENCE CANVAS: usa somente o modelo do arquivo enviado ---- */
+.hangar-login .hud-core{
+  position:absolute;
+}
+.hangar-login .hud-reference-ring-canvas{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:100%;
+  height:100%;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  display:block;
+  pointer-events:none;
+  overflow:visible;
+}
+
+/* Remove somente os dois círculos decorativos antigos que competiam com o modelo novo. */
+.hangar-login .hud-core::before,
+.hangar-login .hud-core::after{
+  display:none!important;
+}
+
+/* Os anéis antigos não são desenhados mais; deixam de duplicar o canvas. */
+.hangar-login .hud-core>.hud-ring-wrap{
+  display:none!important;
+}
