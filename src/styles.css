@@ -3069,3 +3069,176 @@
 /* The video has more empty black space around the core. */
 .hangar-login .hud-core::before{opacity:.34!important}
 .hangar-login .hud-core::after{opacity:.42!important}
+
+
+/* ---- MOTION PASS: elementos periféricos e HUD sem animação ---- */
+
+/* Moldura: atividade eletrônica suave nos cantos. */
+.hangar-login .hud-corner{
+  animation:hud-corner-breathe 3.8s ease-in-out infinite;
+}
+.hangar-login .hud-corner--tr{animation-delay:-.95s}
+.hangar-login .hud-corner--br{animation-delay:-1.9s}
+.hangar-login .hud-corner--bl{animation-delay:-2.85s}
+@keyframes hud-corner-breathe{
+  0%,100%{opacity:.34;box-shadow:0 0 0 rgba(92,139,255,0)}
+  50%{opacity:.82;box-shadow:0 0 16px rgba(63,120,255,.12)}
+}
+
+/* As abas do tracker alternam foco como um painel eletrônico. */
+.hangar-login .hud-tabs span{
+  animation:hud-tab-idle 4.8s ease-in-out infinite;
+}
+.hangar-login .hud-tabs span:nth-child(2){animation-delay:-1.6s}
+.hangar-login .hud-tabs span:nth-child(3){animation-delay:-3.2s}
+.hangar-login .hud-tabs__active{
+  animation:hud-tab-active 2.8s ease-in-out infinite!important;
+}
+@keyframes hud-tab-idle{
+  0%,100%{opacity:.48}
+  50%{opacity:.82}
+}
+@keyframes hud-tab-active{
+  0%,100%{opacity:.78;box-shadow:0 0 0 rgba(71,125,255,0)}
+  50%{opacity:1;box-shadow:0 0 18px rgba(71,125,255,.18)}
+}
+
+/* Top-right matrix: um scan horizontal atravessa o painel. */
+.hangar-login .hud-mini-panel{
+  overflow:hidden;
+}
+.hangar-login .hud-mini-panel::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:-20%;
+  height:22%;
+  background:linear-gradient(180deg,transparent,rgba(84,130,255,.14),transparent);
+  animation:hud-panel-scan 5.2s linear infinite;
+  pointer-events:none;
+}
+@keyframes hud-panel-scan{
+  0%{transform:translateY(-20%)}
+  100%{transform:translateY(590%)}
+}
+
+/* O escopo pisca entre aquisição e rastreio sem mexer na geometria. */
+.hangar-login .hud-scope__title{
+  animation:hud-micro-flicker 3.6s steps(2,end) infinite;
+}
+.hangar-login .hud-scope__meta{
+  animation:hud-meta-pulse 2.6s ease-in-out infinite;
+}
+@keyframes hud-micro-flicker{
+  0%,86%,100%{opacity:.54}
+  89%{opacity:1}
+}
+@keyframes hud-meta-pulse{
+  0%,100%{opacity:.48}
+  50%{opacity:1}
+}
+
+/* Microtacks ganham uma onda de atividade ao redor do núcleo. */
+.hangar-login .hud-core__fine-ticks i{
+  animation:hud-tick-pulse 2.9s ease-in-out infinite;
+}
+.hangar-login .hud-core__fine-ticks i:nth-child(3n){animation-delay:-.6s}
+.hangar-login .hud-core__fine-ticks i:nth-child(5n){animation-delay:-1.3s}
+.hangar-login .hud-core__fine-ticks i:nth-child(7n){animation-delay:-2.1s}
+@keyframes hud-tick-pulse{
+  0%,100%{opacity:.34}
+  50%{opacity:.94}
+}
+
+/* Triângulos e chevrons: pequenos pulsos de lock-on. */
+.hangar-login .hud-core__triangle{
+  animation:hud-lock-marker 2.4s ease-in-out infinite;
+}
+.hangar-login .hud-core__triangle--right{animation-delay:-.6s}
+.hangar-login .hud-core__triangle--bottom{animation-delay:-1.2s}
+.hangar-login .hud-core__triangle--left{animation-delay:-1.8s}
+.hangar-login .hud-core__chevron{
+  animation:hud-chevron-breathe 3.2s ease-in-out infinite;
+}
+.hangar-login .hud-core__chevron--right{animation-delay:-.8s}
+.hangar-login .hud-core__chevron--bottom{animation-delay:-1.6s}
+.hangar-login .hud-core__chevron--left{animation-delay:-2.4s}
+@keyframes hud-lock-marker{
+  0%,100%{opacity:.38;filter:drop-shadow(0 0 2px rgba(91,139,255,.25))}
+  50%{opacity:1;filter:drop-shadow(0 0 7px rgba(91,139,255,.65))}
+}
+@keyframes hud-chevron-breathe{
+  0%,100%{opacity:.38}
+  50%{opacity:1}
+}
+
+/* As cápsulas laterais fazem uma pequena leitura de conexão. */
+.hangar-login .hud-core__side-node{
+  animation:hud-side-node-breathe 3.8s ease-in-out infinite;
+}
+.hangar-login .hud-core__side-node--right{animation-delay:-1.9s}
+@keyframes hud-side-node-breathe{
+  0%,100%{box-shadow:0 0 10px rgba(54,108,255,.06),inset 0 0 14px rgba(54,108,255,.07)}
+  50%{box-shadow:0 0 24px rgba(54,108,255,.16),inset 0 0 22px rgba(54,108,255,.12)}
+}
+
+/* Marcadores orbitais percorrem a circunferência em ciclos alternados. */
+.hangar-login .hud-orbit-marker{
+  animation:hud-marker-ping 2.7s ease-in-out infinite;
+}
+.hangar-login .hud-orbit-marker:nth-child(2n){animation-delay:-.9s}
+.hangar-login .hud-orbit-marker:nth-child(3n){animation-delay:-1.7s}
+@keyframes hud-marker-ping{
+  0%,100%{opacity:.24;transform:translate(-50%,-50%) scale(.72)}
+  50%{opacity:.88;transform:translate(-50%,-50%) scale(1.12)}
+}
+
+/* Notches sinalizam leitura cardinal. */
+.hangar-login .hud-orbit-notch{
+  animation:hud-notch-pulse 3s ease-in-out infinite;
+}
+.hangar-login .hud-orbit-notch--right{animation-delay:-.75s}
+.hangar-login .hud-orbit-notch--bottom{animation-delay:-1.5s}
+.hangar-login .hud-orbit-notch--left{animation-delay:-2.25s}
+@keyframes hud-notch-pulse{
+  0%,100%{opacity:.28}
+  50%{opacity:.82}
+}
+
+/* Linha de status inferior faz uma varredura discreta. */
+.hangar-login .hud-bottom__line{
+  animation:hud-status-line 3.4s ease-in-out infinite;
+}
+.hangar-login .hud-bottom__line:nth-child(3){animation-delay:-1.7s}
+@keyframes hud-status-line{
+  0%,100%{opacity:.30;transform:scaleX(.82)}
+  50%{opacity:.86;transform:scaleX(1)}
+}
+
+/* Pequenos pontos do radar continuam vivos, mas sem excesso de brilho. */
+.hangar-login .hud-radar__blip{
+  animation:hud-blip 3.4s ease-out infinite,hud-blip-glow 1.7s ease-in-out infinite;
+}
+@keyframes hud-blip-glow{
+  0%,100%{opacity:.38}
+  50%{opacity:1}
+}
+
+/* Respeita acessibilidade sem deixar a UI estática se o navegador permitir animação. */
+@media(prefers-reduced-motion:reduce){
+  .hangar-login .hud-corner,
+  .hangar-login .hud-tabs span,
+  .hangar-login .hud-mini-panel::after,
+  .hangar-login .hud-scope__title,
+  .hangar-login .hud-scope__meta,
+  .hangar-login .hud-core__fine-ticks i,
+  .hangar-login .hud-core__triangle,
+  .hangar-login .hud-core__chevron,
+  .hangar-login .hud-core__side-node,
+  .hangar-login .hud-orbit-marker,
+  .hangar-login .hud-orbit-notch,
+  .hangar-login .hud-bottom__line{
+    animation:none!important;
+  }
+}
