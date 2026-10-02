@@ -1282,3 +1282,89 @@
     animation-duration: 4s !important;
   }
 }
+
+
+/* ---- ESTILOS DA VERSÃO AVANÇADA DO HANGAR GATE ---- */
+.hud-particles{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.9;
+}
+.hud-particle{
+  position:absolute;
+  width:2px;
+  height:2px;
+  border-radius:50%;
+  background:#00ffff;
+  box-shadow:0 0 8px #00ffff,0 0 18px rgba(0,255,255,.45);
+  opacity:0;
+  animation:hud-particle-float linear infinite;
+}
+.hud-particle:nth-child(3n){
+  background:#ff0080;
+  box-shadow:0 0 8px #ff0080,0 0 18px rgba(255,0,128,.42);
+}
+.hud-particle:nth-child(5n){
+  background:#ffff00;
+  box-shadow:0 0 8px #ffff00,0 0 18px rgba(255,255,0,.34);
+}
+@keyframes hud-particle-float{
+  0%{opacity:0;transform:translate3d(0,18px,0) scale(.55)}
+  12%{opacity:.85}
+  50%{opacity:.35;transform:translate3d(8px,-18px,0) scale(1)}
+  88%{opacity:.8}
+  100%{opacity:0;transform:translate3d(-12px,-70px,0) scale(.45)}
+}
+
+.hangar-login .hud-core{
+  overflow:visible;
+}
+
+.hangar-login .hud-core__pulse--three{
+  width:298px;
+  height:298px;
+  animation-delay:4s;
+  animation-duration:6.2s;
+  border-color:rgba(255,0,128,.12);
+}
+
+.hangar-login .hud-core__orbit--middle{
+  width:286px;
+  height:132px;
+  transform:rotate(58deg);
+  animation-duration:15s;
+  border-color:rgba(0,255,255,.10);
+}
+.hangar-login .hud-core__orbit-dot--red{
+  background:#ff2060;
+  box-shadow:0 0 8px rgba(255,32,96,.95),0 0 18px rgba(255,32,96,.38);
+}
+.hangar-login .hud-core__orbit-dot--cyan{
+  background:#00ffff;
+  box-shadow:0 0 8px rgba(0,255,255,.95),0 0 18px rgba(0,255,255,.36);
+}
+.hangar-login .hud-core__orbit-dot--red.hud-core__orbit-dot--small{
+  box-shadow:0 0 7px rgba(255,32,96,.95),0 0 14px rgba(255,32,96,.32);
+}
+
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring{
+  overflow:visible;
+}
+
+@media (max-width:720px){
+  .hangar-login .hud-core__pulse--three{
+    width:248px;
+    height:248px;
+  }
+  .hangar-login .hud-core__orbit--middle{
+    width:230px;
+    height:106px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hangar-login .hud-particles{display:none}
+}
