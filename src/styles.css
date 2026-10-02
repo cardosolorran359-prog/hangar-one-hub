@@ -3402,158 +3402,233 @@
 
 
 /* ================================================================
-   RING-ONLY REFERENCE PASS — inspirado exclusivamente no vídeo
-   Não altera radar, painéis, botão, fundo ou qualquer outro elemento.
+   RINGS REFERENCE — somente anéis, baseado nos frames do vídeo
    ================================================================ */
 
+/* Camada de desenho: sem deslocamento, sem blend agressivo. */
 .hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref{
-  filter:none!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  display:grid!important;
+  place-items:center!important;
+  transform-origin:50% 50%!important;
   overflow:visible!important;
+  filter:none!important;
   will-change:transform;
 }
-
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__svg{
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref>.hud-ring{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  animation:none!important;
+  transform:none!important;
   overflow:visible!important;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__track{
+/* Track escuro separando visualmente cada camada. */
+.hangar-login .hud-ring-ref__track{
   stroke:rgba(2,5,10,.96)!important;
-  opacity:1!important;
   filter:none!important;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__body{
-  stroke-width:2.6px!important;
-  opacity:.88!important;
-  filter:drop-shadow(0 0 2px currentColor)!important;
-}
-
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__line{
-  opacity:.46!important;
+/* Corpo fino de instrumentação. */
+.hangar-login .hud-ring-ref__body{
+  opacity:.94!important;
   filter:none!important;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__accent{
-  opacity:.82!important;
-  filter:drop-shadow(0 0 4px currentColor)!important;
+/* Segmentos largos da referência: branco frio por fora, vermelho/laranja por dentro. */
+.hangar-login .hud-ring-ref__accent{
+  filter:drop-shadow(0 0 5px currentColor)!important;
   stroke-linecap:butt!important;
-  animation:hud-ref-accent-pulse 3.8s ease-in-out infinite;
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  animation:hud-ref-ring-breathe 3.8s ease-in-out infinite;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__sweep{
-  stroke-dashoffset:0;
-  animation:hud-ref-sweep 4.2s linear infinite;
-  filter:drop-shadow(0 0 4px currentColor)!important;
+/* Linhas finas de apoio. */
+.hangar-login .hud-ring-ref__line{
+  opacity:.62!important;
+  filter:none!important;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__ticks{
-  animation:hud-ref-ticks 2.8s ease-in-out infinite;
+/* Escala radial do segundo anel. */
+.hangar-login .hud-ring-ref__radials{
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  animation:hud-ref-radial-spin 22s linear infinite;
 }
-
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__accent{
+.hangar-login .hud-ring--reverse .hud-ring-ref__radials{
   animation-direction:reverse;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__sweep{
+/* Ponteiro/segmento que corre pela circunferência. */
+.hangar-login .hud-ring-ref__sweep{
+  stroke-linecap:round!important;
+  filter:drop-shadow(0 0 5px currentColor)!important;
+  animation:hud-ref-sweep 4.6s linear infinite;
+}
+.hangar-login .hud-ring--reverse .hud-ring-ref__sweep{
   animation-direction:reverse;
 }
 
-.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__ticks{
-  animation-direction:reverse;
+@keyframes hud-ref-ring-breathe{
+  0%,100%{opacity:.64;filter:drop-shadow(0 0 2px currentColor)}
+  45%{opacity:.94;filter:drop-shadow(0 0 7px currentColor)}
+  54%{opacity:1;filter:drop-shadow(0 0 9px currentColor)}
+  70%{opacity:.70;filter:drop-shadow(0 0 3px currentColor)}
+}
+@keyframes hud-ref-radial-spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes hud-ref-sweep{
+  0%{stroke-dashoffset:0;opacity:.14}
+  16%{opacity:.92}
+  48%{stroke-dashoffset:-110;opacity:.72}
+  78%{opacity:.30}
+  100%{stroke-dashoffset:-220;opacity:.14}
 }
 
-/* Outer white/cyan segment: the dominant mechanical ring in the reference. */
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref{
-  color:#e9fbff!important;
-  opacity:.92!important;
+/* Anel externo: grande arco branco em 3 blocos, como no vídeo. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"].hud-ring-ref{
+  color:#effdff!important;
+  opacity:1!important;
 }
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref .hud-ring-ref__body{
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#eafcff!important;
+  stroke-width:1.9px!important;
+  stroke-dasharray:1 22!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#f1ffff!important;
+  stroke-width:10px!important;
+  stroke-dasharray:132 46 118 54 92 78!important;
+  opacity:.96!important;
+}
+
+/* Grade técnica fina com ponteiros e pontos. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"].hud-ring-ref{
+  color:#ff5037!important;
+  opacity:.72!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ff573e!important;
+  stroke-width:1.15px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff553a!important;
+  stroke-width:1px!important;
+  stroke-dasharray:260 150!important;
+  opacity:.36!important;
+}
+
+/* Grande banda vermelha. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="390"].hud-ring-ref{
+  color:#ff3f2b!important;
+  opacity:.96!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="390"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#e82e21!important;
   stroke-width:3px!important;
 }
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref .hud-ring-ref__accent{
-  stroke:#e9fbff!important;
-  stroke-width:8px!important;
-  opacity:.90!important;
-  filter:drop-shadow(0 0 6px rgba(217,247,255,.32))!important;
-}
-
-/* Red middle band: strong but not blown out. */
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref{
-  color:#ff3a24!important;
-  opacity:.90!important;
-}
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref .hud-ring-ref__body{
-  stroke-width:4px!important;
-}
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref .hud-ring-ref__accent{
-  stroke:#ff3a24!important;
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="390"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff4930!important;
   stroke-width:5px!important;
-  opacity:.78!important;
+  stroke-dasharray:116 28 54 26 96 44!important;
+  opacity:.88!important;
 }
 
-/* White/cyan technical ring with a lighter presence. */
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"].hud-ring-ref{
-  color:#cdefff!important;
-  opacity:.78!important;
+/* Segundo conjunto de arcos vermelhos, mais fino. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="350"].hud-ring-ref{
+  color:#ff4b31!important;
+  opacity:.75!important;
 }
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"].hud-ring-ref .hud-ring-ref__accent{
-  stroke:#d9f7ff!important;
-  stroke-width:6px!important;
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="350"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ff4730!important;
+  stroke-width:2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="350"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff4e35!important;
+  stroke-width:3.6px!important;
+  stroke-dasharray:150 26 72 34!important;
   opacity:.66!important;
 }
 
-/* Inner red and amber rings. */
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref,
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref{
-  color:#ff4a2f!important;
+/* Banda quente interna. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="310"].hud-ring-ref{
+  color:#ff7a36!important;
+  opacity:.92!important;
 }
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref{
-  opacity:.84!important;
-}
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref{
-  opacity:.76!important;
-}
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref .hud-ring-ref__body{
-  stroke-width:3.2px!important;
-}
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref .hud-ring-ref__body{
-  stroke:#ffb04a!important;
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="310"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ff5a29!important;
   stroke-width:2.5px!important;
 }
-.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref .hud-ring-ref__accent{
-  stroke:#ff7b38!important;
-  stroke-width:3.2px!important;
-  opacity:.64!important;
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="310"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff8b3f!important;
+  stroke-width:4.4px!important;
+  stroke-dasharray:96 32 46 54!important;
+  opacity:.88!important;
 }
 
-/* Small transition details: periodic intensity changes, like the reference animation. */
-@keyframes hud-ref-accent-pulse{
-  0%,100%{opacity:.48}
-  42%{opacity:.82}
-  52%{opacity:1}
-  68%{opacity:.56}
+/* Anel interno de grade fina. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"].hud-ring-ref{
+  color:#dff9ff!important;
+  opacity:.60!important;
 }
-
-@keyframes hud-ref-sweep{
-  0%{stroke-dashoffset:0;opacity:.24}
-  18%{opacity:.92}
-  48%{stroke-dashoffset:-170;opacity:.72}
-  76%{opacity:.36}
-  100%{stroke-dashoffset:-340;opacity:.24}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#dff9ff!important;
+  stroke-width:1.2px!important;
 }
-
-@keyframes hud-ref-ticks{
-  0%,100%{opacity:.34}
-  50%{opacity:.88}
-}
-
-/* Keep the two measurement rings around the reference-style layers. */
-.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref) .hud-ring{
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#dff9ff!important;
+  stroke-width:1px!important;
   opacity:.34!important;
 }
 
-@media (max-width:720px){
-  .hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__accent{
-    stroke-width:6px!important;
-  }
+/* Anel laranja menor. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="230"].hud-ring-ref{
+  color:#ffb34b!important;
+  opacity:.82!important;
 }
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="230"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ffb04a!important;
+  stroke-width:2.4px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="230"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff7e31!important;
+  stroke-width:3.4px!important;
+  stroke-dasharray:112 34 42 70!important;
+  opacity:.82!important;
+}
+
+/* Centro vermelho, pequeno e mais limpo. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"].hud-ring-ref{
+  color:#ff5137!important;
+  opacity:.90!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ff5137!important;
+  stroke-width:2.2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff633c!important;
+  stroke-width:2.8px!important;
+  stroke-dasharray:74 28 22 58!important;
+  opacity:.76!important;
+}
+
+/* Os Ticks externos permanecem finos e funcionam como a escala periférica da referência. */
+.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref){
+  color:#eafcff!important;
+  opacity:.66!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref) .hud-ring{
+  opacity:.70!important;
+}
+
+/* Nenhuma alteração fora do sistema dos anéis. */
