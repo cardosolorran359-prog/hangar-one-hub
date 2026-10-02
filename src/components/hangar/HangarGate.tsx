@@ -582,3 +582,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
 // Clean motion sync.
 
+
+// Rings-only reference rebuild synchronized.
