@@ -512,3 +512,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+// V5 sync marker.
