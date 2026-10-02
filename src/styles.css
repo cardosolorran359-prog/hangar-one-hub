@@ -813,3 +813,85 @@
     height: 198px;
   }
 }
+
+/* ---- Movimento interno dos anéis centrais ---- */
+.hud-core .hud-ring--flow circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    hud-dash-flow 5.2s linear infinite,
+    hud-ring-breathe 4.6s ease-in-out infinite;
+}
+
+.hud-core .hud-ring--flow:nth-of-type(4) circle {
+  animation-duration: 7.4s, 5.3s;
+  animation-direction: reverse, alternate;
+}
+
+.hud-core .hud-ring--flow:nth-of-type(6) circle {
+  animation-duration: 4.1s, 3.8s;
+}
+
+.hud-core .hud-ring--flow:nth-of-type(10) circle {
+  animation-duration: 6.2s, 4.2s;
+  animation-direction: reverse, alternate;
+}
+
+.hud-core .hud-ring--pulse circle {
+  animation:
+    hud-dash-flow 4.4s linear infinite,
+    hud-ring-pulse 2.8s ease-in-out infinite;
+}
+
+.hud-core .hud-ring--pulse:nth-of-type(4) circle {
+  animation-delay: -1.1s, -0.6s;
+}
+
+@keyframes hud-dash-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -96; }
+}
+
+@keyframes hud-ring-breathe {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(0.985);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes hud-ring-pulse {
+  0%, 100% {
+    opacity: 0.52;
+    filter: drop-shadow(0 0 2px rgba(0, 190, 255, 0.08));
+  }
+  45% {
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgba(0, 210, 255, 0.24));
+  }
+  70% {
+    opacity: 0.68;
+  }
+}
+
+.hud-core .hud-ring--flow:nth-of-type(5) {
+  filter: blur(0.15px);
+}
+
+.hud-core .hud-ring--flow:nth-of-type(7) {
+  animation-duration: 17s;
+}
+
+.hud-core .hud-ring--flow:nth-of-type(9) {
+  animation-duration: 13s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-core .hud-ring--flow circle,
+  .hud-core .hud-ring--pulse circle {
+    animation: none !important;
+  }
+}
