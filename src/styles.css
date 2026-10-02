@@ -1818,3 +1818,748 @@
 }
 
 /* Hangar One — acabamento visual: anéis encorpados e raios radiais. */
+
+
+/* ================================================================
+   HUD REFERENCE V4 — composição widescreen inspirada no vídeo anexado
+   ================================================================ */
+
+.hangar-login{
+  background:
+    radial-gradient(620px 460px at 50% 50%, rgba(30,86,180,.10), transparent 68%),
+    radial-gradient(900px 520px at 50% 105%, rgba(18,65,140,.08), transparent 72%),
+    #010307;
+}
+
+.hangar-login .hud-bg{
+  background:
+    linear-gradient(rgba(58,101,180,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,101,180,.035) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(72,126,255,.07), transparent 36%);
+  background-size: 34px 34px, 34px 34px, auto;
+  opacity:.86;
+}
+
+.hangar-login .hud-scanlines{opacity:.16}
+.hangar-login .hud-sweep{opacity:.26}
+
+/* O vídeo tem um HUD inteiro, não apenas o núcleo. */
+.hangar-login .hud-core{
+  width:520px;
+  height:520px;
+  top:50%;
+  left:50%;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="520"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="480"]{
+  opacity:.52 !important;
+  color:#6f9bff;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="460"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="420"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="380"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="300"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="260"]{
+  opacity:.96 !important;
+  filter:drop-shadow(0 0 9px rgba(76,126,255,.35));
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="440"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="400"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="360"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="340"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="320"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="280"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="240"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="220"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="200"],
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="180"]{
+  opacity:.78 !important;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="460"] .hud-ring__body,
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="420"] .hud-ring__body,
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="380"] .hud-ring__body,
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="300"] .hud-ring__body,
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="260"] .hud-ring__body{
+  stroke-width:4px;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="200"] .hud-ring__body{
+  stroke-width:3.5px;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap[data-ring-size="180"] .hud-ring__body{
+  stroke-width:3px;
+}
+
+/* Raios finos e numerosos, mais próximos do efeito do vídeo. */
+.hangar-login .hud-rayfield{
+  width:660px;
+  height:660px;
+  opacity:.78;
+  z-index:0;
+}
+
+.hangar-login .hud-ray{
+  opacity:.82;
+}
+
+.hangar-login .hud-ray__beam{
+  width:1.5px !important;
+  height:50% !important;
+  background:linear-gradient(
+    to bottom,
+    rgba(73,128,255,.02) 0%,
+    rgba(73,128,255,.58) 17%,
+    rgba(73,128,255,.18) 58%,
+    rgba(73,128,255,0) 100%
+  ) !important;
+  filter:drop-shadow(0 0 5px rgba(73,128,255,.38)) !important;
+}
+
+/* Linhas radiais estáticas complementares. */
+.hangar-login .hud-core::before{
+  content:"";
+  position:absolute;
+  inset:-2%;
+  border-radius:50%;
+  z-index:1;
+  pointer-events:none;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(95,144,255,.16) 0deg 0.7deg,
+      transparent .7deg 15deg
+    );
+  -webkit-mask:radial-gradient(circle, transparent 0 54%, #000 54.5% 80%, transparent 80.5%);
+  mask:radial-gradient(circle, transparent 0 54%, #000 54.5% 80%, transparent 80.5%);
+  opacity:.72;
+}
+
+.hangar-login .hud-core::after{
+  content:"";
+  position:absolute;
+  inset:27%;
+  border-radius:50%;
+  z-index:5;
+  pointer-events:none;
+  border:1px solid rgba(127,170,255,.34);
+  box-shadow:
+    0 0 22px rgba(58,112,255,.12),
+    inset 0 0 16px rgba(58,112,255,.10);
+}
+
+/* Barras de marcação finas no anel interno. */
+.hangar-login .hud-core__fine-ticks{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:6;
+  pointer-events:none;
+}
+
+.hangar-login .hud-core__fine-ticks i{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:2px;
+  height:11px;
+  background:#a9c6ff;
+  box-shadow:0 0 5px rgba(88,139,255,.85);
+  transform-origin:center 74px;
+  opacity:.85;
+}
+
+.hangar-login .hud-core__fine-ticks i:nth-child(4n){height:16px;width:2.5px}
+.hangar-login .hud-core__fine-ticks i:nth-child(8n){height:20px}
+
+/* Triângulos, chevrons e alvo que aparecem entre as camadas. */
+.hangar-login .hud-core__triangles{
+  position:absolute;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+}
+
+.hangar-login .hud-core__triangle{
+  position:absolute;
+  width:0;
+  height:0;
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-bottom:11px solid #8fb1ff;
+  filter:drop-shadow(0 0 5px rgba(90,137,255,.85));
+  transform:translate(-50%,-50%);
+}
+
+.hangar-login .hud-core__triangle--top{left:50%;top:31%}
+.hangar-login .hud-core__triangle--right{left:69%;top:50%;transform:translate(-50%,-50%) rotate(90deg)}
+.hangar-login .hud-core__triangle--bottom{left:50%;top:69%;transform:translate(-50%,-50%) rotate(180deg)}
+.hangar-login .hud-core__triangle--left{left:31%;top:50%;transform:translate(-50%,-50%) rotate(270deg)}
+
+.hangar-login .hud-core__chevron{
+  position:absolute;
+  width:15px;
+  height:15px;
+  border-left:2px solid #e6efff;
+  border-top:2px solid #e6efff;
+  filter:drop-shadow(0 0 5px rgba(125,170,255,.7));
+}
+
+.hangar-login .hud-core__chevron--top{left:50%;top:18%;transform:translateX(-50%) rotate(45deg)}
+.hangar-login .hud-core__chevron--right{right:18%;top:50%;transform:translateY(-50%) rotate(135deg)}
+.hangar-login .hud-core__chevron--bottom{left:50%;bottom:18%;transform:translateX(-50%) rotate(225deg)}
+.hangar-login .hud-core__chevron--left{left:18%;top:50%;transform:translateY(-50%) rotate(315deg)}
+
+/* Duas cápsulas laterais do alvo. */
+.hangar-login .hud-core__side-node{
+  position:absolute;
+  top:50%;
+  width:92px;
+  height:92px;
+  transform:translateY(-50%);
+  border:1px solid rgba(84,133,255,.42);
+  border-radius:50%;
+  background:
+    radial-gradient(circle, rgba(78,126,245,.18) 0 34%, rgba(5,13,28,.24) 35% 100%);
+  box-shadow:
+    0 0 20px rgba(54,108,255,.10),
+    inset 0 0 18px rgba(54,108,255,.11);
+}
+.hangar-login .hud-core__side-node::before{
+  content:"";
+  position:absolute;
+  inset:17px;
+  border:1px solid rgba(121,162,255,.38);
+  border-radius:50%;
+  animation:hud-side-node-spin 8s linear infinite;
+}
+.hangar-login .hud-core__side-node::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:25px;
+  height:1px;
+  background:#7da5ff;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 7px rgba(90,139,255,.8);
+}
+.hangar-login .hud-core__side-node b{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font:500 16px/1 var(--font-mono);
+  color:#dbe7ff;
+  z-index:2;
+}
+.hangar-login .hud-core__side-node--left{left:-46px}
+.hangar-login .hud-core__side-node--right{right:-46px}
+@keyframes hud-side-node-spin{
+  to{transform:rotate(360deg)}
+}
+
+/* TOP-LEFT */
+.hangar-login .hud-tabs{
+  position:absolute;
+  top:-14px;
+  left:0;
+  display:flex;
+  gap:5px;
+}
+.hangar-login .hud-tabs span{
+  min-width:84px;
+  height:17px;
+  padding:2px 10px;
+  border:1px solid rgba(74,126,255,.35);
+  font:700 8px/12px var(--font-mono);
+  letter-spacing:.18em;
+  color:rgba(160,189,255,.62);
+  background:rgba(8,16,34,.38);
+  text-align:center;
+}
+.hangar-login .hud-tabs__active{
+  background:rgba(67,115,234,.58) !important;
+  color:#f4f7ff !important;
+  box-shadow:0 0 16px rgba(52,103,255,.22);
+}
+
+.hangar-login .hud-scope{
+  position:absolute;
+  top:56px;
+  left:38px;
+  width:220px;
+  height:186px;
+  z-index:3;
+  color:#7fa8ff;
+  font-family:var(--font-mono);
+}
+.hangar-login .hud-scope::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:-12px;
+  bottom:6px;
+  height:1px;
+  background:linear-gradient(90deg, rgba(78,128,255,.55), transparent 74%);
+}
+.hangar-login .hud-scope__title{
+  margin-top:23px;
+  font-size:8px;
+  letter-spacing:.22em;
+  color:rgba(152,184,255,.62);
+}
+.hangar-login .hud-scope__dial{
+  position:absolute;
+  left:42px;
+  top:50px;
+  width:90px;
+  height:90px;
+  border:1px solid rgba(102,148,255,.46);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(83,133,250,.12), transparent 62%),
+    repeating-radial-gradient(circle, transparent 0 14px, rgba(93,139,255,.10) 14px 15px);
+  box-shadow:0 0 18px rgba(60,113,255,.10);
+}
+.hangar-login .hud-scope__ring{
+  position:absolute;
+  inset:15px;
+  border:1px solid rgba(126,165,255,.28);
+  border-radius:50%;
+}
+.hangar-login .hud-scope__ring--inner{inset:29px}
+.hangar-login .hud-scope__cross{
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:50%;
+  height:1px;
+  background:rgba(117,157,255,.26);
+}
+.hangar-login .hud-scope__cross--v{
+  left:50%;
+  right:auto;
+  top:10%;
+  bottom:10%;
+  width:1px;
+  height:auto;
+}
+.hangar-login .hud-scope__sweep{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:conic-gradient(from -28deg, rgba(90,139,255,.50), transparent 22%);
+  animation:hud-scope-sweep 4s linear infinite;
+}
+@keyframes hud-scope-sweep{to{transform:rotate(360deg)}}
+.hangar-login .hud-scope__target{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#bdd1ff;
+  box-shadow:0 0 8px rgba(109,157,255,.92);
+}
+.hangar-login .hud-scope__target--1{left:68%;top:34%}
+.hangar-login .hud-scope__target--2{left:33%;top:66%;opacity:.55}
+.hangar-login .hud-scope__meta{
+  position:absolute;
+  left:150px;
+  top:104px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  font-size:7px;
+  letter-spacing:.16em;
+}
+.hangar-login .hud-scope__meta strong{color:#d7e4ff}
+
+/* TOP-CENTER waveform */
+.hangar-login .hud-waveform{
+  position:absolute;
+  left:50%;
+  top:34px;
+  width:360px;
+  height:82px;
+  transform:translateX(-50%);
+  z-index:3;
+  color:#789fff;
+  font-family:var(--font-mono);
+}
+.hangar-login .hud-waveform__labels{
+  display:flex;
+  justify-content:space-between;
+  padding:0 8px 6px;
+  font-size:7px;
+  letter-spacing:.18em;
+  color:rgba(155,184,255,.54);
+}
+.hangar-login .hud-waveform__frame{
+  position:relative;
+  height:60px;
+  border-top:1px solid rgba(91,138,255,.24);
+  border-bottom:1px solid rgba(91,138,255,.18);
+}
+.hangar-login .hud-waveform__line{
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  height:1px;
+  background:rgba(101,148,255,.20);
+}
+.hangar-login .hud-waveform__bars{
+  position:absolute;
+  inset:4px 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+.hangar-login .hud-waveform__bars i{
+  width:2px;
+  min-height:4px;
+  background:#7ea7ff;
+  box-shadow:0 0 6px rgba(84,135,255,.74);
+  transform-origin:center;
+  animation:hud-wave-pulse 1.25s ease-in-out infinite;
+}
+@keyframes hud-wave-pulse{
+  0%,100%{transform:scaleY(.26);opacity:.42}
+  50%{transform:scaleY(1);opacity:.96}
+}
+.hangar-login .hud-waveform__bracket{
+  position:absolute;
+  top:12px;
+  bottom:12px;
+  width:11px;
+  border-color:rgba(145,181,255,.72);
+}
+.hangar-login .hud-waveform__bracket--l{left:0;border-left:2px solid;border-top:2px solid;border-bottom:2px solid}
+.hangar-login .hud-waveform__bracket--r{right:0;border-right:2px solid;border-top:2px solid;border-bottom:2px solid}
+
+/* TOP-RIGHT panel + large gauge */
+.hangar-login .hud-mini-panel{
+  position:absolute;
+  top:60px;
+  right:152px;
+  width:210px;
+  height:116px;
+  z-index:3;
+  padding:12px 14px;
+  border:1px solid rgba(77,125,255,.20);
+  border-right:0;
+  background:linear-gradient(90deg, rgba(7,14,30,.30), rgba(7,14,30,.08));
+  font-family:var(--font-mono);
+}
+.hangar-login .hud-mini-panel__title{
+  font-size:8px;
+  letter-spacing:.18em;
+  color:#98b8ff;
+  padding-bottom:7px;
+  border-bottom:1px solid rgba(86,132,255,.18);
+}
+.hangar-login .hud-mini-panel__copy{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 12px;
+  margin-top:12px;
+  font-size:7px;
+  line-height:1.35;
+  color:rgba(164,190,255,.60);
+}
+.hangar-login .hud-mini-panel__rail{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  margin-top:11px;
+}
+.hangar-login .hud-mini-panel__rail span{
+  display:block;
+  height:3px;
+  background:linear-gradient(90deg, #507fff, rgba(80,127,255,.08));
+  box-shadow:0 0 8px rgba(58,111,255,.18);
+  transform-origin:left;
+  animation:hud-rail-pulse 2.4s ease-in-out infinite;
+}
+@keyframes hud-rail-pulse{50%{opacity:.56;transform:scaleX(.76)}}
+.hangar-login .hud-gauge{
+  position:absolute;
+  width:112px;
+  height:130px;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  gap:8px;
+  font-family:var(--font-mono);
+}
+.hangar-login > .hud-gauge{
+  top:50px;
+  right:30px;
+}
+.hangar-login .hud-gauges--bottom{
+  position:absolute;
+  right:25px;
+  bottom:44px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:3;
+}
+.hangar-login .hud-gauges--bottom .hud-gauge{
+  position:relative;
+  width:98px;
+  height:100px;
+}
+.hangar-login .hud-gauge__dial{
+  position:relative;
+  width:94px;
+  height:94px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle, rgba(91,139,255,.14) 0 43%, rgba(5,9,20,.30) 44% 70%, transparent 71%),
+    conic-gradient(from -40deg, rgba(81,129,255,.13), transparent 48%, rgba(81,129,255,.10));
+  border:1px solid rgba(99,145,255,.28);
+  box-shadow:0 0 18px rgba(64,113,255,.08), inset 0 0 18px rgba(64,113,255,.08);
+  overflow:hidden;
+}
+.hangar-login .hud-gauge__arc{
+  position:absolute;
+  inset:7px;
+  border-radius:50%;
+  background:conic-gradient(from -90deg, #6b98ff 0 var(--value), rgba(104,148,255,.08) var(--value) 360deg);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 8px), #000 0);
+  mask:radial-gradient(farthest-side, transparent calc(100% - 8px), #000 0);
+  animation:hud-gauge-rotate 5.5s linear infinite;
+}
+@keyframes hud-gauge-rotate{to{transform:rotate(360deg)}}
+.hangar-login .hud-gauge__dial strong{
+  position:relative;
+  z-index:2;
+  font:700 16px/1 var(--font-mono);
+  letter-spacing:.04em;
+  color:#dfeaff;
+  text-shadow:0 0 10px rgba(86,135,255,.56);
+}
+.hangar-login .hud-gauge__tick{
+  position:absolute;
+  inset:12px;
+  border-top:1px solid rgba(169,196,255,.65);
+  border-radius:50%;
+}
+.hangar-login .hud-gauge__tick--2{transform:rotate(180deg)}
+.hangar-login .hud-gauge__label{
+  font-size:7px;
+  letter-spacing:.18em;
+  color:rgba(148,180,255,.64);
+}
+
+/* LEFT-MIDDLE RADAR becomes the big sector graphic from the reference. */
+.hangar-login .hud-radar{
+  top:38%;
+  left:36px;
+  width:250px;
+  height:250px;
+  border-color:rgba(101,146,255,.34);
+  background:
+    radial-gradient(circle, rgba(35,75,158,.17), rgba(4,10,23,.64));
+}
+.hangar-login .hud-radar__grid{
+  opacity:.82;
+  background:
+    radial-gradient(circle, transparent 20%, rgba(110,153,255,.18) 20.8%, transparent 21.5%),
+    radial-gradient(circle, transparent 48%, rgba(110,153,255,.18) 48.8%, transparent 49.5%),
+    radial-gradient(circle, transparent 74%, rgba(110,153,255,.18) 74.8%, transparent 75.5%),
+    linear-gradient(0deg, transparent 49.7%, rgba(110,153,255,.18) 50%, transparent 50.3%),
+    linear-gradient(90deg, transparent 49.7%, rgba(110,153,255,.18) 50%, transparent 50.3%);
+}
+.hangar-login .hud-radar::after{
+  content:"";
+  position:absolute;
+  inset:8%;
+  border-radius:50%;
+  border:1px solid rgba(114,158,255,.18);
+  clip-path:polygon(0 0, 100% 0, 100% 54%, 47% 54%, 0 0);
+  background:rgba(88,138,255,.15);
+  animation:hud-radar-sector 4.5s linear infinite;
+}
+@keyframes hud-radar-sector{to{transform:rotate(360deg);transform-origin:center}}
+.hangar-login .hud-radar__blip{background:#d5e3ff;box-shadow:0 0 10px rgba(122,165,255,.95)}
+
+/* BOTTOM-LEFT bar graph */
+.hangar-login .hud-bars{
+  position:absolute;
+  left:34px;
+  bottom:46px;
+  width:392px;
+  height:150px;
+  z-index:3;
+  font-family:var(--font-mono);
+}
+.hangar-login .hud-module-label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  font-size:7px;
+  letter-spacing:.18em;
+  color:rgba(157,184,255,.62);
+}
+.hangar-login .hud-module-label b{color:#d7e4ff}
+.hangar-login .hud-bars__grid{
+  position:relative;
+  height:112px;
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+  padding:0 7px;
+  border-bottom:1px solid rgba(87,132,255,.24);
+  background:
+    linear-gradient(rgba(79,126,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,126,255,.05) 1px, transparent 1px);
+  background-size:100% 22px, 28px 100%;
+}
+.hangar-login .hud-bars__grid::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg, rgba(95,141,255,.35), transparent);
+}
+.hangar-login .hud-bars__grid i{
+  width:10px;
+  max-height:100%;
+  background:linear-gradient(to top, rgba(64,113,255,.30), #7fa7ff);
+  box-shadow:0 0 7px rgba(66,117,255,.22);
+  transform-origin:bottom;
+  animation:hud-column-pulse 1.8s ease-in-out infinite;
+}
+@keyframes hud-column-pulse{
+  0%,100%{transform:scaleY(.72);opacity:.52}
+  50%{transform:scaleY(1);opacity:.96}
+}
+.hangar-login .hud-bars__axis{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 3px 0;
+  font-size:6px;
+  letter-spacing:.16em;
+  color:rgba(130,162,228,.40);
+}
+
+/* BOTTOM-CENTER line graph */
+.hangar-login .hud-linegraph{
+  position:absolute;
+  left:50%;
+  bottom:48px;
+  width:420px;
+  height:140px;
+  transform:translateX(-50%);
+  z-index:3;
+  font-family:var(--font-mono);
+}
+.hangar-login .hud-linegraph svg{
+  width:100%;
+  height:110px;
+  overflow:visible;
+}
+.hangar-login .hud-linegraph__grid{
+  fill:none;
+  stroke:rgba(85,130,255,.12);
+  stroke-width:1;
+}
+.hangar-login .hud-linegraph__path{
+  fill:none;
+  stroke:#739dff;
+  stroke-width:1.6;
+  vector-effect:non-scaling-stroke;
+  stroke-dasharray:1;
+  stroke-dashoffset:0;
+  filter:drop-shadow(0 0 4px rgba(77,127,255,.54));
+  animation:hud-line-draw 4.8s linear infinite alternate;
+}
+@keyframes hud-line-draw{
+  from{stroke-dashoffset:1}
+  to{stroke-dashoffset:0}
+}
+
+/* Sutileza técnica em conectores e microtexto */
+.hangar-login .hud-mini-panel::before,
+.hangar-login .hud-bars::before,
+.hangar-login .hud-linegraph::before{
+  content:"";
+  position:absolute;
+  top:-7px;
+  width:18px;
+  height:7px;
+  border-left:1px solid rgba(111,155,255,.42);
+  border-top:1px solid rgba(111,155,255,.42);
+}
+.hangar-login .hud-mini-panel::before{left:0}
+.hangar-login .hud-bars::before{left:0}
+.hangar-login .hud-linegraph::before{left:0}
+
+/* A composição não perde os cantos e o status inferior. */
+.hangar-login .hud-corner{
+  width:58px;
+  height:58px;
+  border-color:rgba(92,139,255,.42);
+}
+.hangar-login .hud-bottom{
+  bottom:20px;
+  width:min(560px, 68vw);
+  opacity:.92;
+}
+.hangar-login .hud-bottom__text{
+  font-size:8px;
+  letter-spacing:.20em;
+  color:rgba(151,182,255,.62);
+}
+
+/* Botão continua sendo a ação real de entrada, sem parecer um painel comum. */
+.hangar-login__button{
+  bottom:24px;
+  min-width:320px;
+  padding:11px 24px;
+  border-color:rgba(92,137,255,.58);
+  background:rgba(2,7,17,.72);
+  box-shadow:0 0 24px rgba(54,107,255,.13), inset 0 0 20px rgba(70,120,255,.03);
+}
+
+@media(max-width:1100px){
+  .hangar-login .hud-mini-panel{right:124px;width:170px}
+  .hangar-login .hud-scope{left:24px}
+  .hangar-login .hud-bars{left:24px;width:330px}
+  .hangar-login .hud-linegraph{width:360px}
+}
+@media(max-width:820px){
+  .hangar-login .hud-mini-panel,
+  .hangar-login .hud-gauge,
+  .hangar-login .hud-gauges--bottom,
+  .hangar-login .hud-bars,
+  .hangar-login .hud-linegraph{
+    transform:scale(.82);
+    transform-origin:center;
+  }
+  .hangar-login .hud-scope{transform:scale(.82);transform-origin:top left}
+  .hangar-login .hud-core{transform:translate(-50%,-50%) scale(.78)}
+}
+@media(max-width:720px){
+  .hangar-login .hud-core{width:520px;height:520px;transform:translate(-50%,-50%) scale(.58)}
+  .hangar-login .hud-rayfield{width:560px;height:560px}
+  .hangar-login .hud-waveform{width:250px}
+  .hangar-login .hud-scope{display:none}
+  .hangar-login .hud-bars,.hangar-login .hud-linegraph{display:none}
+  .hangar-login .hud-mini-panel{display:none}
+  .hangar-login > .hud-gauge{display:none}
+}
