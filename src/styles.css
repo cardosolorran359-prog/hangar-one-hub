@@ -4131,3 +4131,129 @@
 }
 
 /* Keep everything else on the login untouched. */
+
+
+/* ================================================================
+   RING ONLY — ESPESSURA + MOVIMENTO VISÍVEL DA REFERÊNCIA
+   ================================================================ */
+
+/* Aumenta o corpo das bandas para ter a presença física do frame. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-variant="outer"] .hud-ring-model__band{
+  stroke-width:16px!important;
+  opacity:.96!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-variant="outer"] .hud-ring-model__track{
+  stroke-width:20px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="395"] .hud-ring-model__band{
+  stroke-width:8px!important;
+  opacity:.96!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="395"] .hud-ring-model__track{
+  stroke-width:11px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="355"] .hud-ring-model__band{
+  stroke-width:6px!important;
+  opacity:.80!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="355"] .hud-ring-model__track{
+  stroke-width:9px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="315"] .hud-ring-model__band{
+  stroke-width:7px!important;
+  opacity:.94!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="315"] .hud-ring-model__track{
+  stroke-width:10px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="225"] .hud-ring-model__band{
+  stroke-width:4.8px!important;
+  opacity:.86!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="225"] .hud-ring-model__track{
+  stroke-width:7px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="190"] .hud-ring-model__band{
+  stroke-width:4px!important;
+  opacity:.82!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="190"] .hud-ring-model__track{
+  stroke-width:6px!important;
+}
+
+/* Movimento real do desenho: os segmentos correm pela circunferência. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__band{
+  stroke-dashoffset:0;
+  animation-name:hud-reference-band-flow!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+  will-change:stroke-dashoffset,opacity;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-model__band{
+  animation-name:hud-reference-band-flow-reverse!important;
+}
+
+/* Cada camada tem uma cadência própria, como no vídeo. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-model__band{animation-duration:7.8s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-model__ticks{animation-duration:5.6s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__band{animation-duration:6.4s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-model__band{animation-duration:8.6s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__band{animation-duration:5.2s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-model__ticks{animation-duration:4.8s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"] .hud-ring-model__band{animation-duration:6.9s!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__band{animation-duration:4.6s!important}
+
+@keyframes hud-reference-band-flow{
+  0%{stroke-dashoffset:0;opacity:.62}
+  22%{opacity:.92}
+  52%{stroke-dashoffset:-180;opacity:1}
+  78%{opacity:.76}
+  100%{stroke-dashoffset:-360;opacity:.62}
+}
+@keyframes hud-reference-band-flow-reverse{
+  0%{stroke-dashoffset:0;opacity:.62}
+  22%{opacity:.92}
+  52%{stroke-dashoffset:180;opacity:1}
+  78%{opacity:.76}
+  100%{stroke-dashoffset:360;opacity:.62}
+}
+
+/* O anel externo também tem um bloco branco que desliza independentemente. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-model__sweep{
+  stroke:#ffffff!important;
+  stroke-width:2.4px!important;
+  stroke-dasharray:46 326!important;
+  animation:hud-reference-outer-sweep 3.6s linear infinite!important;
+}
+@keyframes hud-reference-outer-sweep{
+  from{stroke-dashoffset:0;opacity:.18}
+  18%{opacity:.96}
+  to{stroke-dashoffset:-372;opacity:.18}
+}
+
+/* A transição de luz acompanha a rotação, sem aumentar o neon. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__sweep,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__sweep,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__sweep{
+  animation-duration:4.4s!important;
+  stroke-width:1.8px!important;
+}
+
+/* Ticks não ficam estáticos: giro lento em sentido próprio. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-model__ticks,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-model__ticks{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation-name:hud-reference-ticks-rotate!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+@keyframes hud-reference-ticks-rotate{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
