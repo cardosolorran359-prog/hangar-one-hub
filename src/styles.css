@@ -1683,3 +1683,136 @@
 }
 
 /* Hangar One: consolidação dos elementos orbitais avançados. */
+
+
+/* ---- ANÉIS ENCORPADOS + RAIOS RADIAIS ATRÁS DO NÚCLEO ---- */
+/* Raios radiais ficam atrás dos anéis: aparecem apenas nos vazios entre as camadas. */
+.hangar-login .hud-rayfield{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:620px;
+  height:620px;
+  transform:translate(-50%,-50%);
+  z-index:0;
+  pointer-events:none;
+  overflow:visible;
+  opacity:.72;
+  mix-blend-mode:screen;
+}
+.hangar-login .hud-ray{
+  position:absolute;
+  inset:0;
+  display:block;
+  transform-origin:center center;
+}
+.hangar-login .hud-ray__beam{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:1px;
+  height:49%;
+  transform:translateX(-50%);
+  transform-origin:50% 0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,255,255,.02) 0%,
+    rgba(0,255,255,.56) 20%,
+    rgba(0,255,255,.22) 58%,
+    rgba(0,255,255,0) 100%
+  );
+  filter:drop-shadow(0 0 4px rgba(0,255,255,.45));
+  clip-path:inset(96% 0 0 0);
+  animation:hud-ray-surge 3.4s ease-in-out infinite;
+}
+.hangar-login .hud-ray:nth-child(3n) .hud-ray__beam{
+  background:linear-gradient(
+    to bottom,
+    rgba(255,32,96,.02) 0%,
+    rgba(255,32,96,.50) 20%,
+    rgba(255,32,96,.20) 58%,
+    rgba(255,32,96,0) 100%
+  );
+  filter:drop-shadow(0 0 4px rgba(255,32,96,.42));
+}
+.hangar-login .hud-ray:nth-child(5n) .hud-ray__beam{
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,0,.01) 0%,
+    rgba(255,255,0,.40) 18%,
+    rgba(255,255,0,.14) 58%,
+    rgba(255,255,0,0) 100%
+  );
+  filter:drop-shadow(0 0 3px rgba(255,255,0,.34));
+}
+.hangar-login .hud-ray:nth-child(4n+2) .hud-ray__beam{animation-delay:-.8s}
+.hangar-login .hud-ray:nth-child(4n+3) .hud-ray__beam{animation-delay:-1.55s}
+.hangar-login .hud-ray:nth-child(4n) .hud-ray__beam{animation-delay:-2.2s}
+
+@keyframes hud-ray-surge{
+  0%,100%{opacity:.18;clip-path:inset(96% 0 0 0)}
+  16%{opacity:.82;clip-path:inset(26% 0 0 0)}
+  42%{opacity:.44;clip-path:inset(0 0 0 0)}
+  70%{opacity:.20;clip-path:inset(14% 0 0 0)}
+}
+
+.hangar-login .hud-core > .hud-ring-wrap{
+  z-index:2;
+}
+
+/* Corpo mais espesso: halo largo + traço principal + detalhe móvel. */
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring__body{
+  opacity:.92;
+}
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring__highlight{
+  transform-box:fill-box;
+  transform-origin:center center;
+  stroke-linecap:round;
+  stroke-width:2;
+  filter:drop-shadow(0 0 7px currentColor);
+  animation:hud-ring-highlight 4.2s linear infinite;
+}
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(5) .hud-ring__highlight,
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(8) .hud-ring__highlight,
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(11) .hud-ring__highlight,
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(14) .hud-ring__highlight,
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(17) .hud-ring__highlight,
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18) .hud-ring__highlight{
+  stroke-width:2.5;
+}
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring circle:first-child{
+  filter:drop-shadow(0 0 12px currentColor);
+}
+@keyframes hud-ring-highlight{
+  from{stroke-dashoffset:0;opacity:.35}
+  38%{opacity:1}
+  to{stroke-dashoffset:-220;opacity:.28}
+}
+
+/* Dá mais presença às camadas principais sem virar uma massa de luz. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(5),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(7),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(9),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(11),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(13),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(15),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(17),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18){
+  filter:drop-shadow(0 0 8px currentColor);
+}
+
+@media(max-width:720px){
+  .hangar-login .hud-rayfield{
+    width:430px;
+    height:430px;
+    opacity:.58;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .hangar-login .hud-ray__beam,
+  .hangar-login .hud-core > .hud-ring-wrap .hud-ring__highlight{
+    animation:none!important;
+    clip-path:none;
+    opacity:.35;
+  }
+}
