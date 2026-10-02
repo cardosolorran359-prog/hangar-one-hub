@@ -2993,3 +2993,79 @@
 .hangar-login .hud-gauge__dial strong{
   transition:opacity .2s ease, transform .2s ease;
 }
+
+
+/* ---- HUD V6: anéis técnicos, limpos e próximos da referência ---- */
+.hangar-login .hud-rayfield{opacity:.28!important}
+.hangar-login .hud-core>.hud-ring-wrap{filter:none!important}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__mechanical-underlay{
+  stroke:rgba(2,6,14,.96)!important;
+  stroke-width:4.8px!important;
+  filter:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{
+  stroke-width:2.25px!important;
+  stroke-linecap:round!important;
+  opacity:.90!important;
+  filter:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__edge{
+  stroke-width:1px!important;
+  opacity:.34!important;
+  filter:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__arc{
+  stroke-width:1.5px!important;
+  opacity:.58!important;
+  filter:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__ticks{
+  opacity:.86;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{
+  stroke-width:1.25px!important;
+  opacity:.46!important;
+  filter:none!important;
+  animation-duration:7.5s!important;
+}
+
+/* A few major red/blue arcs become the visual anchors. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"] .hud-ring__body{
+  stroke-width:3.1px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"] .hud-ring__body{
+  stroke-width:2.7px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"] .hud-ring__body{
+  stroke-width:2.4px!important;
+}
+
+/* Red should read as an accent, blue as the structural layer. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"]{
+  opacity:.88!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"]{
+  opacity:.76!important;
+}
+
+/* Remove the heavy segmented-pixel feeling from the surrounding decorative arcs. */
+.hangar-login .hud-orbit-arc{
+  border-style:solid!important;
+  border-width:1px!important;
+  opacity:.34;
+}
+.hangar-login .hud-orbit-markers .hud-orbit-marker{
+  width:4px;height:4px;opacity:.52;
+}
+.hangar-login .hud-core__crosshair{opacity:.22!important}
+
+/* The video has more empty black space around the core. */
+.hangar-login .hud-core::before{opacity:.34!important}
+.hangar-login .hud-core::after{opacity:.42!important}
