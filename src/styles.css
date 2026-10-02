@@ -3847,3 +3847,287 @@
 .hangar-login .hud-core>.hud-ring-wrap[data-ring-size="480"]{
   display:none!important;
 }
+
+
+/* ================================================================
+   LITERAL RING REFERENCE PASS — ONLY THE RINGS
+   ================================================================ */
+
+/* Stable centering + independent rotation of each ring layer. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:50% 50%!important;
+  animation-name:hud-reference-ring-rotate!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+  will-change:transform;
+  filter:none!important;
+  overflow:visible!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse{
+  animation-name:hud-reference-ring-rotate-reverse!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref>.hud-ring{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  animation:none!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+@keyframes hud-reference-ring-rotate{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+@keyframes hud-reference-ring-rotate-reverse{
+  from{transform:translate(-50%,-50%) rotate(360deg)}
+  to{transform:translate(-50%,-50%) rotate(0deg)}
+}
+
+/* Dark chassis between the light bands. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__track{
+  fill:none!important;
+  stroke:#030507!important;
+  filter:none!important;
+  vector-effect:non-scaling-stroke;
+}
+
+/* Thin technical baseline. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__base{
+  fill:none!important;
+  stroke-linecap:butt!important;
+  filter:none!important;
+  vector-effect:non-scaling-stroke;
+}
+
+/* Main segmented bands. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__band{
+  fill:none!important;
+  stroke-linecap:butt!important;
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  vector-effect:non-scaling-stroke;
+  animation:hud-reference-band-breathe 4.6s ease-in-out infinite;
+  filter:drop-shadow(0 0 3px currentColor)!important;
+}
+
+/* Fine mechanical scale. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__ticks{
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  animation:hud-reference-ticks 3.2s ease-in-out infinite;
+}
+
+/* A moving light fragment travels on selected rings. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__sweep{
+  fill:none!important;
+  stroke-linecap:round!important;
+  stroke-dashoffset:0;
+  animation:hud-reference-sweep 5.2s linear infinite;
+  filter:drop-shadow(0 0 4px currentColor)!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-model__ticks,
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-model__band,
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-model__sweep{
+  animation-direction:reverse;
+}
+
+/* OUTER SHELL — white segmented metal ring, exactly the dominant shape. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"]{
+  color:#f0f7f6!important;
+  opacity:1!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"] .hud-ring-model__track{
+  stroke-width:15px!important;
+  stroke-dasharray:154 44 140 50 118 205!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"] .hud-ring-model__base{
+  stroke:#dfe9e8!important;
+  stroke-width:1.6px!important;
+  stroke-dasharray:1 22!important;
+  opacity:.80!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"] .hud-ring-model__band{
+  stroke:#eef8f7!important;
+  stroke-width:11px!important;
+  stroke-dasharray:154 44 140 50 118 205!important;
+  opacity:.94!important;
+  filter:drop-shadow(0 0 5px rgba(232,248,247,.25))!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-variant="outer"] .hud-ring-model__sweep{
+  stroke:#ffffff!important;
+  stroke-width:1.8px!important;
+  opacity:.88!important;
+}
+
+/* SECONDARY FINE RING — hairline boundary around the red system. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"]{
+  color:#dce9e8!important;
+  opacity:.78!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-model__track{
+  stroke-width:3px!important;
+  stroke-dasharray:999 1!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-model__base{
+  stroke:#d7e3e2!important;
+  stroke-width:1.15px!important;
+  opacity:.62!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-model__ticks{
+  opacity:.60!important;
+}
+
+/* MAIN RED BAND — thick red arc. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"]{
+  color:#f03d2c!important;
+  opacity:.98!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__track{
+  stroke-width:8px!important;
+  stroke-dasharray:188 28 112 24 74 46!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__base{
+  stroke:#ff4a36!important;
+  stroke-width:1.6px!important;
+  stroke-dasharray:188 28 112 24 74 46!important;
+  opacity:.60!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-model__band{
+  stroke:#f03b2b!important;
+  stroke-width:5.8px!important;
+  stroke-dasharray:188 28 112 24 74 46!important;
+  opacity:.92!important;
+}
+
+/* SECOND RED BAND — thinner ring, separated by visible black space. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"]{
+  color:#d92e25!important;
+  opacity:.78!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-model__track{
+  stroke-width:6px!important;
+  stroke-dasharray:126 18 72 28 48 38!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-model__base{
+  stroke:#ea3a2a!important;
+  stroke-width:1.2px!important;
+  opacity:.55!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-model__band{
+  stroke:#e13127!important;
+  stroke-width:4px!important;
+  stroke-dasharray:126 18 72 28 48 38!important;
+  opacity:.68!important;
+}
+
+/* ORANGE BAND — bright warm inner ring. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"]{
+  color:#ff8131!important;
+  opacity:.96!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__track{
+  stroke-width:7px!important;
+  stroke-dasharray:160 34 92 48 58 78!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__base{
+  stroke:#ff9b43!important;
+  stroke-width:1.4px!important;
+  opacity:.58!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-model__band{
+  stroke:#ff8631!important;
+  stroke-width:5px!important;
+  stroke-dasharray:160 34 92 48 58 78!important;
+  opacity:.90!important;
+}
+
+/* INNER FINE RING — pale technical ticks around the target. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"]{
+  color:#edf8f7!important;
+  opacity:.54!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-model__track{
+  stroke-width:2px!important;
+  stroke-dasharray:999 1!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-model__base{
+  stroke:#e5efee!important;
+  stroke-width:1px!important;
+  opacity:.54!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-model__ticks{
+  opacity:.76!important;
+}
+
+/* INNER ORANGE + RED — compact, bright core rings. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"]{
+  color:#ff9a3c!important;
+  opacity:.90!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"] .hud-ring-model__track{
+  stroke-width:5px!important;
+  stroke-dasharray:108 24 62 34 38 58!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"] .hud-ring-model__base{
+  stroke:#ffb04b!important;
+  stroke-width:1.3px!important;
+  opacity:.58!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="225"] .hud-ring-model__band{
+  stroke:#ff9a38!important;
+  stroke-width:3.5px!important;
+  stroke-dasharray:108 24 62 34 38 58!important;
+  opacity:.78!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"]{
+  color:#f34a32!important;
+  opacity:.94!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__track{
+  stroke-width:4px!important;
+  stroke-dasharray:84 28 28 54!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__base{
+  stroke:#ff6543!important;
+  stroke-width:1px!important;
+  opacity:.52!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-model__band{
+  stroke:#f34932!important;
+  stroke-width:3px!important;
+  stroke-dasharray:84 28 28 54!important;
+  opacity:.72!important;
+}
+
+/* Animation language: slow body rotation + subtle intensity + passing highlights. */
+@keyframes hud-reference-band-breathe{
+  0%,100%{opacity:.46}
+  30%{opacity:.72}
+  48%{opacity:1}
+  61%{opacity:.82}
+  78%{opacity:.55}
+}
+@keyframes hud-reference-ticks{
+  0%,100%{opacity:.34}
+  48%{opacity:.92}
+  61%{opacity:.52}
+}
+@keyframes hud-reference-sweep{
+  0%{stroke-dashoffset:0;opacity:.05}
+  14%{opacity:.92}
+  46%{stroke-dashoffset:-120;opacity:.72}
+  74%{opacity:.28}
+  100%{stroke-dashoffset:-240;opacity:.05}
+}
+
+/* Keep everything else on the login untouched. */
