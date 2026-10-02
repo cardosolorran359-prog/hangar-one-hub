@@ -1368,3 +1368,91 @@
 @media (prefers-reduced-motion:reduce){
   .hangar-login .hud-particles{display:none}
 }
+
+
+/* ---- MODO CLEAN: PRESERVA A ANIMAÇÃO, REDUZ A POLUIÇÃO VISUAL ---- */
+/* A animação continua nos mesmos elementos; apenas reduzimos a quantidade
+   de informação visual competindo com o núcleo. */
+.hangar-login .hud-telemetry,
+.hangar-login .hud-radar,
+.hangar-login .hud-bottom,
+.hangar-login .hud-corner {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.hangar-login .hud-scanlines {
+  opacity: .28;
+}
+
+.hangar-login .hud-sweep {
+  opacity: .35;
+}
+
+.hangar-login .hud-particles {
+  opacity: .30;
+}
+
+.hangar-login .hud-core {
+  filter: none;
+}
+
+/* Mantém os anéis externos de medição, mas bem mais discretos. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(3),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(4) {
+  opacity: .24 !important;
+}
+
+/* Reduz camadas intermediárias redundantes sem desligar a animação principal. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(6),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(8),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(10),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(12) {
+  opacity: .30 !important;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(14),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(16),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18) {
+  opacity: .38 !important;
+}
+
+/* Glow menor: mantém as cores, mas evita o efeito de "luz estourada". */
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring circle {
+  filter: drop-shadow(0 0 4px currentColor) !important;
+}
+
+.hangar-login .hud-core__pulse {
+  opacity: 0 !important;
+}
+
+.hangar-login .hud-core__pulse--one {
+  opacity: .13 !important;
+}
+
+.hangar-login .hud-core__pulse--two,
+.hangar-login .hud-core__pulse--three {
+  opacity: .07 !important;
+}
+
+.hangar-login .hud-core__orbit {
+  opacity: .30;
+}
+
+.hangar-login .hud-core__crosshair {
+  opacity: .35;
+}
+
+.hangar-login .hud-core__label {
+  text-shadow:
+    0 0 8px rgba(0,255,255,.62),
+    1px 1px 0 rgba(255,0,128,.22);
+}
+
+@media (max-width:720px) {
+  .hangar-login .hud-particles,
+  .hangar-login .hud-sweep {
+    display: none;
+  }
+}
