@@ -905,3 +905,96 @@
     animation: none !important;
   }
 }
+
+/* ---- Rotação explícita dos anéis do núcleo ---- */
+.hud-core > .hud-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: hud-core-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.hud-core > .hud-ring:nth-of-type(1) {
+  animation-duration: 60s;
+}
+
+.hud-core > .hud-ring:nth-of-type(2) {
+  animation-duration: 48s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(3) {
+  animation-duration: 34s;
+}
+
+.hud-core > .hud-ring:nth-of-type(4) {
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(5) {
+  animation-duration: 31s;
+}
+
+.hud-core > .hud-ring:nth-of-type(6) {
+  animation-duration: 28s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(7) {
+  animation-duration: 26s;
+}
+
+.hud-core > .hud-ring:nth-of-type(8) {
+  animation-duration: 22s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(9) {
+  animation-duration: 20s;
+}
+
+.hud-core > .hud-ring:nth-of-type(10) {
+  animation-duration: 18s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(11) {
+  animation-duration: 15s;
+}
+
+.hud-core > .hud-ring:nth-of-type(12) {
+  animation-duration: 13s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(13) {
+  animation-duration: 12s;
+}
+
+.hud-core > .hud-ring:nth-of-type(14) {
+  animation-duration: 10s;
+  animation-direction: reverse;
+}
+
+.hud-core > .hud-ring:nth-of-type(15) {
+  animation-duration: 9s;
+}
+
+.hud-core > .hud-ring:nth-of-type(16) {
+  animation-duration: 8s;
+  animation-direction: reverse;
+}
+
+@keyframes hud-core-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-core > .hud-ring {
+    animation: none !important;
+  }
+}
