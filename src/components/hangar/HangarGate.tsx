@@ -29,15 +29,18 @@ function Ring({
   };
   const stroke = colors[color];
   const center = size / 2;
-  const r = size / 2 - 5;
+  const r = size / 2 - 7;
 
   const pattern = {
-    outer: "170 34 132 46 92 64 146 230",
-    fine: "520 8",
-    red: "188 28 112 24 74 46",
-    redThin: "126 18 72 28 48 38",
-    orange: "160 34 92 48 58 78",
-    inner: "108 24 62 34 38 58",
+    // 3 large white armor blocks + deep gaps, like the reference.
+    outer: "300 72 270 64 250 500",
+    fine: "999 1",
+    // Broad red arcs with clearly separated black gaps.
+    red: "300 54 330 48 190 440",
+    redThin: "220 42 280 48 138 520",
+    // Bright orange inner band: long, thick arc with two deliberate breaks.
+    orange: "330 42 240 54 150 430",
+    inner: "220 42 150 56 98 420",
   }[variant];
 
   return (
