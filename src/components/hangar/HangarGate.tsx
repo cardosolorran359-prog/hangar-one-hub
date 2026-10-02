@@ -44,11 +44,8 @@ function ReferenceRingCanvas() {
     let dpr = 1;
 
     const resize = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
-      W = rect.width;
-      H = rect.height;
+      W = window.innerWidth;
+      H = window.innerHeight;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.max(1, Math.round(W * dpr));
       canvas.height = Math.max(1, Math.round(H * dpr));
@@ -510,6 +507,8 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <HudGauge value={97} label="SYNC" delay={2400} />
           </div>
 
+          <ReferenceRingCanvas />
+
           <div className="hud-core" aria-hidden>
             <div className="hud-core__pulse hud-core__pulse--one" />
             <div className="hud-core__pulse hud-core__pulse--two" />
@@ -526,8 +525,6 @@ export function HangarGate({ children }: { children: ReactNode }) {
                 </span>
               ))}
             </div>
-
-            <ReferenceRingCanvas />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
             <div className="hud-orbit-details" aria-hidden>
@@ -610,10 +607,3 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
 
 // Clean motion sync.
-
-
-// Rings-only reference rebuild synchronized.
-
-// Literal ring reference model sync.
-
-// Reference rings use the uploaded HUD Login Background model.
