@@ -4325,3 +4325,57 @@
 .hangar-login .hud-core>.hud-ring-wrap.hud-ring--reverse{
   animation-direction:reverse!important;
 }
+
+
+/* ---- ESPESSURA FORTE DA REFERÊNCIA: somente os anéis ---- */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-variant="outer"] .hud-ring-model__track{
+  stroke-width:30px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-variant="outer"] .hud-ring-model__band{
+  stroke-width:24px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="395"] .hud-ring-model__track{
+  stroke-width:15px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="395"] .hud-ring-model__band{
+  stroke-width:13px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="355"] .hud-ring-model__track{
+  stroke-width:11px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="355"] .hud-ring-model__band{
+  stroke-width:9px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="315"] .hud-ring-model__track{
+  stroke-width:14px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="315"] .hud-ring-model__band{
+  stroke-width:12px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="225"] .hud-ring-model__track{
+  stroke-width:9px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="225"] .hud-ring-model__band{
+  stroke-width:7px!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="190"] .hud-ring-model__track{
+  stroke-width:8px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref[data-ring-size="190"] .hud-ring-model__band{
+  stroke-width:6px!important;
+}
+
+/* Mantém os espaços pretos entre as bandas para não virar um disco único. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__track{
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-model__band{
+  filter:drop-shadow(0 0 3px currentColor)!important;
+}
+
+/* A animação continua sendo a existente; apenas a leitura física fica mais forte. */
