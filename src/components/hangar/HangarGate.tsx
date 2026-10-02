@@ -60,13 +60,42 @@ function Ring({
           r={r}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={thickness}
+          strokeWidth={Math.max(thickness * 2.35, 3.2)}
+          strokeDasharray={dash}
+          strokeLinecap="round"
+          opacity={0.16}
+          style={{
+            filter: `drop-shadow(0 0 12px ${colorMap[color]})`,
+          }}
+        />
+        <circle
+          className="hud-ring__body"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={colorMap[color]}
+          strokeWidth={Math.max(thickness * 1.35, 2)}
           strokeDasharray={dash}
           strokeLinecap="round"
           style={{
-            filter: `drop-shadow(0 0 10px ${colorMap[color]})`,
+            filter: `drop-shadow(0 0 6px ${colorMap[color]})`,
           }}
         />
+        {(flow || pulse) && (
+          <circle
+            className="hud-ring__highlight"
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            fill="none"
+            stroke={colorMap[color]}
+            strokeWidth={Math.max(thickness * 0.8, 1)}
+            strokeDasharray={`${Math.max(22, size * 0.09)} ${Math.max(90, size * 0.34)}`}
+            strokeLinecap="round"
+            opacity={0.95}
+          />
+        )}
       </svg>
     </div>
   );
@@ -174,22 +203,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
       {!ready && (
         <section className={`hangar-login ${exiting ? "hangar-login--exiting" : ""}`} aria-label="Acesso ao Hangar One">
-          <style>{String.raw`.hangar-login .hud-orbit-details{position:absolute;left:50%;top:50%;width:560px;height:560px;transform:translate(-50%,-50%);z-index:4;pointer-events:none}
-.hangar-login .hud-orbit-arc{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%);box-sizing:border-box;border:1px dashed rgba(0,255,255,.20)}
-.hangar-login .hud-orbit-arc--outer{width:548px;height:548px;border-left-color:rgba(255,32,96,.72);border-right-color:transparent;animation:hud-orbit-arc-spin 24s linear infinite}
-.hangar-login .hud-orbit-arc--inner{width:500px;height:500px;border-top-color:rgba(0,255,255,.52);border-bottom-color:rgba(255,255,0,.32);border-left-color:transparent;border-right-color:rgba(255,0,128,.36);animation:hud-orbit-arc-spin-reverse 18s linear infinite}
-@keyframes hud-orbit-arc-spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes hud-orbit-arc-spin-reverse{from{transform:translate(-50%,-50%) rotate(360deg)}to{transform:translate(-50%,-50%) rotate(0deg)}}
-.hangar-login .hud-orbit-markers{position:absolute;inset:0;animation:hud-marker-wheel 32s linear infinite}
-.hangar-login .hud-orbit-marker{position:absolute;width:6px;height:6px;border:1px solid #00ffff;background:rgba(0,255,255,.18);box-shadow:0 0 7px rgba(0,255,255,.75);transform:translate(-50%,-50%)}
-.hangar-login .hud-orbit-marker:nth-child(1){left:50%;top:2%}.hangar-login .hud-orbit-marker:nth-child(2){left:74%;top:7%}.hangar-login .hud-orbit-marker:nth-child(3){left:93%;top:26%;background:rgba(255,32,96,.20);border-color:#ff2060;box-shadow:0 0 7px rgba(255,32,96,.8)}.hangar-login .hud-orbit-marker:nth-child(4){left:98%;top:50%}.hangar-login .hud-orbit-marker:nth-child(5){left:91%;top:75%;background:rgba(255,255,0,.16);border-color:#ffff00;box-shadow:0 0 7px rgba(255,255,0,.7)}.hangar-login .hud-orbit-marker:nth-child(6){left:72%;top:93%}.hangar-login .hud-orbit-marker:nth-child(7){left:50%;top:98%;background:rgba(255,32,96,.16);border-color:#ff2060;box-shadow:0 0 7px rgba(255,32,96,.8)}.hangar-login .hud-orbit-marker:nth-child(8){left:26%;top:93%}.hangar-login .hud-orbit-marker:nth-child(9){left:8%;top:75%}.hangar-login .hud-orbit-marker:nth-child(10){left:2%;top:50%}.hangar-login .hud-orbit-marker:nth-child(11){left:9%;top:25%;background:rgba(255,255,0,.16);border-color:#ffff00;box-shadow:0 0 7px rgba(255,255,0,.7)}.hangar-login .hud-orbit-marker:nth-child(12){left:27%;top:7%}
-@keyframes hud-marker-wheel{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
-.hangar-login .hud-signal-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#00ffff;box-shadow:0 0 8px #00ffff,0 0 16px rgba(0,255,255,.42);animation:hud-signal-pulse 1.8s ease-in-out infinite}
-.hangar-login .hud-signal-dot--top{left:50%;top:0;transform:translate(-50%,-50%)}.hangar-login .hud-signal-dot--right{right:0;top:50%;transform:translate(50%,-50%);background:#ff2060;box-shadow:0 0 8px #ff2060,0 0 16px rgba(255,32,96,.38);animation-delay:.45s}.hangar-login .hud-signal-dot--bottom{left:50%;bottom:0;transform:translate(-50%,50%);background:#ffff00;box-shadow:0 0 8px #ffff00,0 0 16px rgba(255,255,0,.34);animation-delay:.9s}.hangar-login .hud-signal-dot--left{left:0;top:50%;transform:translate(-50%,-50%);animation-delay:1.35s}
-@keyframes hud-signal-pulse{0%,100%{opacity:.30;filter:brightness(.7)}50%{opacity:1;filter:brightness(1.4)}}
-.hangar-login .hud-orbit-notch{position:absolute;width:22px;height:22px;opacity:.65}.hangar-login .hud-orbit-notch::before,.hangar-login .hud-orbit-notch::after{content:\"\";position:absolute;background:#00ffff;box-shadow:0 0 7px rgba(0,255,255,.48)}.hangar-login .hud-orbit-notch::before{width:22px;height:1px;top:10px;left:0}.hangar-login .hud-orbit-notch::after{width:1px;height:22px;top:0;left:10px}.hangar-login .hud-orbit-notch--top{left:50%;top:-11px;transform:translateX(-50%)}.hangar-login .hud-orbit-notch--right{right:-11px;top:50%;transform:translateY(-50%) rotate(90deg)}.hangar-login .hud-orbit-notch--bottom{left:50%;bottom:-11px;transform:translateX(-50%) rotate(180deg)}.hangar-login .hud-orbit-notch--left{left:-11px;top:50%;transform:translateY(-50%) rotate(270deg)}
-@media(max-width:720px){.hangar-login .hud-orbit-details{width:392px;height:392px}.hangar-login .hud-orbit-arc--outer{width:382px;height:382px}.hangar-login .hud-orbit-arc--inner{width:350px;height:350px}}
-@media(prefers-reduced-motion:reduce){.hangar-login .hud-orbit-details *{animation:none!important}}`}</style>>\n          <div className="hud-bg" aria-hidden />
+\n          <div className="hud-bg" aria-hidden />
           <div className="hud-scanlines" aria-hidden />
           <div className="hud-sweep" aria-hidden />
           <div className="hud-particles" aria-hidden>
@@ -220,6 +234,18 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <div className="hud-core__pulse hud-core__pulse--one" />
             <div className="hud-core__pulse hud-core__pulse--two" />
             <div className="hud-core__pulse hud-core__pulse--three" />
+
+            <div className="hud-rayfield" aria-hidden>
+              {Array.from({ length: 24 }, (_, i) => (
+                <span
+                  key={i}
+                  className="hud-ray"
+                  style={{ transform: `rotate(${i * 15}deg)` }}
+                >
+                  <span className="hud-ray__beam" />
+                </span>
+              ))}
+            </div>
 
             {/* Outer rings with red/blue gradient effect */}
             <Ticks size={520} count={72} length={18} duration={65} />
