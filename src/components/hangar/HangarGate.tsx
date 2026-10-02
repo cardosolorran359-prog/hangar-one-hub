@@ -320,7 +320,7 @@ function HudGauge({ value, label, delay = 0 }: { value: number; label: string; d
     let frame = 0;
     let start = 0;
     let active = true;
-    const duration = 9000;
+    const duration = 14000;
 
     const tick = (now: number) => {
       if (!active) return;
@@ -408,15 +408,6 @@ export function HangarGate({ children }: { children: ReactNode }) {
 @media(max-width:720px){.hangar-login .hud-rayfield{width:430px;height:430px;opacity:.58}.hangar-login .hud-core__pulse--three{width:248px;height:248px}.hangar-login .hud-core__orbit--middle{width:230px;height:106px}}
 @media(prefers-reduced-motion:reduce){.hangar-login .hud-ray__beam,.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{animation:none!important;clip-path:none;opacity:.35}}`}</style>
 \n          <div className="hud-bg" aria-hidden />
-          <div className="hud-motion-grid" aria-hidden>
-            {Array.from({ length: 8 }, (_, i) => (
-              <span key={i} className="hud-motion-grid__beam hud-motion-grid__beam--h" style={{ top: `${12 + i * 11}%`, animationDelay: `${-i * 0.55}s` }} />
-            ))}
-            {Array.from({ length: 6 }, (_, i) => (
-              <span key={`v-${i}`} className="hud-motion-grid__beam hud-motion-grid__beam--v" style={{ left: `${10 + i * 16}%`, animationDelay: `${-i * 0.7}s` }} />
-            ))}
-          </div>
-
 
           <div className="hud-scanlines" aria-hidden />
           <div className="hud-sweep" aria-hidden />
@@ -559,7 +550,3 @@ export function HangarGate({ children }: { children: ReactNode }) {
 }
 
 // V5 sync marker.
-
-// Sync marker: HUD V6 ring model.
-
-// Motion pass synchronization marker.
