@@ -5,37 +5,40 @@ const EXIT_DELAY = 650;
 
 function Ring({
   size,
-  dash,
   duration,
   reverse = false,
   opacity = 1,
-  thickness = 1.5,
+  color = "red",
+  variant = "red",
   flow = false,
   pulse = false,
-  color = "cyan",
-  variant = "inner",
 }: {
   size: number;
-  dash: string;
   duration: number;
   reverse?: boolean;
   opacity?: number;
-  thickness?: number;
+  color?: "white" | "red" | "orange";
+  variant?: "outer" | "fine" | "red" | "redThin" | "orange" | "inner";
   flow?: boolean;
   pulse?: boolean;
-  color?: "cyan" | "red" | "yellow" | "pink";
-  variant?: "outer" | "spokes" | "red" | "orange" | "inner";
 }) {
-  const colorMap = {
-    cyan: "#f3ffff",
-    red: "#ff3b28",
-    yellow: "#ff9a3c",
-    pink: "#ff5b3f",
+  const colors = {
+    white: "#eef7f6",
+    red: "#f03b2d",
+    orange: "#ff812f",
   };
-
+  const stroke = colors[color];
   const center = size / 2;
-  const r = size / 2 - thickness;
-  const stroke = colorMap[color];
+  const r = size / 2 - 5;
+
+  const pattern = {
+    outer: "170 34 132 46 92 64 146 230",
+    fine: "520 8",
+    red: "188 28 112 24 74 46",
+    redThin: "126 18 72 28 48 38",
+    orange: "160 34 92 48 58 78",
+    inner: "108 24 62 34 38 58",
+  }[variant];
 
   return (
     <div
@@ -52,111 +55,75 @@ function Ring({
     >
       <svg className="hud-ring hud-ring-ref__svg" viewBox={`0 0 ${size} ${size}`} aria-hidden>
         <circle
-          className="hud-ring-ref__track"
+          className="hud-ring-model__track"
           cx={center}
           cy={center}
           r={r}
           fill="none"
           stroke="rgba(0,0,0,.94)"
-          strokeWidth={variant === "outer" ? 12 : 6}
-          strokeDasharray={dash}
+          strokeWidth={variant === "outer" ? 14 : variant === "red" || variant === "orange" ? 8 : 3}
+          strokeDasharray={variant === "fine" ? "999 1" : pattern}
           strokeLinecap="butt"
         />
 
         <circle
-          className="hud-ring-ref__body"
+          className="hud-ring-model__base"
           cx={center}
           cy={center}
           r={r}
           fill="none"
           stroke={stroke}
           strokeWidth={
-            variant === "outer" ? 2 :
-            variant === "red" ? 2.5 :
-            variant === "orange" ? 2.1 :
-            1.5
+            variant === "outer" ? 1.8 :
+            variant === "red" ? 2.4 :
+            variant === "redThin" ? 1.6 :
+            variant === "orange" ? 2.2 :
+            1.2
           }
-          strokeDasharray={variant === "spokes" ? "2 10" : dash}
+          strokeDasharray={variant === "fine" ? "999 1" : pattern}
           strokeLinecap="butt"
+          opacity={variant === "fine" ? ".55" : ".82"}
           vectorEffect="non-scaling-stroke"
         />
 
-        {variant === "outer" && (
+        {(variant === "outer" || variant === "red" || variant === "orange" || variant === "inner") && (
           <circle
-            className="hud-ring-ref__accent"
+            className="hud-ring-model__band"
             cx={center}
             cy={center}
-            r={r + 1}
+            r={variant === "outer" ? r + 1 : r - 1}
             fill="none"
             stroke={stroke}
-            strokeWidth="11"
-            strokeDasharray="154 44 140 50 118 206"
+            strokeWidth={
+              variant === "outer" ? 10 :
+              variant === "red" ? 5.8 :
+              variant === "orange" ? 5.2 :
+              3.2
+            }
+            strokeDasharray={variant === "outer" ? "154 42 136 48 118 205" : pattern}
             strokeLinecap="butt"
-            opacity=".96"
+            opacity={variant === "outer" ? ".96" : variant === "inner" ? ".76" : ".88"}
             vectorEffect="non-scaling-stroke"
           />
         )}
 
-        {(variant === "red" || variant === "orange" || variant === "inner") && (
-          <>
-            <circle
-              className="hud-ring-ref__accent"
-              cx={center}
-              cy={center}
-              r={r}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={
-                variant === "red" ? 5 :
-                variant === "orange" ? 4 :
-                2.5
-              }
-              strokeDasharray={dash}
-              strokeLinecap="butt"
-              opacity={variant === "inner" ? ".70" : ".82"}
-              vectorEffect="non-scaling-stroke"
-            />
-            <circle
-              className="hud-ring-ref__line"
-              cx={center}
-              cy={center}
-              r={r - 7}
-              fill="none"
-              stroke={stroke}
-              strokeWidth="1"
-              strokeDasharray="2 12"
-              strokeLinecap="round"
-              opacity=".55"
-              vectorEffect="non-scaling-stroke"
-            />
-          </>
-        )}
-
-        {variant === "spokes" && (
-          <g className="hud-ring-ref__spokes">
-            {Array.from({ length: 48 }, (_, i) => {
-              const angle = (i / 48) * Math.PI * 2;
-              const inner = r * .53;
-              const outer = r * .97;
-              const x1 = center + Math.cos(angle) * inner;
-              const y1 = center + Math.sin(angle) * inner;
-              const x2 = center + Math.cos(angle) * outer;
-              const y2 = center + Math.sin(angle) * outer;
+        {variant === "fine" && (
+          <g className="hud-ring-model__ticks">
+            {Array.from({ length: 60 }, (_, i) => {
+              const angle = (i / 60) * Math.PI * 2;
+              const outer = r + 2;
+              const inner = outer - (i % 5 === 0 ? 11 : 5);
               return (
-                <g key={i}>
-                  <line
-                    x1={x1}
-                    y1={y1}
-                    x2={x2}
-                    y2={y2}
-                    stroke={stroke}
-                    strokeWidth={i % 8 === 0 ? 1.5 : .7}
-                    opacity={i % 8 === 0 ? .72 : .20}
-                  />
-                  {i % 8 === 0 && (
-                    <circle cx={x2} cy={y2} r="2" fill={stroke} opacity=".75" />
-                  )}
-                </g>
+                <line
+                  key={i}
+                  x1={center + Math.cos(angle) * inner}
+                  y1={center + Math.sin(angle) * inner}
+                  x2={center + Math.cos(angle) * outer}
+                  y2={center + Math.sin(angle) * outer}
+                  stroke={stroke}
+                  strokeWidth={i % 5 === 0 ? 1.4 : 0.8}
+                  opacity={i % 5 === 0 ? ".78" : ".28"}
+                />
               );
             })}
           </g>
@@ -164,16 +131,16 @@ function Ring({
 
         {(flow || pulse) && (
           <circle
-            className="hud-ring-ref__sweep"
+            className="hud-ring-model__sweep"
             cx={center}
             cy={center}
             r={r - 2}
             fill="none"
             stroke={stroke}
-            strokeWidth={variant === "outer" ? 2 : 1.4}
-            strokeDasharray={variant === "outer" ? "34 320" : "24 260"}
+            strokeWidth={variant === "outer" ? 2 : 1.6}
+            strokeDasharray={variant === "outer" ? "34 310" : "24 230"}
             strokeLinecap="round"
-            opacity=".95"
+            opacity=".92"
           />
         )}
       </svg>
@@ -490,15 +457,15 @@ export function HangarGate({ children }: { children: ReactNode }) {
               ))}
             </div>
 
-            {/* Modelo dos anéis — reconstruído a partir dos frames do vídeo */}
-            <Ring size={470} dash="1 18" duration={52} opacity={1} thickness={3} flow color="cyan" variant="outer" />
-            <Ring size={425} dash="2 12" duration={44} reverse opacity={0.38} thickness={1.1} color="red" variant="spokes" />
-            <Ring size={395} dash="174 34 112 48" duration={34} opacity={0.92} flow color="red" variant="red" />
-            <Ring size={355} dash="138 28 92 58" duration={30} reverse opacity={0.72} color="red" variant="red" />
-            <Ring size={315} dash="154 40 98 70" duration={25} opacity={0.86} flow pulse color="yellow" variant="orange" />
-            <Ring size={270} dash="4 15" duration={31} reverse opacity={0.45} color="cyan" variant="spokes" />
-            <Ring size={228} dash="118 38 52 74" duration={19} opacity={0.82} color="yellow" variant="inner" />
-            <Ring size={190} dash="84 30 28 54" duration={15} reverse opacity={0.90} flow color="red" variant="inner" />
+            {/* Modelo dos anéis — reconstrução fiel da referência */}
+            <Ring size={470} duration={46} opacity={1} color="white" variant="outer" flow />
+            <Ring size={425} duration={38} reverse opacity={0.42} color="red" variant="fine" />
+            <Ring size={395} duration={32} opacity={0.96} color="red" variant="red" flow />
+            <Ring size={355} duration={28} reverse opacity={0.72} color="red" variant="redThin" />
+            <Ring size={315} duration={24} opacity={0.92} color="orange" variant="orange" flow pulse />
+            <Ring size={270} duration={30} reverse opacity={0.48} color="white" variant="fine" />
+            <Ring size={225} duration={18} opacity={0.86} color="orange" variant="inner" flow />
+            <Ring size={190} duration={14} reverse opacity={0.90} color="red" variant="inner" flow />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
             <div className="hud-orbit-details" aria-hidden>
