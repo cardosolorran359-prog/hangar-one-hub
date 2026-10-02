@@ -3399,3 +3399,161 @@
   from{transform:translateX(0) skewX(-18deg)}
   to{transform:translateX(720%) skewX(-18deg)}
 }
+
+
+/* ================================================================
+   RING-ONLY REFERENCE PASS — inspirado exclusivamente no vídeo
+   Não altera radar, painéis, botão, fundo ou qualquer outro elemento.
+   ================================================================ */
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref{
+  filter:none!important;
+  overflow:visible!important;
+  will-change:transform;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__svg{
+  overflow:visible!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__track{
+  stroke:rgba(2,5,10,.96)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__body{
+  stroke-width:2.6px!important;
+  opacity:.88!important;
+  filter:drop-shadow(0 0 2px currentColor)!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__line{
+  opacity:.46!important;
+  filter:none!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__accent{
+  opacity:.82!important;
+  filter:drop-shadow(0 0 4px currentColor)!important;
+  stroke-linecap:butt!important;
+  animation:hud-ref-accent-pulse 3.8s ease-in-out infinite;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__sweep{
+  stroke-dashoffset:0;
+  animation:hud-ref-sweep 4.2s linear infinite;
+  filter:drop-shadow(0 0 4px currentColor)!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__ticks{
+  animation:hud-ref-ticks 2.8s ease-in-out infinite;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__accent{
+  animation-direction:reverse;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__sweep{
+  animation-direction:reverse;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse .hud-ring-ref__ticks{
+  animation-direction:reverse;
+}
+
+/* Outer white/cyan segment: the dominant mechanical ring in the reference. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref{
+  color:#e9fbff!important;
+  opacity:.92!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref .hud-ring-ref__body{
+  stroke-width:3px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#e9fbff!important;
+  stroke-width:8px!important;
+  opacity:.90!important;
+  filter:drop-shadow(0 0 6px rgba(217,247,255,.32))!important;
+}
+
+/* Red middle band: strong but not blown out. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref{
+  color:#ff3a24!important;
+  opacity:.90!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref .hud-ring-ref__body{
+  stroke-width:4px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff3a24!important;
+  stroke-width:5px!important;
+  opacity:.78!important;
+}
+
+/* White/cyan technical ring with a lighter presence. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"].hud-ring-ref{
+  color:#cdefff!important;
+  opacity:.78!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#d9f7ff!important;
+  stroke-width:6px!important;
+  opacity:.66!important;
+}
+
+/* Inner red and amber rings. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref{
+  color:#ff4a2f!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref{
+  opacity:.84!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref{
+  opacity:.76!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"].hud-ring-ref .hud-ring-ref__body{
+  stroke-width:3.2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref .hud-ring-ref__body{
+  stroke:#ffb04a!important;
+  stroke-width:2.5px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"].hud-ring-ref .hud-ring-ref__accent{
+  stroke:#ff7b38!important;
+  stroke-width:3.2px!important;
+  opacity:.64!important;
+}
+
+/* Small transition details: periodic intensity changes, like the reference animation. */
+@keyframes hud-ref-accent-pulse{
+  0%,100%{opacity:.48}
+  42%{opacity:.82}
+  52%{opacity:1}
+  68%{opacity:.56}
+}
+
+@keyframes hud-ref-sweep{
+  0%{stroke-dashoffset:0;opacity:.24}
+  18%{opacity:.92}
+  48%{stroke-dashoffset:-170;opacity:.72}
+  76%{opacity:.36}
+  100%{stroke-dashoffset:-340;opacity:.24}
+}
+
+@keyframes hud-ref-ticks{
+  0%,100%{opacity:.34}
+  50%{opacity:.88}
+}
+
+/* Keep the two measurement rings around the reference-style layers. */
+.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref) .hud-ring{
+  opacity:.34!important;
+}
+
+@media (max-width:720px){
+  .hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref .hud-ring-ref__accent{
+    stroke-width:6px!important;
+  }
+}
