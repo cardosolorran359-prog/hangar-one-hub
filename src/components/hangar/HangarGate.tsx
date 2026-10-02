@@ -49,13 +49,14 @@ function Ticks({ size, count, length, duration }: { size: number; count: number;
       {Array.from({ length: count }, (_, i) => {
         const a = (i / count) * Math.PI * 2;
         const major = i % (count / 4) === 0;
+        const rd = (n: number) => Math.round(n * 100) / 100;
         return (
           <line
             key={i}
-            x1={c + Math.cos(a) * r1}
-            y1={c + Math.sin(a) * r1}
-            x2={c + Math.cos(a) * r2}
-            y2={c + Math.sin(a) * r2}
+            x1={rd(c + Math.cos(a) * r1)}
+            y1={rd(c + Math.sin(a) * r1)}
+            x2={rd(c + Math.cos(a) * r2)}
+            y2={rd(c + Math.sin(a) * r2)}
             stroke="currentColor"
             strokeWidth={major ? 2 : 1}
             opacity={major ? 0.9 : 0.45}
