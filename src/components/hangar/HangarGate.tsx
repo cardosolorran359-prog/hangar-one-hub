@@ -157,7 +157,7 @@ function Ticks({ size, count, length, duration, reverse = false }: { size: numbe
   const r2 = c - 2;
   return (
     <div
-      className={`hud-ring-wrap ${reverse ? "hud-ring--reverse" : ""}`}
+      className={`hud-ring-wrap hud-ring-ticks ${reverse ? "hud-ring--reverse" : ""}`}
       style={{ width: size, height: size, animationDuration: `${duration}s` }}
       aria-hidden
     >
