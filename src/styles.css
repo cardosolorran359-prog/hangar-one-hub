@@ -4436,42 +4436,19 @@
   margin:0!important;
 }
 
-
-/* ---- RING REFERENCE CANVAS: usa somente o modelo do arquivo enviado ---- */
-.hangar-login .hud-core{
-  position:absolute;
-}
+/* ---- HUD Login Background: canvas da referência em viewport completo ---- */
 .hangar-login .hud-reference-ring-canvas{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:100%;
-  height:100%;
-  transform:translate(-50%,-50%);
-  z-index:1;
-  display:block;
-  pointer-events:none;
-  overflow:visible;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  left:0!important;
+  top:0!important;
+  transform:none!important;
+  z-index:1!important;
+  display:block!important;
+  pointer-events:none!important;
 }
-
-/* Remove somente os dois círculos decorativos antigos que competiam com o modelo novo. */
-.hangar-login .hud-core::before,
-.hangar-login .hud-core::after{
-  display:none!important;
-}
-
-/* Os anéis antigos não são desenhados mais; deixam de duplicar o canvas. */
 .hangar-login .hud-core>.hud-ring-wrap{
   display:none!important;
-}
-
-
-/* ---- ONLY RING CANVAS: preserve source proportions inside the 520px core ---- */
-.hangar-login .hud-reference-ring-canvas{
-  width:860px!important;
-  height:860px!important;
-  left:50%!important;
-  top:50%!important;
-  transform:translate(-50%,-50%)!important;
-  overflow:visible!important;
 }
