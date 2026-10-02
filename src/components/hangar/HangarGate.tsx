@@ -172,6 +172,11 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <div className="hud-core" aria-hidden>
             <div className="hud-core__pulse hud-core__pulse--one" />
             <div className="hud-core__pulse hud-core__pulse--two" />
+            <div className="hangar-neon-ring hangar-neon-ring--1" />
+            <div className="hangar-neon-ring hangar-neon-ring--2" />
+            <div className="hangar-neon-ring hangar-neon-ring--3" />
+            <div className="hangar-neon-ring hangar-neon-ring--4" />
+            <div className="hangar-neon-ring hangar-neon-ring--5" />
             <Ticks size={460} count={72} length={14} duration={60} />
             <Ticks size={434} count={144} length={8} duration={48} reverse />
             <Ring size={416} dash="1 22" duration={34} opacity={0.38} thickness={1} flow />
