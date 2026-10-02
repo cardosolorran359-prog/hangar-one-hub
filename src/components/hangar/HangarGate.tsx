@@ -3,152 +3,219 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 const BUTTON_DELAY = 2200;
 const EXIT_DELAY = 650;
 
-function Ring({
-  size,
-  duration,
-  reverse = false,
-  opacity = 1,
-  color = "red",
-  variant = "red",
-  flow = false,
-  pulse = false,
-}: {
-  size: number;
-  duration: number;
-  reverse?: boolean;
-  opacity?: number;
-  color?: "white" | "red" | "orange";
-  variant?: "outer" | "fine" | "red" | "redThin" | "orange" | "inner";
-  flow?: boolean;
-  pulse?: boolean;
-}) {
-  const colors = {
-    white: "#eef7f6",
-    red: "#f03b2d",
-    orange: "#ff812f",
-  };
-  const stroke = colors[color];
-  const center = size / 2;
-  const r = size / 2 - 7;
+function ReferenceRingCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const pattern = {
-    // 3 large white armor blocks + deep gaps, like the reference.
-    outer: "300 72 270 64 250 500",
-    fine: "999 1",
-    // Broad red arcs with clearly separated black gaps.
-    red: "300 54 330 48 190 440",
-    redThin: "220 42 280 48 138 520",
-    // Bright orange inner band: long, thick arc with two deliberate breaks.
-    orange: "330 42 240 54 150 430",
-    inner: "220 42 150 56 98 420",
-  }[variant];
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  return (
-    <div
-      className={`hud-ring-wrap hud-ring-ref hud-ring-ref--${variant} ${reverse ? "hud-ring--reverse" : ""}`}
-      data-ring-size={size}
-      data-ring-variant={variant}
-      style={{
-        width: size,
-        height: size,
-        animationDuration: `${duration}s`,
-        opacity,
-      }}
-      aria-hidden
-    >
-      <svg className="hud-ring hud-ring-ref__svg" viewBox={`0 0 ${size} ${size}`} aria-hidden>
-        <circle
-          className="hud-ring-model__track"
-          cx={center}
-          cy={center}
-          r={r}
-          fill="none"
-          stroke="rgba(0,0,0,.94)"
-          strokeWidth={variant === "outer" ? 14 : variant === "red" || variant === "orange" ? 8 : 3}
-          strokeDasharray={variant === "fine" ? "999 1" : pattern}
-          strokeLinecap="butt"
-        />
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-        <circle
-          className="hud-ring-model__base"
-          cx={center}
-          cy={center}
-          r={r}
-          fill="none"
-          stroke={stroke}
-          strokeWidth={
-            variant === "outer" ? 1.8 :
-            variant === "red" ? 2.4 :
-            variant === "redThin" ? 1.6 :
-            variant === "orange" ? 2.2 :
-            1.2
-          }
-          strokeDasharray={variant === "fine" ? "999 1" : pattern}
-          strokeLinecap="butt"
-          opacity={variant === "fine" ? ".55" : ".82"}
-          vectorEffect="non-scaling-stroke"
-        />
+    const CFG = {
+      loop: 10,
+      size: 0.40,
+      glow: 1,
+      red: "255,60,40",
+      white: "235,245,245",
+    };
 
-        {(variant === "outer" || variant === "red" || variant === "orange" || variant === "inner") && (
-          <circle
-            className="hud-ring-model__band"
-            cx={center}
-            cy={center}
-            r={variant === "outer" ? r + 1 : r - 1}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={
-              variant === "outer" ? 10 :
-              variant === "red" ? 5.8 :
-              variant === "orange" ? 5.2 :
-              3.2
-            }
-            strokeDasharray={variant === "outer" ? "154 42 136 48 118 205" : pattern}
-            strokeLinecap="butt"
-            opacity={variant === "outer" ? ".96" : variant === "inner" ? ".76" : ".88"}
-            vectorEffect="non-scaling-stroke"
-          />
-        )}
+    const RINGS = [
+      [1.00, 0.050, 1.35, 0.3, 1, "w"],
+      [1.00, 0.050, 1.00, 2.6, 1, "w"],
+      [1.00, 0.050, 1.60, 4.4, 1, "w"],
+      [0.86, 0.030, 2.20, 1.0, -2, "r"],
+      [0.86, 0.030, 1.40, 4.0, -2, "r"],
+      [0.72, 0.035, 1.90, 2.0, 3, "r"],
+      [0.72, 0.035, 1.30, 5.0, 3, "r"],
+      [0.60, 0.040, 2.60, 0.5, -1, "r"],
+      [0.60, 0.040, 1.20, 4.2, -1, "r"],
+      [0.47, 0.045, 2.00, 3.0, 2, "r"],
+      [0.47, 0.045, 1.50, 0.2, 2, "r"],
+      [0.35, 0.030, 1.70, 1.5, -3, "r"],
+      [0.35, 0.030, 1.30, 4.6, -3, "r"],
+    ] as const;
 
-        {variant === "fine" && (
-          <g className="hud-ring-model__ticks">
-            {Array.from({ length: 60 }, (_, i) => {
-              const angle = (i / 60) * Math.PI * 2;
-              const outer = r + 2;
-              const inner = outer - (i % 5 === 0 ? 11 : 5);
-              return (
-                <line
-                  key={i}
-                  x1={center + Math.cos(angle) * inner}
-                  y1={center + Math.sin(angle) * inner}
-                  x2={center + Math.cos(angle) * outer}
-                  y2={center + Math.sin(angle) * outer}
-                  stroke={stroke}
-                  strokeWidth={i % 5 === 0 ? 1.4 : 0.8}
-                  opacity={i % 5 === 0 ? ".78" : ".28"}
-                />
-              );
-            })}
-          </g>
-        )}
+    const TAU = Math.PI * 2;
+    let raf = 0;
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
 
-        {(flow || pulse) && (
-          <circle
-            className="hud-ring-model__sweep"
-            cx={center}
-            cy={center}
-            r={r - 2}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={variant === "outer" ? 2 : 1.6}
-            strokeDasharray={variant === "outer" ? "34 310" : "24 230"}
-            strokeLinecap="round"
-            opacity=".92"
-          />
-        )}
-      </svg>
-    </div>
-  );
+    const resize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      W = rect.width;
+      H = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const arc = (
+      cx: number,
+      cy: number,
+      radius: number,
+      width: number,
+      a0: number,
+      len: number,
+      col: string,
+      alpha: number,
+      glow: number,
+    ) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, a0, a0 + len);
+      ctx.lineWidth = width;
+      ctx.strokeStyle = `rgba(${col},${alpha})`;
+      ctx.shadowColor = `rgba(${col === CFG.white ? "255,255,255" : "255,50,30"},${alpha})`;
+      ctx.shadowBlur = glow * CFG.glow;
+      ctx.stroke();
+    };
+
+    const line = (
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number,
+      width: number,
+      col: string,
+      alpha: number,
+    ) => {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineWidth = width;
+      ctx.strokeStyle = `rgba(${col},${alpha})`;
+      ctx.stroke();
+    };
+
+    const draw = (seconds: number) => {
+      const u = (seconds % CFG.loop) / CFG.loop;
+      const k = 0.5 - 0.5 * Math.cos(TAU * u);
+      const cx = W / 2;
+      const cy = H / 2;
+      const R = H * CFG.size;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "lighter";
+
+      // Thin concentric rings.
+      [1.0, 0.93, 0.80, 0.66, 0.54].forEach((factor, i) => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * factor, 0, TAU);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(${i < 2 ? CFG.white : CFG.red},${0.25 + 0.2 * k})`;
+        ctx.shadowBlur = 0;
+        ctx.stroke();
+      });
+
+      // Outer measuring scale.
+      const nT = 120;
+      const tr = R * 0.83;
+      for (let i = 0; i < nT; i += 1) {
+        const a = (i / nT) * TAU + u * TAU * -1;
+        const long = i % 5 === 0;
+        const r1 = tr;
+        const r2 = tr + R * (long ? 0.05 : 0.025);
+        line(
+          cx + Math.cos(a) * r1,
+          cy + Math.sin(a) * r1,
+          cx + Math.cos(a) * r2,
+          cy + Math.sin(a) * r2,
+          1,
+          CFG.red,
+          (long ? 0.8 : 0.4) * (0.4 + 0.6 * k),
+        );
+      }
+
+      // Fine inner measuring marks.
+      for (let i = 0; i < 180; i += 1) {
+        const a = (i / 180) * TAU + u * TAU * 2;
+        const r1 = R * 0.66;
+        const r2 = R * 0.685;
+        line(
+          cx + Math.cos(a) * r1,
+          cy + Math.sin(a) * r1,
+          cx + Math.cos(a) * r2,
+          cy + Math.sin(a) * r2,
+          0.8,
+          CFG.red,
+          0.55 * k,
+        );
+      }
+
+      // Three synchronized radial beams from behind the ring system.
+      for (let i = 0; i < 3; i += 1) {
+        const a = (i / 3) * TAU + u * TAU;
+        ctx.shadowColor = "rgba(255,50,30,1)";
+        ctx.shadowBlur = 8 * CFG.glow;
+        line(
+          cx,
+          cy,
+          cx + Math.cos(a) * R * 0.72,
+          cy + Math.sin(a) * R * 0.72,
+          1.4,
+          CFG.red,
+          0.85 * k,
+        );
+      }
+
+      // The actual thick segmented arcs from the supplied reference.
+      RINGS.forEach(([factor, widthFactor, length, a0, turns, colorType]) => {
+        const col = colorType === "w" ? CFG.white : CFG.red;
+        const angle = a0 + u * TAU * turns;
+        const breathe = colorType === "r" ? 0.55 + 0.45 * k : 1;
+        arc(
+          cx,
+          cy,
+          R * factor,
+          R * widthFactor,
+          angle,
+          length,
+          col,
+          0.95 * breathe,
+          colorType === "w" ? 14 : 18,
+        );
+      });
+
+      // Three delicate outer red arcs that appear near the peak.
+      for (let i = 0; i < 3; i += 1) {
+        arc(
+          cx,
+          cy,
+          R * (1.1 + i * 0.05),
+          1.5,
+          u * TAU * (i % 2 ? -1 : 1) + i * 2,
+          1.2 + i * 0.4,
+          CFG.red,
+          0.7 * k,
+          8,
+        );
+      }
+
+      ctx.shadowBlur = 0;
+      ctx.globalCompositeOperation = "source-over";
+    };
+
+    const loop = (ms: number) => {
+      draw(ms / 1000);
+      raf = window.requestAnimationFrame(loop);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    raf = window.requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="hud-reference-ring-canvas" aria-hidden />;
 }
 
 function Ticks({ size, count, length, duration, reverse = false }: { size: number; count: number; length: number; duration: number; reverse?: boolean }) {
@@ -460,15 +527,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
               ))}
             </div>
 
-            {/* Modelo dos anéis — reconstrução fiel da referência */}
-            <Ring size={470} duration={46} opacity={1} color="white" variant="outer" flow />
-            <Ring size={425} duration={38} reverse opacity={0.42} color="red" variant="fine" />
-            <Ring size={395} duration={32} opacity={0.96} color="red" variant="red" flow />
-            <Ring size={355} duration={28} reverse opacity={0.72} color="red" variant="redThin" />
-            <Ring size={315} duration={24} opacity={0.92} color="orange" variant="orange" flow pulse />
-            <Ring size={270} duration={30} reverse opacity={0.48} color="white" variant="fine" />
-            <Ring size={225} duration={18} opacity={0.86} color="orange" variant="inner" flow />
-            <Ring size={190} duration={14} reverse opacity={0.90} color="red" variant="inner" flow />
+            <ReferenceRingCanvas />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
             <div className="hud-orbit-details" aria-hidden>
