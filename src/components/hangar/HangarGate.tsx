@@ -450,8 +450,8 @@ export function HangarGate({ children }: { children: ReactNode }) {
             {/* Center */}
             <div className="hud-core__center">
               <span className="hud-core__dot" />
-              <span className="hud-core__label">SYSTEM ONLINE</span>
-              <span className="hud-core__sub">HANGAR ONE · CORE LINK</span>
+              <span className="hud-core__label">HANGAR ONE</span>
+              <span className="hud-core__sub">SYSTEM ONLINE · CORE LINK</span>
             </div>
             <span className="hud-core__crosshair hud-core__crosshair--h" />
             <span className="hud-core__crosshair hud-core__crosshair--v" />
@@ -483,3 +483,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
 // Hangar One: referência V4 consolidada após atualização global de estilos.
 
 // HUD V4 styles synchronized.
+
+// Final V4 sync: paleta azul e composição periférica.
