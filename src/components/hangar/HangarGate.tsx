@@ -25,10 +25,10 @@ function Ring({
   color?: "cyan" | "red" | "yellow" | "pink";
 }) {
   const colorMap = {
-    cyan: "#00ffff",
-    red: "#ff2060",
-    yellow: "#ffff00",
-    pink: "#ff0080",
+    cyan: "#4f86ff",
+    red: "#6ea2ff",
+    yellow: "#a8c7ff",
+    pink: "#2f63db",
   };
 
   const r = size / 2 - thickness;
@@ -179,6 +179,103 @@ function Telemetry({ side }: { side: "left" | "right" }) {
   );
 }
 
+
+function HudWaveform() {
+  const levels = [8, 14, 6, 20, 12, 30, 10, 44, 18, 58, 26, 72, 38, 88, 22, 54, 12, 34, 8, 22, 6];
+  return (
+    <div className="hud-waveform" aria-hidden>
+      <div className="hud-waveform__labels">
+        <span>ANALYZER</span>
+        <span>AUDIO / SIGNAL</span>
+      </div>
+      <div className="hud-waveform__frame">
+        <span className="hud-waveform__bracket hud-waveform__bracket--l" />
+        <span className="hud-waveform__bracket hud-waveform__bracket--r" />
+        <div className="hud-waveform__line" />
+        <div className="hud-waveform__bars">
+          {levels.map((h, i) => (
+            <i key={i} style={{ height: h, animationDelay: `${-i * 0.11}s` }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HudScope() {
+  return (
+    <div className="hud-scope" aria-hidden>
+      <div className="hud-scope__title">TRACKING / 03</div>
+      <div className="hud-scope__dial">
+        <span className="hud-scope__ring" />
+        <span className="hud-scope__ring hud-scope__ring--inner" />
+        <span className="hud-scope__cross hud-scope__cross--h" />
+        <span className="hud-scope__cross hud-scope__cross--v" />
+        <span className="hud-scope__sweep" />
+        <b className="hud-scope__target hud-scope__target--1" />
+        <b className="hud-scope__target hud-scope__target--2" />
+      </div>
+      <div className="hud-scope__meta"><span>LOCK</span><strong>ACTIVE</strong></div>
+    </div>
+  );
+}
+
+function HudMiniPanel() {
+  return (
+    <div className="hud-mini-panel" aria-hidden>
+      <div className="hud-mini-panel__title">SYSTEM / MATRIX</div>
+      <div className="hud-mini-panel__copy">
+        <span>CORE STATUS</span>
+        <span>RANGE / 04.82</span>
+        <span>SYNC / 99.8</span>
+        <span>PHASE / 12.04</span>
+      </div>
+      <div className="hud-mini-panel__rail"><span style={{ width: "82%" }} /><span style={{ width: "58%" }} /><span style={{ width: "71%" }} /></div>
+    </div>
+  );
+}
+
+function HudBars() {
+  const values = [32, 58, 43, 76, 54, 82, 44, 68, 88, 61, 42, 77, 56, 36, 66, 48, 72];
+  return (
+    <div className="hud-bars" aria-hidden>
+      <div className="hud-module-label"><span>LOAD / CHANNEL</span><b>ACTIVE</b></div>
+      <div className="hud-bars__grid">
+        {values.map((v, i) => (
+          <i key={i} style={{ height: `${v}%`, animationDelay: `${-i * 0.08}s` }} />
+        ))}
+      </div>
+      <div className="hud-bars__axis"><span>01</span><span>08</span><span>16</span><span>24</span><span>32</span></div>
+    </div>
+  );
+}
+
+function HudLineGraph() {
+  return (
+    <div className="hud-linegraph" aria-hidden>
+      <div className="hud-module-label"><span>VECTOR / FLOW</span><b>LIVE</b></div>
+      <svg viewBox="0 0 420 110" preserveAspectRatio="none">
+        <path className="hud-linegraph__grid" d="M0 22H420M0 55H420M0 88H420M70 0V110M140 0V110M210 0V110M280 0V110M350 0V110" />
+        <path className="hud-linegraph__path" pathLength="1" d="M0 82 L34 82 L60 48 L88 70 L114 38 L142 74 L172 62 L200 86 L232 38 L261 58 L290 28 L322 72 L350 52 L378 92 L420 34" />
+      </svg>
+    </div>
+  );
+}
+
+function HudGauge({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="hud-gauge" aria-hidden>
+      <div className="hud-gauge__dial">
+        <span className="hud-gauge__arc" style={{ "--value": `${value * 3.6}deg` } as React.CSSProperties} />
+        <span className="hud-gauge__tick hud-gauge__tick--1" />
+        <span className="hud-gauge__tick hud-gauge__tick--2" />
+        <strong>{value}%</strong>
+      </div>
+      <span className="hud-gauge__label">{label}</span>
+    </div>
+  );
+}
+
 export function HangarGate({ children }: { children: ReactNode }) {
   const [showButton, setShowButton] = useState(false);
   const [exiting, setExiting] = useState(false);
@@ -248,9 +345,17 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <span className="hud-corner hud-corner--bl" aria-hidden />
           <span className="hud-corner hud-corner--br" aria-hidden />
 
+          <HudScope />
+          <HudWaveform />
+          <HudMiniPanel />
           <Radar />
-          <Telemetry side="left" />
-          <Telemetry side="right" />
+          <HudBars />
+          <HudLineGraph />
+          <HudGauge value={93} label="AUDIO / POWER" />
+          <div className="hud-gauges hud-gauges--bottom" aria-hidden>
+            <HudGauge value={99} label="CORE" />
+            <HudGauge value={97} label="SYNC" />
+          </div>
 
           <div className="hud-core" aria-hidden>
             <div className="hud-core__pulse hud-core__pulse--one" />
@@ -320,11 +425,28 @@ export function HangarGate({ children }: { children: ReactNode }) {
               <span className="hud-core__orbit-dot hud-core__orbit-dot--small hud-core__orbit-dot--red" />
             </div>
 
+            <div className="hud-core__fine-ticks" aria-hidden>
+              {Array.from({ length: 48 }, (_, i) => (
+                <i key={i} style={{ transform: `translate(-50%, -50%) rotate(${i * 7.5}deg) translateY(-74px)` }} />
+              ))}
+            </div>
+
+            <div className="hud-core__triangles" aria-hidden>
+              <span className="hud-core__triangle hud-core__triangle--top" />
+              <span className="hud-core__triangle hud-core__triangle--right" />
+              <span className="hud-core__triangle hud-core__triangle--bottom" />
+              <span className="hud-core__triangle hud-core__triangle--left" />
+              <span className="hud-core__chevron hud-core__chevron--top" />
+              <span className="hud-core__chevron hud-core__chevron--right" />
+              <span className="hud-core__chevron hud-core__chevron--bottom" />
+              <span className="hud-core__chevron hud-core__chevron--left" />
+            </div>
+
             {/* Center */}
             <div className="hud-core__center">
               <span className="hud-core__dot" />
-              <span className="hud-core__label">HANGAR ONE</span>
-              <span className="hud-core__sub">BANCADA TÉCNICA · SISTEMA ONLINE</span>
+              <span className="hud-core__label">SYSTEM ONLINE</span>
+              <span className="hud-core__sub">HANGAR ONE · CORE LINK</span>
             </div>
             <span className="hud-core__crosshair hud-core__crosshair--h" />
             <span className="hud-core__crosshair hud-core__crosshair--v" />
@@ -351,4 +473,4 @@ export function HangarGate({ children }: { children: ReactNode }) {
   );
 }
 
-// Hangar One: acabamento dos anéis e raios radiais consolidado.
+// Hangar One: HUD de entrada alinhado à referência visual anexada — núcleo, módulos periféricos e telemetria animada.
