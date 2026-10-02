@@ -2816,3 +2816,112 @@
 }
 
 /* Hangar One: V4 final commit marker. */
+
+
+/* ---- CYBERPUNK CORE: RED + BLUE, DENSE MECHANICAL RINGS ---- */
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__mechanical-underlay{
+  stroke:rgba(5,10,22,.96)!important;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.48));
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{
+  stroke-width:5px!important;
+  opacity:.96!important;
+  filter:drop-shadow(0 0 2px currentColor)!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__highlight{
+  stroke-width:2.2px!important;
+  opacity:.72!important;
+  filter:drop-shadow(0 0 3px currentColor)!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap circle:not(.hud-ring__mechanical-underlay):not(.hud-ring__body):not(.hud-ring__highlight){
+  stroke-width:8px!important;
+  opacity:.16!important;
+  filter:drop-shadow(0 0 3px rgba(35,55,98,.55))!important;
+}
+
+/* Explicit color mapping: the reference reads as a blue/red technical instrument. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"]{
+  color:#e84a63!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="440"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="400"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="360"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="320"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="280"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="240"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="200"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"]{
+  color:#477dff!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="220"] .hud-ring circle{
+  stroke:#e84a63!important;
+}
+
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="440"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="400"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="360"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="320"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="280"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="240"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="200"] .hud-ring circle,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="180"] .hud-ring circle{
+  stroke:#477dff!important;
+}
+
+/* More segmented, less "laser": butt ends and stronger dark chassis around the light. */
+.hangar-login .hud-core>.hud-ring-wrap .hud-ring__body{
+  stroke-linecap:butt!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="460"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="420"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="300"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="260"] .hud-ring__body{
+  stroke-width:6px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="440"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="380"] .hud-ring__body,
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="340"] .hud-ring__body{
+  stroke-width:4px!important;
+}
+
+/* Mechanical radial beam palette */
+.hangar-login .hud-ray__beam{
+  background:linear-gradient(to bottom,rgba(71,125,255,0),rgba(71,125,255,.42) 18%,rgba(71,125,255,.10) 60%,rgba(71,125,255,0))!important;
+  filter:drop-shadow(0 0 3px rgba(71,125,255,.26))!important;
+}
+.hangar-login .hud-ray:nth-child(3n) .hud-ray__beam{
+  background:linear-gradient(to bottom,rgba(232,74,99,0),rgba(232,74,99,.38) 18%,rgba(232,74,99,.09) 60%,rgba(232,74,99,0))!important;
+  filter:drop-shadow(0 0 3px rgba(232,74,99,.22))!important;
+}
+.hangar-login .hud-ray:nth-child(6n) .hud-ray__beam{
+  opacity:.48;
+}
+
+/* Start all gauges at zero and let the values visibly build up. */
+.hangar-login .hud-gauge__arc{
+  transition:background .08s linear;
+}
+.hangar-login .hud-gauge__dial strong{
+  min-width:54px;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Red/blue side accents */
+.hangar-login .hud-core__side-node--left{border-color:rgba(71,125,255,.50)}
+.hangar-login .hud-core__side-node--right{border-color:rgba(232,74,99,.50)}
+.hangar-login .hud-core__side-node--right b{color:#ffd9df}
+.hangar-login .hud-core__side-node--left b{color:#d8e4ff}
