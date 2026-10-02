@@ -1118,3 +1118,92 @@
   .hangar-login .hud-core::after,
   .hangar-login .hud-core__label{animation:none!important}
 }
+
+/* ---- ANÉIS NEON FÍSICOS NO HANGAR GATE ---- */
+.hangar-neon-ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  box-sizing:border-box;
+  pointer-events:none;
+  z-index:1;
+  transform-origin:center center;
+  mix-blend-mode:screen;
+  will-change:transform,box-shadow,opacity;
+}
+.hangar-neon-ring--1{
+  width:350px;height:350px;
+  border:2px solid var(--primary-neon,#00ffff);
+  box-shadow:0 0 20px rgba(0,255,255,.45),inset 0 0 20px rgba(0,255,255,.12);
+  animation:hangar-neon-rotate-1 20s linear infinite;
+}
+.hangar-neon-ring--2{
+  width:280px;height:280px;
+  border:2px solid var(--secondary-neon,#ff0080);
+  box-shadow:0 0 20px rgba(255,0,128,.42),inset 0 0 20px rgba(255,0,128,.11);
+  animation:hangar-neon-rotate-2 25s linear infinite;
+}
+.hangar-neon-ring--3{
+  width:210px;height:210px;
+  border:2px solid var(--tertiary-neon,#ffff00);
+  box-shadow:0 0 15px rgba(255,255,0,.34),inset 0 0 15px rgba(255,255,0,.08);
+  animation:hangar-neon-rotate-3 30s linear infinite;
+}
+.hangar-neon-ring--4{
+  width:140px;height:140px;
+  border:2px solid var(--primary-neon,#00ffff);
+  box-shadow:0 0 15px rgba(0,255,255,.42),inset 0 0 15px rgba(0,255,255,.12);
+  animation:hangar-neon-pulse 2s ease-in-out infinite;
+}
+.hangar-neon-ring--5{
+  width:70px;height:70px;
+  border:3px solid var(--secondary-neon,#ff0080);
+  box-shadow:0 0 25px rgba(255,0,128,.52);
+  animation:hangar-neon-spin-pulse 3s linear infinite;
+}
+@keyframes hangar-neon-rotate-1{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+@keyframes hangar-neon-rotate-2{
+  from{transform:translate(-50%,-50%) rotate(360deg)}
+  to{transform:translate(-50%,-50%) rotate(0deg)}
+}
+@keyframes hangar-neon-rotate-3{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+@keyframes hangar-neon-pulse{
+  0%,100%{
+    transform:translate(-50%,-50%) scale(1);
+    box-shadow:0 0 15px rgba(0,255,255,.42),inset 0 0 15px rgba(0,255,255,.12);
+  }
+  50%{
+    transform:translate(-50%,-50%) scale(1.10);
+    box-shadow:0 0 30px rgba(0,255,255,.70),inset 0 0 30px rgba(0,255,255,.20);
+  }
+}
+@keyframes hangar-neon-spin-pulse{
+  from{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
+  50%{transform:translate(-50%,-50%) rotate(180deg) scale(.82)}
+  to{transform:translate(-50%,-50%) rotate(360deg) scale(1)}
+}
+
+/* Mantém o nome no centro acima dos novos anéis decorativos. */
+.hangar-login .hud-core__center{z-index:5}
+
+/* O núcleo SVG continua responsável pelos muitos anéis técnicos que já giram. */
+.hangar-login .hud-core > .hud-ring-wrap{z-index:2}
+
+/* O brilho novo complementa, sem substituir, a animação de rotação existente. */
+@media (max-width:720px){
+  .hangar-neon-ring--1{width:292px;height:292px}
+  .hangar-neon-ring--2{width:234px;height:234px}
+  .hangar-neon-ring--3{width:176px;height:176px}
+  .hangar-neon-ring--4{width:118px;height:118px}
+  .hangar-neon-ring--5{width:58px;height:58px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hangar-neon-ring{animation:none!important}
+}
