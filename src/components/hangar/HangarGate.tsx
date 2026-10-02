@@ -132,26 +132,6 @@ function Ring({
           })}
         </g>
 
-        <g className="hud-ring__locators">
-          {[0, 60, 120, 180, 240, 300].map((deg, i) => {
-            const a = (deg * Math.PI) / 180;
-            const rr = r + 7;
-            const x = size / 2 + Math.cos(a) * rr - 2.5;
-            const y = size / 2 + Math.sin(a) * rr - 2.5;
-            return (
-              <rect
-                key={i}
-                x={x}
-                y={y}
-                width={i % 2 === 0 ? 5 : 3}
-                height={i % 2 === 0 ? 5 : 3}
-                fill={colorMap[color]}
-                opacity={i % 2 === 0 ? 0.62 : 0.35}
-              />
-            );
-          })}
-        </g>
-
         {(flow || pulse) && (
           <circle
             className="hud-ring__highlight"
@@ -483,11 +463,11 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <Ticks size={520} count={72} length={18} duration={65} />
             <Ticks size={480} count={96} length={10} duration={55} reverse />
 
-            <Ring size={340} dash="42 16 8 24 96 28" duration={32} opacity={0.68} thickness={1.8} color="cyan" />
-            <Ring size={300} dash="148 22 62 34" duration={27} reverse opacity={0.86} thickness={3} flow pulse color="red" />
-            <Ring size={260} dash="6 12" duration={22} opacity={0.64} thickness={1.7} color="cyan" />
-            <Ring size={220} dash="92 22 30 18" duration={17} reverse opacity={0.82} thickness={2.6} color="red" />
-            <Ring size={180} dash="54 18 10 24" duration={13} opacity={0.72} thickness={2} color="cyan" />
+            <Ring size={340} dash="90 18 14 36" duration={30} opacity={0.76} color="cyan" />
+            <Ring size={300} dash="120 20 55 24" duration={25} reverse opacity={0.90} flow pulse color="red" />
+            <Ring size={260} dash="84 18 32 28" duration={20} opacity={0.82} thickness={2.8} color="cyan" />
+            <Ring size={220} dash="52 22 16 24" duration={16} reverse opacity={0.88} thickness={2.8} color="red" />
+            <Ring size={180} dash="64 20 10 18" duration={12} opacity={0.84} thickness={2.3} color="cyan" />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
             <div className="hud-orbit-details" aria-hidden>
@@ -570,5 +550,4 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
 // V5 sync marker.
 
-
-// Ring V7 sync marker.
+// Sync marker: HUD V6 ring model.
