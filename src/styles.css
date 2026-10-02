@@ -3632,3 +3632,218 @@
 }
 
 /* Nenhuma alteração fora do sistema dos anéis. */
+
+
+/* ================================================================
+   RING REFERENCE HARD RESET — somente o núcleo de anéis
+   ================================================================ */
+
+/* Disable stale ring-specific rules from earlier experiments by defining
+   the final geometry with the new data attributes. */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  transform-origin:50% 50%!important;
+  will-change:transform;
+  filter:none!important;
+  overflow:visible!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref>.hud-ring{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  animation:none!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ref.hud-ring--reverse{
+  animation-direction:reverse!important;
+}
+
+.hangar-login .hud-ring-ref__track{
+  stroke:rgba(0,0,0,.93)!important;
+  filter:none!important;
+}
+.hangar-login .hud-ring-ref__body{
+  filter:none!important;
+  stroke-linecap:butt!important;
+}
+.hangar-login .hud-ring-ref__accent{
+  stroke-linecap:butt!important;
+  filter:drop-shadow(0 0 3px currentColor)!important;
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  animation:hud-ref-accent-breathe 3.4s ease-in-out infinite;
+}
+.hangar-login .hud-ring-ref__line{
+  filter:none!important;
+}
+.hangar-login .hud-ring-ref__spokes{
+  animation:hud-ref-spokes-turn 26s linear infinite;
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+}
+.hangar-login .hud-ring--reverse .hud-ring-ref__spokes{
+  animation-direction:reverse;
+}
+.hangar-login .hud-ring-ref__sweep{
+  animation:hud-ref-sweep-run 4.8s linear infinite;
+  filter:drop-shadow(0 0 3px currentColor)!important;
+}
+.hangar-login .hud-ring--reverse .hud-ring-ref__sweep{
+  animation-direction:reverse;
+}
+
+@keyframes hud-ref-accent-breathe{
+  0%,100%{opacity:.58}
+  35%{opacity:.82}
+  50%{opacity:1}
+  66%{opacity:.70}
+}
+@keyframes hud-ref-spokes-turn{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes hud-ref-sweep-run{
+  0%{stroke-dashoffset:0;opacity:.12}
+  16%{opacity:.9}
+  45%{stroke-dashoffset:-120;opacity:.72}
+  76%{opacity:.28}
+  100%{stroke-dashoffset:-240;opacity:.12}
+}
+
+/* OUTER: the white/cyan segmented armor ring. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"]{
+  color:#f3ffff!important;
+  opacity:1!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-ref__track{
+  stroke-width:14px!important;
+  stroke-dasharray:154 44 140 50 118 205!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-ref__body{
+  stroke:#e9fbff!important;
+  stroke-width:2px!important;
+  stroke-dasharray:1 22!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="470"] .hud-ring-ref__accent{
+  stroke:#f4ffff!important;
+  stroke-width:11px!important;
+  stroke-dasharray:154 44 140 50 118 205!important;
+  opacity:.96!important;
+  filter:drop-shadow(0 0 7px rgba(225,250,255,.28))!important;
+}
+
+/* SPOKES: red technical lattice inside the outer shell. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"]{
+  color:#ff4a32!important;
+  opacity:.50!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="425"] .hud-ring-ref__body{
+  stroke:#ff4a32!important;
+  stroke-width:1px!important;
+  opacity:.32!important;
+}
+
+/* RED BANDS: broad, separated, angular arcs. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"]{
+  color:#ff3b29!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"]{opacity:.92!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"]{opacity:.76!important}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-ref__track{
+  stroke-width:7px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-ref__body{
+  stroke:#e92c21!important;
+  stroke-width:2.6px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="395"] .hud-ring-ref__accent{
+  stroke:#ff422b!important;
+  stroke-width:5.5px!important;
+  stroke-dasharray:174 34 112 48!important;
+  opacity:.88!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-ref__body{
+  stroke:#ef3324!important;
+  stroke-width:2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="355"] .hud-ring-ref__accent{
+  stroke:#ff4931!important;
+  stroke-width:4px!important;
+  stroke-dasharray:138 28 92 58!important;
+  opacity:.62!important;
+}
+
+/* ORANGE BAND: transition layer from red to the inner core. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"]{
+  color:#ff8a34!important;
+  opacity:.88!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-ref__body{
+  stroke:#ff6d27!important;
+  stroke-width:2.3px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="315"] .hud-ring-ref__accent{
+  stroke:#ff8f38!important;
+  stroke-width:4.5px!important;
+  stroke-dasharray:154 40 98 70!important;
+  opacity:.82!important;
+}
+
+/* INNER GRID: pale/white technical ring, deliberately thinner. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"]{
+  color:#eafcff!important;
+  opacity:.50!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-ref__body{
+  stroke:#dff8ff!important;
+  stroke-width:1.1px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="270"] .hud-ring-ref__accent{
+  stroke:#e8fbff!important;
+  stroke-width:1px!important;
+  opacity:.28!important;
+  stroke-dasharray:4 15!important;
+}
+
+/* SMALL INNER RINGS. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="228"]{
+  color:#ffad47!important;
+  opacity:.82!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="228"] .hud-ring-ref__body{
+  stroke:#ffaf48!important;
+  stroke-width:2.2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="228"] .hud-ring-ref__accent{
+  stroke:#ff7d2e!important;
+  stroke-width:3.2px!important;
+  opacity:.76!important;
+  stroke-dasharray:112 38 52 74!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"]{
+  color:#ff4b34!important;
+  opacity:.88!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-ref__body{
+  stroke:#ff5038!important;
+  stroke-width:2px!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="190"] .hud-ring-ref__accent{
+  stroke:#ff6040!important;
+  stroke-width:2.7px!important;
+  opacity:.70!important;
+  stroke-dasharray:84 30 28 54!important;
+}
+
+/* No old ring system remains visible under the new model. */
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="520"],
+.hangar-login .hud-core>.hud-ring-wrap[data-ring-size="480"]{
+  display:none!important;
+}
