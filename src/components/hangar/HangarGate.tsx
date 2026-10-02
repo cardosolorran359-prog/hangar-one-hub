@@ -203,6 +203,91 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
         );
       }
 
+      // Detalhes adicionais: escala externa, marcadores orbitais, bracketes e um scanner.
+      const outerR = R * 1.075;
+      const outerTicks = 48;
+      for (let i = 0; i < outerTicks; i++) {
+        const a = (i / outerTicks) * TAU - u * TAU * 0.5;
+        const major = i % 6 === 0;
+        const r1 = outerR;
+        const r2 = outerR + R * (major ? 0.040 : 0.018);
+        line(
+          cx + Math.cos(a) * r1,
+          cy + Math.sin(a) * r1,
+          cx + Math.cos(a) * r2,
+          cy + Math.sin(a) * r2,
+          major ? 1.5 : 0.8,
+          CFG.white,
+          major ? 0.72 + 0.18 * k : 0.26 + 0.20 * k,
+        );
+      }
+
+      // Quatro marcadores maiores giram lentamente com o mesmo ciclo de 10s.
+      for (let i = 0; i < 4; i++) {
+        const a = i * (TAU / 4) + u * TAU * (i % 2 ? -0.35 : 0.35);
+        const rr = R * 1.035;
+        const x = cx + Math.cos(a) * rr;
+        const y = cy + Math.sin(a) * rr;
+        ctx.beginPath();
+        ctx.arc(x, y, R * 0.014, 0, TAU);
+        ctx.fillStyle = `rgba(${CFG.white},${0.34 + 0.42 * k})`;
+        ctx.shadowColor = "rgba(240,250,250,0.9)";
+        ctx.shadowBlur = 8 * CFG.glow;
+        ctx.fill();
+        line(
+          x - Math.cos(a) * R * 0.026,
+          y - Math.sin(a) * R * 0.026,
+          x + Math.cos(a) * R * 0.026,
+          y + Math.sin(a) * R * 0.026,
+          1,
+          CFG.white,
+          0.28 + 0.35 * k,
+        );
+      }
+
+      // Brackets técnicos quadrados na horizontal e vertical.
+      const bracketAlpha = 0.18 + 0.34 * k;
+      const b = R * 0.12;
+      const gap = R * 1.18;
+      line(cx - gap, cy - b, cx - gap + b, cy - b, 1, CFG.white, bracketAlpha);
+      line(cx - gap, cy - b, cx - gap, cy - b + b, 1, CFG.white, bracketAlpha);
+      line(cx + gap, cy - b, cx + gap - b, cy - b, 1, CFG.white, bracketAlpha);
+      line(cx + gap, cy - b, cx + gap, cy - b + b, 1, CFG.white, bracketAlpha);
+      line(cx - gap, cy + b, cx - gap + b, cy + b, 1, CFG.white, bracketAlpha);
+      line(cx - gap, cy + b, cx - gap, cy + b - b, 1, CFG.white, bracketAlpha);
+      line(cx + gap, cy + b, cx + gap - b, cy + b, 1, CFG.white, bracketAlpha);
+      line(cx + gap, cy + b, cx + gap, cy + b - b, 1, CFG.white, bracketAlpha);
+
+      // Scanner que atravessa uma faixa do anel externo.
+      const scanA = u * TAU * 1.2 - 0.7;
+      const scanR1 = R * 0.94;
+      const scanR2 = R * 1.085;
+      line(
+        cx + Math.cos(scanA) * scanR1,
+        cy + Math.sin(scanA) * scanR1,
+        cx + Math.cos(scanA) * scanR2,
+        cy + Math.sin(scanA) * scanR2,
+        2,
+        CFG.white,
+        0.18 + 0.72 * k,
+      );
+      dot(
+        cx + Math.cos(scanA) * scanR2,
+        cy + Math.sin(scanA) * scanR2,
+        R * 0.010,
+        0.35 + 0.55 * k,
+      );
+
+      // Micro-retícula ao redor do ponto central.
+      [0.16, 0.20].forEach((factor, index) => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * factor, 0, TAU);
+        ctx.lineWidth = index === 0 ? 1.2 : 0.7;
+        ctx.strokeStyle = `rgba(${CFG.white},${0.15 + 0.16 * k})`;
+        ctx.shadowBlur = 0;
+        ctx.stroke();
+      });
+
       dot(cx, cy, 2.5, 0.6 + 0.4 * k);
       ctx.shadowBlur = 0;
       ctx.globalCompositeOperation = "source-over";
@@ -272,25 +357,85 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           bottom:34px;
           transform:translateX(-50%);
           z-index:5;
-          padding:12px 26px;
-          border:1px solid rgba(235,245,245,.35);
-          background:rgba(5,6,7,.60);
-          color:rgba(235,245,245,.92);
-          font:600 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;
-          letter-spacing:.26em;
+          min-width:390px;
+          padding:17px 34px;
+          border:1px solid rgba(235,245,245,.48);
+          background:
+            linear-gradient(180deg,rgba(20,24,27,.78),rgba(5,6,7,.70));
+          color:rgba(245,252,252,.96);
+          font:600 13px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.28em;
+          text-indent:.28em;
           cursor:pointer;
           opacity:0;
           pointer-events:none;
-          transition:opacity .35s ease, border-color .35s ease, box-shadow .35s ease;
+          overflow:hidden;
+          clip-path:polygon(0 0,97% 0,100% 18%,100% 82%,97% 100%,0 100%);
+          transition:
+            opacity .35s ease,
+            border-color .35s ease,
+            box-shadow .35s ease,
+            transform .25s ease;
+        }
+        .hud-source-login__enter::before {
+          content:"";
+          position:absolute;
+          inset:0;
+          background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.10) 46%,rgba(255,255,255,.38) 50%,rgba(255,255,255,.10) 54%,transparent 100%);
+          transform:translateX(-120%);
+          animation:hud-button-scan 3.2s linear infinite;
+          pointer-events:none;
+        }
+        .hud-source-login__enter::after {
+          content:"";
+          position:absolute;
+          left:14px;
+          right:14px;
+          top:5px;
+          height:1px;
+          background:linear-gradient(90deg,transparent,rgba(255,90,64,.80),transparent);
+          animation:hud-button-pulse 2s ease-in-out infinite;
+          pointer-events:none;
         }
         .hud-source-login__enter[data-visible="true"] {
           opacity:1;
           pointer-events:auto;
-          box-shadow:0 0 18px rgba(255,60,40,.12);
+          box-shadow:
+            0 0 18px rgba(255,60,40,.13),
+            0 0 42px rgba(235,245,245,.05),
+            inset 0 0 18px rgba(255,60,40,.035);
+          animation:hud-button-idle 2.8s ease-in-out infinite;
         }
         .hud-source-login__enter:hover {
-          border-color:rgba(235,245,245,.8);
-          box-shadow:0 0 24px rgba(255,60,40,.22);
+          border-color:rgba(255,245,242,.92);
+          box-shadow:
+            0 0 25px rgba(255,60,40,.22),
+            0 0 52px rgba(235,245,245,.08),
+            inset 0 0 24px rgba(255,60,40,.07);
+          transform:translateX(-50%) translateY(-2px);
+        }
+        @keyframes hud-button-scan {
+          0%{transform:translateX(-120%);opacity:0}
+          15%{opacity:1}
+          52%{opacity:.85}
+          100%{transform:translateX(120%);opacity:0}
+        }
+        @keyframes hud-button-pulse {
+          0%,100%{opacity:.28;transform:scaleX(.65)}
+          50%{opacity:1;transform:scaleX(1)}
+        }
+        @keyframes hud-button-idle {
+          0%,100%{box-shadow:0 0 18px rgba(255,60,40,.10),inset 0 0 18px rgba(255,60,40,.025)}
+          50%{box-shadow:0 0 28px rgba(255,60,40,.18),inset 0 0 22px rgba(255,60,40,.045)}
+        }
+        @media (max-width:720px) {
+          .hud-source-login__enter {
+            min-width:calc(100vw - 48px);
+            padding:15px 20px;
+            font-size:12px;
+            letter-spacing:.20em;
+            text-indent:.20em;
+          }
         }
         :root {
           --hud-source-red:255,60,40;
