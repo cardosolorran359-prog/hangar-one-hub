@@ -1456,3 +1456,107 @@
     display: none;
   }
 }
+
+
+/* ---- FOCO NO NÚCLEO: LATERAIS PRESERVADAS ---- */
+/* As laterais continuam presentes; a limpeza fica restrita ao núcleo. */
+.hangar-login .hud-telemetry,
+.hangar-login .hud-radar,
+.hangar-login .hud-bottom,
+.hangar-login .hud-corner {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hangar-login .hud-telemetry {
+  z-index: 3;
+}
+
+.hangar-login .hud-radar {
+  z-index: 3;
+}
+
+.hangar-login .hud-bottom {
+  z-index: 4;
+}
+
+.hangar-login .hud-corner {
+  z-index: 4;
+}
+
+/* Partículas ficam discretas para não disputar com os anéis. */
+.hangar-login .hud-particles {
+  opacity: .14;
+}
+
+/* Menos "camadas fantasma" dentro do núcleo. */
+.hangar-login .hud-core__pulse--two,
+.hangar-login .hud-core__pulse--three {
+  opacity: 0 !important;
+}
+
+/* Mantém o pulso central, mas bem suave. */
+.hangar-login .hud-core__pulse--one {
+  opacity: .10 !important;
+}
+
+/* A órbita central fica secundária aos anéis. */
+.hangar-login .hud-core__orbit--outer,
+.hangar-login .hud-core__orbit--middle,
+.hangar-login .hud-core__orbit--inner {
+  opacity: .22;
+}
+
+/* Crosshair quase imperceptível: a leitura visual passa para os anéis. */
+.hangar-login .hud-core__crosshair {
+  opacity: .18;
+}
+
+/* Os ticks externos marcam a escala sem dominar o núcleo. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(4),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(5) {
+  opacity: .24 !important;
+}
+
+/* Mantém todos os anéis girando, mas cria hierarquia entre eles. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(6),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(8),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(10),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(12),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(14) {
+  opacity: .30 !important;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(16),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(18) {
+  opacity: .38 !important;
+}
+
+/* Os anéis principais ficam mais definidos e com glow controlado. */
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(7),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(9),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(11),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(13),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(15),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(17),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(19),
+.hangar-login .hud-core > .hud-ring-wrap:nth-child(20) {
+  opacity: .78 !important;
+}
+
+.hangar-login .hud-core > .hud-ring-wrap .hud-ring circle {
+  filter: drop-shadow(0 0 4px currentColor) !important;
+}
+
+/* O nome no centro permanece limpo e legível. */
+.hangar-login .hud-core__label {
+  text-shadow:
+    0 0 8px rgba(0,255,255,.62),
+    1px 1px 0 rgba(255,0,128,.20);
+}
+
+@media (max-width:720px) {
+  .hangar-login .hud-particles {
+    display: none;
+  }
+}
