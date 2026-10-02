@@ -275,17 +275,27 @@ function HudLineGraph() {
   );
 }
 
-function HudGauge({ value, label }: { value: number; label: string }) {
+function HudGauge({ value, label, delay = 0 }: { value: number; label: string; delay?: number }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let frame = 0;
-    const start = performance.now();
-    const duration = 2400;
+    let start = 0;
+    let active = true;
+    const duration = 9000;
 
     const tick = (now: number) => {
+      if (!active) return;
+      if (!start) start = now + delay;
+
+      if (now < start) {
+        frame = window.requestAnimationFrame(tick);
+        return;
+      }
+
       const elapsed = Math.min(now - start, duration);
-      const eased = 1 - Math.pow(1 - elapsed / duration, 3);
+      const ratio = elapsed / duration;
+      const eased = 1 - Math.pow(1 - ratio, 3);
       setProgress(Math.round(value * eased));
 
       if (elapsed < duration) {
@@ -294,8 +304,11 @@ function HudGauge({ value, label }: { value: number; label: string }) {
     };
 
     frame = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(frame);
-  }, [value]);
+    return () => {
+      active = false;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [value, delay]);
 
   return (
     <div className="hud-gauge" aria-hidden>
@@ -385,10 +398,10 @@ export function HangarGate({ children }: { children: ReactNode }) {
           <Radar />
           <HudBars />
           <HudLineGraph />
-          <HudGauge value={93} label="AUDIO / POWER" />
+          <HudGauge value={93} label="AUDIO / POWER" delay={0} />
           <div className="hud-gauges hud-gauges--bottom" aria-hidden>
-            <HudGauge value={99} label="CORE" />
-            <HudGauge value={97} label="SYNC" />
+            <HudGauge value={99} label="CORE" delay={900} />
+            <HudGauge value={97} label="SYNC" delay={1800} />
           </div>
 
           <div className="hud-core" aria-hidden>
@@ -408,28 +421,18 @@ export function HangarGate({ children }: { children: ReactNode }) {
               ))}
             </div>
 
-            {/* Outer rings with red/blue gradient effect */}
+            {/* Núcleo cyberpunk: poucas camadas, muito mais legíveis */}
             <Ticks size={520} count={72} length={18} duration={65} />
-            <Ticks size={480} count={144} length={10} duration={55} reverse />
-            <Ring size={460} dash="142 26 68 28 34 70" duration={40} opacity={0.96} thickness={3.4} flow color="red" />
-            <Ring size={440} dash="6 18" duration={45} opacity={0.82} thickness={2.4} color="cyan" />
-            <Ring size={420} dash="118 22 52 18" duration={38} reverse opacity={0.88} thickness={3} flow pulse color="pink" />
-            <Ring size={400} dash="10 20" duration={42} opacity={0.76} thickness={2.4} color="red" />
-            <Ring size={380} dash="160 14 36 20" duration={35} reverse opacity={0.9} thickness={3} flow color="cyan" />
+            <Ticks size={480} count={96} length={10} duration={55} reverse />
 
-            {/* Middle rings */}
-            <Ring size={360} dash="3 9" duration={32} opacity={0.7} thickness={1.7} color="red" />
-            <Ring size={340} dash="84 18 28 24" duration={30} reverse opacity={0.78} thickness={2.2} color="cyan" />
-            <Ring size={320} dash="12 16" duration={28} opacity={0.82} thickness={2.2} flow color="pink" />
-            <Ring size={300} dash="112 20 64 24" duration={25} reverse opacity={0.88} thickness={3} flow pulse color="red" />
-            <Ring size={280} dash="4 11" duration={23} opacity={0.7} thickness={1.8} color="cyan" />
-
-            {/* Inner rings */}
-            <Ring size={260} dash="126 36" duration={20} reverse opacity={0.96} thickness={3.4} color="red" />
-            <Ring size={240} dash="14 8 4 12" duration={18} opacity={0.86} thickness={2.2} flow color="cyan" />
-            <Ring size={220} dash="5 14" duration={16} reverse opacity={0.9} thickness={1.8} color="pink" />
-            <Ring size={200} dash="74 24 18 22" duration={14} opacity={0.92} thickness={3} pulse color="red" />
-            <Ring size={180} dash="6 8" duration={12} opacity={0.86} thickness={2.2} color="cyan" />
+            <Ring size={460} dash="110 28 40 16 72 20" duration={40} opacity={0.94} thickness={3.4} flow color="red" />
+            <Ring size={420} dash="72 18 16 28 120 24" duration={38} reverse opacity={0.82} thickness={2.7} color="cyan" />
+            <Ring size={380} dash="150 30 38 18" duration={35} reverse opacity={0.92} flow color="red" />
+            <Ring size={340} dash="90 18 14 36" duration={30} opacity={0.76} color="cyan" />
+            <Ring size={300} dash="120 20 55 24" duration={25} reverse opacity={0.90} flow pulse color="red" />
+            <Ring size={260} dash="84 18 32 28" duration={20} opacity={0.82} thickness={2.8} color="cyan" />
+            <Ring size={220} dash="52 22 16 24" duration={16} reverse opacity={0.88} thickness={2.8} color="red" />
+            <Ring size={180} dash="64 20 10 18" duration={12} opacity={0.84} thickness={2.3} color="cyan" />
 
             {/* Elementos orbitais extras ao redor dos anéis */}
             <div className="hud-orbit-details" aria-hidden>
@@ -509,13 +512,3 @@ export function HangarGate({ children }: { children: ReactNode }) {
     </>
   );
 }
-
-// Hangar One: HUD de entrada alinhado à referência visual anexada — núcleo, módulos periféricos e telemetria animada.
-
-// Hangar One: referência V4 consolidada após atualização global de estilos.
-
-// HUD V4 styles synchronized.
-
-// Final V4 sync: paleta azul e composição periférica.
-
-// Cyberpunk pass: gauges contam gradualmente e anéis passam a ter corpo mecânico em vermelho/azul.
