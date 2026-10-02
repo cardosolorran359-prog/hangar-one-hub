@@ -4381,22 +4381,42 @@
 /* A animação continua sendo a existente; apenas a leitura física fica mais forte. */
 
 
-/* ---- FIX ONLY: anel de marcação externo desalinhado ----
-   Os Ticks antigos usam o mesmo wrapper de rotação, mas não tinham
-   uma posição absoluta explícita. Centralizamos somente essa camada. */
-.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref){
+/* ---- TICKS ALIGNMENT FIX: only the two external scale rings ---- */
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ticks{
   position:absolute!important;
-  inset:0!important;
-  margin:auto!important;
-  transform-origin:50% 50%!important;
+  left:50%!important;
+  top:50%!important;
+  width:auto;
+  height:auto;
+  margin:0!important;
+  inset:auto!important;
   display:grid!important;
   place-items:center!important;
+  transform-origin:50% 50%!important;
+  animation-name:hud-ticks-rotate!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+  will-change:transform;
 }
-.hangar-login .hud-core>.hud-ring-wrap:not(.hud-ring-ref)>.hud-ring{
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ticks>.hud-ring{
   position:absolute!important;
-  inset:0!important;
+  left:0!important;
+  top:0!important;
+  inset:auto!important;
   width:100%!important;
   height:100%!important;
   margin:0!important;
   transform:none!important;
+  animation:none!important;
+}
+.hangar-login .hud-core>.hud-ring-wrap.hud-ring-ticks.hud-ring--reverse{
+  animation-name:hud-ticks-rotate-reverse!important;
+}
+@keyframes hud-ticks-rotate{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+@keyframes hud-ticks-rotate-reverse{
+  from{transform:translate(-50%,-50%) rotate(360deg)}
+  to{transform:translate(-50%,-50%) rotate(0deg)}
 }
