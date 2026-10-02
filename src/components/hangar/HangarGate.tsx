@@ -479,3 +479,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
 }
 
 // Hangar One: HUD de entrada alinhado à referência visual anexada — núcleo, módulos periféricos e telemetria animada.
+
+// Hangar One: referência V4 consolidada após atualização global de estilos.
