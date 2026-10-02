@@ -25,10 +25,10 @@ function Ring({
   color?: "cyan" | "red" | "yellow" | "pink";
 }) {
   const colorMap = {
-    cyan: "#4f86ff",
-    red: "#6ea2ff",
-    yellow: "#a8c7ff",
-    pink: "#2f63db",
+    cyan: "#3f78ff",
+    red: "#e33b55",
+    yellow: "#6d8fdc",
+    pink: "#b92f49",
   };
 
   const r = size / 2 - thickness;
@@ -56,17 +56,28 @@ function Ring({
         aria-hidden
       >
         <circle
+          className="hud-ring__mechanical-underlay"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="rgba(8,14,28,.92)"
+          strokeWidth={Math.max(thickness * 3.9, 6)}
+          strokeDasharray={dash}
+          strokeLinecap="butt"
+        />
+        <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 2.35, 3.2)}
+          strokeWidth={Math.max(thickness * 3.0, 4.8)}
           strokeDasharray={dash}
           strokeLinecap="round"
-          opacity={0.16}
+          opacity={0.12}
           style={{
-            filter: `drop-shadow(0 0 12px ${colorMap[color]})`,
+            filter: "drop-shadow(0 0 5px rgba(51,72,120,.45))",
           }}
         />
         <circle
@@ -76,11 +87,12 @@ function Ring({
           r={r}
           fill="none"
           stroke={colorMap[color]}
-          strokeWidth={Math.max(thickness * 1.35, 2)}
+          strokeWidth={Math.max(thickness * 1.8, 3.2)}
           strokeDasharray={dash}
-          strokeLinecap="round"
+          strokeLinecap="butt"
+          className="hud-ring__body"
           style={{
-            filter: `drop-shadow(0 0 6px ${colorMap[color]})`,
+            filter: "drop-shadow(0 0 3px rgba(38,56,95,.40))",
           }}
         />
         {(flow || pulse) && (
@@ -265,13 +277,34 @@ function HudLineGraph() {
 }
 
 function HudGauge({ value, label }: { value: number; label: string }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const start = performance.now();
+    const duration = 2400;
+
+    const tick = (now: number) => {
+      const elapsed = Math.min(now - start, duration);
+      const eased = 1 - Math.pow(1 - elapsed / duration, 3);
+      setProgress(Math.round(value * eased));
+
+      if (elapsed < duration) {
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
+
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [value]);
+
   return (
     <div className="hud-gauge" aria-hidden>
       <div className="hud-gauge__dial">
-        <span className="hud-gauge__arc" style={{ "--value": `${value * 3.6}deg` } as CSSProperties} />
+        <span className="hud-gauge__arc" style={{ "--value": `${progress * 3.6}deg` } as CSSProperties} />
         <span className="hud-gauge__tick hud-gauge__tick--1" />
         <span className="hud-gauge__tick hud-gauge__tick--2" />
-        <strong>{value}%</strong>
+        <strong>{progress}%</strong>
       </div>
       <span className="hud-gauge__label">{label}</span>
     </div>
@@ -485,3 +518,5 @@ export function HangarGate({ children }: { children: ReactNode }) {
 // HUD V4 styles synchronized.
 
 // Final V4 sync: paleta azul e composição periférica.
+
+// Cyberpunk pass: gauges contam gradualmente e anéis passam a ter corpo mecânico em vermelho/azul.
