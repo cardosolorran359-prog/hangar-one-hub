@@ -229,6 +229,23 @@ export function HangarGate({ children }: { children: ReactNode }) {
             <Ring size={200} dash="30 12" duration={14} opacity={0.85} pulse color="red" />
             <Ring size={180} dash="8 6" duration={12} opacity={0.8} color="cyan" />
 
+            {/* Elementos orbitais extras ao redor dos anéis */}
+            <div className="hud-orbit-details" aria-hidden>
+              <div className="hud-orbit-arc hud-orbit-arc--outer" />
+              <div className="hud-orbit-arc hud-orbit-arc--inner" />
+              <div className="hud-orbit-markers">
+                {Array.from({ length: 12 }, (_, i) => <span key={i} className="hud-orbit-marker" />)}
+              </div>
+              <span className="hud-signal-dot hud-signal-dot--top" />
+              <span className="hud-signal-dot hud-signal-dot--right" />
+              <span className="hud-signal-dot hud-signal-dot--bottom" />
+              <span className="hud-signal-dot hud-signal-dot--left" />
+              <div className="hud-orbit-notch hud-orbit-notch--top" />
+              <div className="hud-orbit-notch hud-orbit-notch--right" />
+              <div className="hud-orbit-notch hud-orbit-notch--bottom" />
+              <div className="hud-orbit-notch hud-orbit-notch--left" />
+            </div>
+
             {/* Orbital elements */}
             <div className="hud-core__orbit hud-core__orbit--outer">
               <span className="hud-core__orbit-dot hud-core__orbit-dot--red" />
