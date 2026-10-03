@@ -458,3 +458,5 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
       >
         ENTRAR NO HANGAR ONE
       </button>
+
+// HudDetails integration sync marker.
