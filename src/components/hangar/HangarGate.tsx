@@ -14,11 +14,12 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
   }, []);
 
   useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv) return;
-
-    const ctx = cv.getContext("2d");
-    if (!ctx) return;
+    const cvEl = canvasRef.current;
+    if (!cvEl) return;
+    const ctxEl = cvEl.getContext("2d");
+    if (!ctxEl) return;
+    const cv: HTMLCanvasElement = cvEl;
+    const ctx: CanvasRenderingContext2D = ctxEl;
 
     // ===== CÓDIGO-FONTE FORNECIDO =====
     const CFG = {
@@ -458,5 +459,48 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
       >
         ENTRAR NO HANGAR ONE
       </button>
+    </section>
+  );
+}
 
-// HudDetails integration sync marker.
+const GATE_KEY = "hangar-one:gate";
+
+export function HangarGate({ children }: { children: ReactNode }) {
+  const [phase, setPhase] = useState<"checking" | "gate" | "leaving" | "done">("checking");
+
+  useEffect(() => {
+    let seen = false;
+    try {
+      seen = window.sessionStorage.getItem(GATE_KEY) === "1";
+    } catch {
+      seen = false;
+    }
+    setPhase(seen ? "done" : "gate");
+  }, []);
+
+  const enter = () => {
+    try {
+      window.sessionStorage.setItem(GATE_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setPhase("leaving");
+    window.setTimeout(() => setPhase("done"), EXIT_DELAY);
+  };
+
+  return (
+    <>
+      {children}
+      {(phase === "gate" || phase === "leaving") && (
+        <div
+          style={{
+            opacity: phase === "leaving" ? 0 : 1,
+            transition: `opacity ${EXIT_DELAY}ms ease`,
+          }}
+        >
+          <HudLoginBackground onEnter={enter} />
+        </div>
+      )}
+    </>
+  );
+}
