@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Panel } from "./ui";
 import { TechContentImporter } from "./TechContentImporter";
+import { TechDocumentReader } from "./TechDocumentReader";
 import { listIndexedDocuments, searchIndexedDocuments, type IndexedTechDocument } from "@/lib/techLibrary";
 
 type Mode = "buscar" | "diagnostico" | "procedimentos" | "calculadoras" | "favoritos" | "historico";
@@ -128,6 +129,7 @@ export function TechnicalCenter() {
   const [resistance, setResistance] = useState("2.5");
   const [importOpen, setImportOpen] = useState(false);
   const [libraryDocs, setLibraryDocs] = useState<IndexedTechDocument[]>([]);
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
   useEffect(() => {
     setFavorites(loadJson("hangar-one-tech-favorites", []));
@@ -176,6 +178,11 @@ export function TechnicalCenter() {
     setQuery(value);
     if (value.trim()) saveSearch(value);
   };
+
+  const selectedDoc = useMemo(() => {
+    if (!selectedDocId) return null;
+    return libraryDocs.find((d) => d.id === selectedDocId) ?? allDocs.find((d) => d.id === selectedDocId) ?? null;
+  }, [selectedDocId, libraryDocs, allDocs]);
 
   const modeItems: [Mode, string, typeof Search][] = [
     ["buscar", "Busca", Search],
@@ -264,7 +271,7 @@ export function TechnicalCenter() {
                       <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
                         <span className="inline-flex items-center gap-1.5 text-muted-foreground"><FileText className="size-3.5" /> {d.source}</span>
                         {d.page && <span className="inline-flex items-center gap-1.5 font-mono text-muted-foreground">pág. {d.page}</span>}
-                        <button onClick={() => toast.info("O visualizador de documento será ligado ao arquivo/indexador do acervo.")} className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-3 py-2 text-primary hover:bg-primary/15">Abrir conteúdo <ArrowRight className="size-3.5" /></button>
+                        <button onClick={() => setSelectedDocId(d.id)} className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-3 py-2 text-primary hover:bg-primary/15">Abrir conteúdo <ArrowRight className="size-3.5" /></button>
                       </div>
                     </div>
                   </div>
