@@ -1040,7 +1040,7 @@
 }
 
 /* ---- FUTURISTIC LOGIN VISUALS ON ACTIVE HANGAR GATE ---- */
-/* Efeitos do FuturisticLogin.css aplicados à tela de entrada real (HangarGate). */
+/* Efeitos da tela de entrada (HangarGate). */
 .hangar-login {
   --primary-neon: #00ffff;
   --secondary-neon: #ff0080;
