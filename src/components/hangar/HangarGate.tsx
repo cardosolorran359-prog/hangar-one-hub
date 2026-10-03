@@ -14,11 +14,12 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
   }, []);
 
   useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv) return;
-
-    const ctx = cv.getContext("2d");
-    if (!ctx) return;
+    const cvEl = canvasRef.current;
+    if (!cvEl) return;
+    const ctxEl = cvEl.getContext("2d");
+    if (!ctxEl) return;
+    const cv: HTMLCanvasElement = cvEl;
+    const ctx: CanvasRenderingContext2D = ctxEl;
 
     // ===== CÓDIGO-FONTE FORNECIDO =====
     const CFG = {
