@@ -1,4 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { HangarLogo } from "./Logo";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   LayoutDashboard, Smartphone, Apple, Users, Tablet, ClipboardList, Stethoscope, Receipt, Package,
