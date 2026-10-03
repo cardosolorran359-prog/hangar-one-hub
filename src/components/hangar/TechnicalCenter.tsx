@@ -6,6 +6,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Panel } from "./ui";
+import { TechContentImporter } from "./TechContentImporter";
+import { listIndexedDocuments, searchIndexedDocuments, type IndexedTechDocument } from "@/lib/techLibrary";
 
 type Mode = "buscar" | "diagnostico" | "procedimentos" | "calculadoras" | "favoritos" | "historico";
 type Scope = "todos" | "celular" | "computador";
@@ -124,11 +126,18 @@ export function TechnicalCenter() {
   const [voltage, setVoltage] = useState("5");
   const [current, setCurrent] = useState("2");
   const [resistance, setResistance] = useState("2.5");
+  const [importOpen, setImportOpen] = useState(false);
+  const [libraryDocs, setLibraryDocs] = useState<IndexedTechDocument[]>([]);
 
   useEffect(() => {
     setFavorites(loadJson("hangar-one-tech-favorites", []));
     setHistory(loadJson("hangar-one-tech-history", []));
+    void refreshLibrary();
   }, []);
+
+  const refreshLibrary = async () => {
+    try { setLibraryDocs(await listIndexedDocuments()); } catch { toast.error("Não foi possível carregar o índice local."); }
+  };
 
   useEffect(() => {
     localStorage.setItem("hangar-one-tech-favorites", JSON.stringify(favorites));
@@ -138,7 +147,16 @@ export function TechnicalCenter() {
     localStorage.setItem("hangar-one-tech-history", JSON.stringify(history));
   }, [history]);
 
-  const results = useMemo(() => searchDocs(query, scope), [query, scope]);
+  const indexedAsDocs = useMemo<Doc[]>(() => libraryDocs.map((d) => ({
+    id: d.id, title: d.title, source: d.source, scope: d.scope, brand: d.brand, model: d.model, kind: d.kind,
+    tags: d.tags, excerpt: d.excerpt, page: d.page,
+  })), [libraryDocs]);
+  const allDocs = useMemo(() => [...DOCS, ...indexedAsDocs], [indexedAsDocs]);
+  const results = useMemo(() => {
+    const base = searchDocs(query, scope);
+    const indexed = searchIndexedDocuments(libraryDocs, query, SYNONYMS, scope) as Doc[];
+    return [...base, ...indexed];
+  }, [query, scope, libraryDocs]);
   const suggestions = useMemo(() => {
     const q = norm(query);
     return SUGGESTIONS.filter((item) => !q || norm(item).includes(q)).slice(0, 6);
@@ -176,7 +194,7 @@ export function TechnicalCenter() {
           <h1 className="mt-1 font-display text-3xl font-semibold">Central de bancada</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Busca rápida por sintomas, modelos, componentes e procedimentos — sem depender de IA.</p>
         </div>
-        <button onClick={() => toast.info("A importação de PDFs e a indexação do conteúdo serão conectadas ao acervo do Supabase nesta etapa seguinte.")} className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/15">
+        <button onClick={() => setImportOpen(true)} className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/15">
           <Upload className="size-4" /> Adicionar conteúdo
         </button>
       </div>
@@ -324,7 +342,7 @@ export function TechnicalCenter() {
       {mode === "favoritos" && (
         <Panel title="Meus conteúdos salvos" icon={<Star className="size-3.5 text-warning" />}>
           <div className="space-y-2">
-            {DOCS.filter((d) => favorites.includes(d.id)).map((d) => <div key={d.id} className="flex items-center gap-3 rounded-lg border border-border p-3"><Star className="size-4 fill-current text-warning" /><div className="flex-1"><div className="text-sm font-medium">{d.title}</div><div className="text-xs text-muted-foreground">{d.brand} · {d.model}</div></div><button onClick={() => toggleFavorite(d.id)} className="text-muted-foreground hover:text-foreground"><X className="size-4" /></button></div>)}
+            {allDocs.filter((d) => favorites.includes(d.id)).map((d) => <div key={d.id} className="flex items-center gap-3 rounded-lg border border-border p-3"><Star className="size-4 fill-current text-warning" /><div className="flex-1"><div className="text-sm font-medium">{d.title}</div><div className="text-xs text-muted-foreground">{d.brand} · {d.model}</div></div><button onClick={() => toggleFavorite(d.id)} className="text-muted-foreground hover:text-foreground"><X className="size-4" /></button></div>)}
             {!favorites.length && <div className="py-10 text-center text-sm text-muted-foreground">Você ainda não salvou nenhum conteúdo.</div>}
           </div>
         </Panel>
@@ -344,6 +362,7 @@ export function TechnicalCenter() {
         <InfoCard icon={<Stethoscope className="size-4" />} title="Diagnóstico guiado" text="Fluxos por sintoma ajudam a chegar ao próximo teste antes de trocar componentes." />
         <InfoCard icon={<CheckCircle2 className="size-4" />} title="Sem dependência de IA" text="Sinônimos, filtros, pesos e histórico fazem a busca funcionar de forma rápida e previsível." />
       </div>
+      <TechContentImporter open={importOpen} onClose={() => setImportOpen(false)} onChanged={refreshLibrary} />
     </div>
   );
 }
