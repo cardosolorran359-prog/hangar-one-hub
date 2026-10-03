@@ -118,7 +118,7 @@ function loadJson<T>(key: string, fallback: T): T {
   }
 }
 
-export function TechnicalCenter() {
+// Technical Center: imported content is rendered as native Hangar One knowledge pages.\nexport function TechnicalCenter() {
   const [mode, setMode] = useState<Mode>("buscar");
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<Scope>("todos");
