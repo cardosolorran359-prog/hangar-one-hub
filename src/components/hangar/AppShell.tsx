@@ -6,7 +6,7 @@ import {
   BarChart3, Shield, ChevronsLeft, Search, Bell, Settings, Usb, Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { hydrate, osNum, statusTone, useStore } from "@/lib/store";
+import { digits, hydrate, indexById, osNum, statusTone, useStore } from "@/lib/store";
 import { useUsb } from "@/lib/usb";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Pill } from "./ui";
@@ -118,11 +118,13 @@ function GlobalSearch({ open, setOpen }: { open: boolean; setOpen: (o: boolean) 
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
   const orders = useStore((s) => s.orders);
-  const items = useMemo(() => orders.map((o) => {
-    const c = customers.find((x) => x.id === o.customerId);
-    const dv = devices.find((x) => x.id === o.deviceId);
-    return { o, c, dv, key: [osNum(o.number), o.number, c?.name, c?.cpf, c?.phone, c?.phone.replace(/\D/g, ""), dv?.imei, dv?.serial, dv?.model].join(" ") };
-  }), [orders, customers, devices]);
+  const items = useMemo(() => {
+    const cs = indexById(customers); const ds = indexById(devices);
+    return orders.map((o) => {
+      const c = cs.get(o.customerId); const dv = ds.get(o.deviceId);
+      return { o, c, dv, key: [osNum(o.number), o.number, c?.name, c?.cpf, c?.phone, digits(c?.phone), dv?.imei, dv?.serial, dv?.model].join(" ") };
+    });
+  }, [orders, customers, devices]);
   const go = (fn: () => void) => { setOpen(false); fn(); };
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
@@ -140,7 +142,7 @@ function GlobalSearch({ open, setOpen }: { open: boolean; setOpen: (o: boolean) 
         </CommandGroup>
         <CommandGroup heading="Clientes">
           {customers.map((c) => (
-            <CommandItem key={c.id} value={`${c.name} ${c.cpf} ${c.phone} ${c.phone.replace(/\D/g, "")}`} onSelect={() => go(() => nav({ to: "/clientes", search: { id: c.id } }))}>
+            <CommandItem key={c.id} value={`${c.name} ${c.cpf} ${c.phone} ${digits(c.phone)}`} onSelect={() => go(() => nav({ to: "/clientes", search: { id: c.id } }))}>
               <Users className="size-4" /> {c.name} <span className="ml-auto font-mono text-xs text-muted-foreground">{c.phone}</span>
             </CommandItem>
           ))}

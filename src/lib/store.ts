@@ -35,12 +35,12 @@ export interface Device {
   id: string; customerId: string; brand: string; model: string; platform: Platform; imei: string; imei2: string;
   serial: string; os: string; color: string; storage: string; notes: string;
 }
-export interface BudgetItem { id: string; desc: string; kind: "servico" | "peca" | "mao"; qty: number; price: number }
+export interface BudgetItem { id: string; desc: string; kind: "servico" | "peca" | "mao"; qty: number; price: number; partId?: string }
 export type Approval = "Pendente" | "Aprovado" | "Recusado" | "Expirado";
 export interface WorkOrder {
   id: string; number: number; customerId: string; deviceId: string; createdAt: string; dueAt: string; tech: string;
   problem: string; diagnosis: string; status: OsStatus; service: string;
-  budget: { items: BudgetItem[]; discount: number; warrantyDays: number; approval: Approval };
+  budget: { items: BudgetItem[]; discount: number; warrantyDays: number; approval: Approval; stockApplied?: boolean };
   checklist: Record<string, TestResult>;
   repair: { procedure: string; notes: string };
   history: { at: string; status: OsStatus; note?: string | undefined; user: string }[];
@@ -119,4 +119,41 @@ export function statusTone(s: OsStatus): "blue" | "green" | "orange" | "violet" 
   if (s === "Em testes" || s === "Em diagnóstico") return "violet";
   if (s === "Aberta") return "cyan";
   return "muted";
+}
+
+/* ---------- Helpers compartilhados entre módulos ---------- */
+export const CLOSED_STATUSES: OsStatus[] = ["Entregue", "Cancelado"];
+export const isOpen = (o: WorkOrder) => !CLOSED_STATUSES.includes(o.status);
+export const isLate = (o: WorkOrder) => new Date(o.dueAt) < new Date() && !["Pronto", ...CLOSED_STATUSES].includes(o.status);
+export const digits = (s = "") => s.replace(/\D/g, "");
+
+/** Índice por id — evita `.find` repetido em cada linha das tabelas. */
+export function indexById<T extends { id: string }>(list: T[]): Map<string, T> {
+  return new Map(list.map((x) => [x.id, x]));
+}
+
+export function nextOrderNumber() {
+  return Math.max(0, ...state.orders.map((o) => o.number)) + 1;
+}
+
+/** Link do WhatsApp com DDI 55 quando o número não tem código de país. */
+export function whatsappLink(phone: string, text: string) {
+  let n = digits(phone);
+  if (n.length <= 11) n = "55" + n;
+  return `https://wa.me/${n}?text=${encodeURIComponent(text)}`;
+}
+
+/** Baixa as peças do estoque (uma única vez por OS). Retorna quantas unidades foram baixadas. */
+export function applyStock(orderId: string): number {
+  const o = state.orders.find((x) => x.id === orderId);
+  if (!o || o.budget.stockApplied) return 0;
+  const use = new Map<string, number>();
+  o.budget.items.forEach((i) => { if (i.partId) use.set(i.partId, (use.get(i.partId) ?? 0) + i.qty); });
+  let total = 0; use.forEach((q) => (total += q));
+  setState((s) => ({
+    ...s,
+    parts: s.parts.map((p) => (use.has(p.id) ? { ...p, qty: Math.max(0, p.qty - (use.get(p.id) ?? 0)) } : p)),
+    orders: s.orders.map((x) => (x.id === orderId ? { ...x, budget: { ...x.budget, stockApplied: true } } : x)),
+  }));
+  return total;
 }

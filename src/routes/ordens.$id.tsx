@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Check, Clock, Plus, Printer, Trash2, X } from "lucide-react";
+import { ArrowLeft, Check, Clock, MessageCircle, Plus, Printer, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Field, Panel, Pill, Empty } from "@/components/hangar/ui";
 import { Checklist } from "@/components/hangar/Checklist";
@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  brl, budgetTotal, fmtDate, fmtTime, getState, logActivity, OS_STATUSES, osNum, setState, statusTone, TECHS, uid, useStore,
+  applyStock, brl, budgetTotal, fmtDate, fmtTime, getState, logActivity, whatsappLink, CHECKLIST_ITEMS, OS_STATUSES, osNum, setState, statusTone, TECHS, uid, useStore,
   type Approval, type OsStatus, type WorkOrder,
 } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -34,8 +34,8 @@ function OrderPage() {
   const devices = useStore((s) => s.devices);
   const parts = useStore((s) => s.parts);
   const o = orders.find((x) => x.id === id);
-  const c = customers.find((x) => x.id === o?.customerId);
-  const d = devices.find((x) => x.id === o?.deviceId);
+  const c = o ? customers.find((x) => x.id === o.customerId) : undefined;
+  const d = o ? devices.find((x) => x.id === o.deviceId) : undefined;
   const [newItem, setNewItem] = useState({ desc: "", price: "" });
 
   if (!o) return <Empty icon={<X className="size-5" />} title="OS não encontrada"><Button asChild variant="outline" size="sm"><Link to="/ordens">Voltar</Link></Button></Empty>;
@@ -49,15 +49,24 @@ function OrderPage() {
   };
   const setApproval = (a: Approval) => {
     update((x) => ({ ...x, budget: { ...x.budget, approval: a } }));
-    if (a === "Aprovado") setStatus("Aprovado", "Orçamento aprovado pelo cliente");
+    if (a === "Aprovado") {
+      setStatus("Aprovado", "Orçamento aprovado pelo cliente");
+      const n = applyStock(o.id);
+      if (n) { toast.success(`${n} peça(s) baixada(s) do estoque`); logActivity(`OS ${osNum(o.number)}: ${n} peça(s) baixada(s) do estoque`, "ok"); }
+    }
     if (a === "Recusado") setStatus("Cancelado", "Orçamento recusado");
   };
-  const addItem = (desc: string, price: number, kind: "servico" | "peca" | "mao" = "servico") =>
-    update((x) => ({ ...x, budget: { ...x.budget, items: [...x.budget.items, { id: uid(), desc, kind, qty: 1, price }] } }));
+  const addItem = (desc: string, price: number, kind: "servico" | "peca" | "mao" = "servico", partId?: string) =>
+    update((x) => ({ ...x, budget: { ...x.budget, items: [...x.budget.items, { id: uid(), desc, kind, qty: 1, price, ...(partId ? { partId } : {}) }] } }));
+  const waText = o.status === "Pronto"
+    ? `Olá ${c?.name ?? ""}! Seu ${d?.brand ?? ""} ${d?.model ?? ""} (OS ${osNum(o.number)}) está pronto para retirada. Total: ${brl(budgetTotal(o))}.`
+    : `Olá ${c?.name ?? ""}! Orçamento da OS ${osNum(o.number)} — ${d?.brand ?? ""} ${d?.model ?? ""}:\n${o.budget.items.map((i) => `• ${i.desc} x${i.qty}: ${brl(i.qty * i.price)}`).join("\n")}${o.budget.discount ? `\nDesconto: ${brl(o.budget.discount)}` : ""}\nTotal: ${brl(budgetTotal(o))}\nGarantia: ${o.budget.warrantyDays} dias.`;
   const idx = FLOW.indexOf(o.status);
 
   return (
-    <div className="space-y-6">
+    <>
+    <Receipt o={o} c={c} d={d} />
+    <div className="space-y-6 print:hidden">
       <div className="flex flex-wrap items-center gap-4">
         <Button asChild variant="ghost" size="icon"><Link to="/ordens"><ArrowLeft className="size-4" /></Link></Button>
         <div>
@@ -66,7 +75,8 @@ function OrderPage() {
         </div>
         <Pill tone={statusTone(o.status)} className="text-xs">{o.status}</Pill>
         <div className="ml-auto flex gap-2">
-          <Button variant="outline" onClick={() => window.print()}><Printer className="size-4" /> Imprimir</Button>
+          <Button variant="outline" disabled={!c?.phone} title={c?.phone ? "Enviar pelo WhatsApp" : "Cliente sem telefone"} onClick={() => c?.phone && window.open(whatsappLink(c.phone, waText), "_blank", "noopener")}><MessageCircle className="size-4" /> WhatsApp</Button>
+          <Button variant="outline" onClick={() => window.print()}><Printer className="size-4" /> Comprovante</Button>
           <Select value={o.status} onValueChange={(v) => setStatus(v as OsStatus)}>
             <SelectTrigger className="w-56"><SelectValue /></SelectTrigger>
             <SelectContent>{OS_STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
@@ -157,7 +167,7 @@ function OrderPage() {
                 <Input className="min-w-48 flex-1" placeholder="Serviço ou mão de obra" value={newItem.desc} onChange={(e) => setNewItem({ ...newItem, desc: e.target.value })} />
                 <Input className="w-32" type="number" placeholder="Valor" value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: e.target.value })} />
                 <Button variant="outline" onClick={() => { if (!newItem.desc || !newItem.price) return; addItem(newItem.desc, Number(newItem.price)); setNewItem({ desc: "", price: "" }); }}><Plus className="size-4" /> Adicionar</Button>
-                <Select onValueChange={(pid) => { const p = parts.find((x) => x.id === pid); if (p) addItem(p.desc, p.price, "peca"); }}>
+                <Select onValueChange={(pid) => { const p = parts.find((x) => x.id === pid); if (p) addItem(p.desc, p.price, "peca", p.id); }}>
                   <SelectTrigger className="w-56"><SelectValue placeholder="+ Peça do estoque" /></SelectTrigger>
                   <SelectContent>{parts.map((p) => <SelectItem key={p.id} value={p.id}>{p.desc} · {brl(p.price)} ({p.qty} un.)</SelectItem>)}</SelectContent>
                 </Select>
@@ -203,6 +213,38 @@ function OrderPage() {
           </ol>
         </Panel>
       </div>
+    </div>
+    </>
+  );
+}
+
+type C = ReturnType<typeof getState>["customers"][number] | undefined;
+type D = ReturnType<typeof getState>["devices"][number] | undefined;
+
+/** Comprovante de entrada — visível apenas na impressão. */
+function Receipt({ o, c, d }: { o: WorkOrder; c: C; d: D }) {
+  const mark = { ok: "OK", falha: "FALHA", nt: "N/T", na: "N/A" } as const;
+  return (
+    <div className="receipt hidden print:block">
+      <div className="text-center"><div className="text-lg font-bold tracking-widest">HANGAR ONE</div><div className="text-xs">Assistência técnica de celulares</div></div>
+      <hr />
+      <div className="flex justify-between font-bold"><span>OS {osNum(o.number)}</span><span>{fmtDate(o.createdAt)} {fmtTime(o.createdAt)}</span></div>
+      <p><b>Cliente:</b> {c?.name} · {c?.phone}</p>
+      {c?.cpf && <p><b>CPF:</b> {c.cpf}</p>}
+      <p><b>Aparelho:</b> {d?.brand} {d?.model}</p>
+      <p><b>IMEI/Serial:</b> {d?.imei || d?.serial || "—"}</p>
+      <p><b>Técnico:</b> {o.tech} · <b>Previsão:</b> {fmtDate(o.dueAt)}</p>
+      <p><b>Problema relatado:</b> {o.problem}</p>
+      {o.diagnosis && <p><b>Laudo:</b> {o.diagnosis}</p>}
+      {Object.keys(o.checklist).length > 0 && (<><hr /><b>Checklist de entrada</b>
+        <div className="grid grid-cols-2 gap-x-4 text-xs">{CHECKLIST_ITEMS.filter((k) => o.checklist[k]).map((k) => <span key={k}>{k}: {mark[o.checklist[k]!]}</span>)}</div></>)}
+      {o.budget.items.length > 0 && (<><hr /><b>Orçamento</b>
+        {o.budget.items.map((i) => <div key={i.id} className="flex justify-between text-xs"><span>{i.desc} x{i.qty}</span><span>{brl(i.qty * i.price)}</span></div>)}
+        {o.budget.discount > 0 && <div className="flex justify-between text-xs"><span>Desconto</span><span>-{brl(o.budget.discount)}</span></div>}
+        <div className="flex justify-between font-bold"><span>Total</span><span>{brl(budgetTotal(o))}</span></div></>)}
+      <hr />
+      <p className="text-xs">Garantia de {o.budget.warrantyDays} dias sobre o serviço executado, não cobrindo mau uso, quedas ou contato com líquidos. Aparelhos não retirados em 90 dias após o aviso de pronto poderão ser descartados conforme a lei.</p>
+      <div className="mt-10 border-t border-current pt-1 text-center text-xs">Assinatura do cliente</div>
     </div>
   );
 }

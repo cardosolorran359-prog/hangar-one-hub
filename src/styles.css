@@ -1040,7 +1040,7 @@
 }
 
 /* ---- FUTURISTIC LOGIN VISUALS ON ACTIVE HANGAR GATE ---- */
-/* Efeitos do FuturisticLogin.css aplicados à tela de entrada real (HangarGate). */
+/* Efeitos da tela de entrada (HangarGate). */
 .hangar-login {
   --primary-neon: #00ffff;
   --secondary-neon: #ff0080;
@@ -4451,4 +4451,15 @@
 }
 .hangar-login .hud-core>.hud-ring-wrap{
   display:none!important;
+}
+
+/* Comprovante de OS para impressão (A4 ou térmica 80mm) */
+@media print {
+  @page { margin: 8mm; }
+  html, body { background: #fff !important; color: #000 !important; }
+  aside, header { display: none !important; }
+  main { overflow: visible !important; }
+  .receipt { max-width: 80mm; margin: 0 auto; font-family: "JetBrains Mono", monospace; font-size: 11px; line-height: 1.45; color: #000; }
+  .receipt p { margin: 2px 0; }
+  .receipt hr { border: 0; border-top: 1px dashed #000; margin: 6px 0; }
 }

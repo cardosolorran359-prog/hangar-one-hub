@@ -4,7 +4,7 @@ import { ClipboardList, Search } from "lucide-react";
 import { PageHeader, Panel, Pill, Empty } from "@/components/hangar/ui";
 import { NewOrderDialog } from "@/components/hangar/NewOrderDialog";
 import { Input } from "@/components/ui/input";
-import { brl, budgetTotal, fmtDate, OS_STATUSES, osNum, statusTone, useStore } from "@/lib/store";
+import { brl, budgetTotal, fmtDate, indexById, isLate, OS_STATUSES, osNum, statusTone, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/ordens/")({
@@ -30,12 +30,13 @@ function Orders() {
   const orders = useStore((s) => s.orders);
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
+  const custById = indexById(customers); const devById = indexById(devices);
   const [g, setG] = useState("Todas");
   const [q, setQ] = useState("");
   const list = [...orders].sort((a, b) => b.number - a.number).filter((o) => {
     if (g !== "Todas" && !(GROUPS[g] ?? []).includes(o.status)) return false;
     if (!q) return true;
-    const c = customers.find((x) => x.id === o.customerId); const d = devices.find((x) => x.id === o.deviceId);
+    const c = custById.get(o.customerId); const d = devById.get(o.deviceId);
     return [osNum(o.number), c?.name, c?.phone, d?.model, d?.imei, o.service].join(" ").toLowerCase().includes(q.toLowerCase());
   });
 
@@ -65,8 +66,8 @@ function Orders() {
               </tr></thead>
               <tbody>
                 {list.map((o) => {
-                  const c = customers.find((x) => x.id === o.customerId); const d = devices.find((x) => x.id === o.deviceId);
-                  const late = new Date(o.dueAt) < new Date() && !["Pronto", "Entregue", "Cancelado"].includes(o.status);
+                  const c = custById.get(o.customerId); const d = devById.get(o.deviceId);
+                  const late = isLate(o);
                   return (
                     <tr key={o.id} className="border-b border-border/50 last:border-0 hover:bg-muted/40">
                       <td className="px-4 py-3"><Link to="/ordens/$id" params={{ id: o.id }} className="font-mono font-semibold text-primary hover:underline">{osNum(o.number)}</Link></td>
