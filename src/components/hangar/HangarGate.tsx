@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { HudDetails } from "./HudDetails";
 
 const BUTTON_DELAY = 2200;
 const EXIT_DELAY = 650;
@@ -446,6 +447,7 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
       <div className="leds" />
       <canvas ref={canvasRef} id="hud-source-canvas" aria-hidden />
       <div className="vig" />
+      <HudDetails />
       <button
         type="button"
         className="hud-source-login__enter"
@@ -456,27 +458,3 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
       >
         ENTRAR NO HANGAR ONE
       </button>
-    </section>
-  );
-}
-
-export function HangarGate({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState(false);
-  const [exiting, setExiting] = useState(false);
-
-  const enterHangar = () => {
-    if (exiting) return;
-    setExiting(true);
-    window.setTimeout(() => setReady(true), EXIT_DELAY);
-  };
-
-  return (
-    <>
-      <div className={ready ? "hud-app hud-app--ready" : "hud-app"} aria-hidden={!ready}>
-        {children}
-      </div>
-
-      {!ready && <HudLoginBackground onEnter={enterHangar} />}
-    </>
-  );
-}
