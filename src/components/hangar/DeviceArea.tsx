@@ -8,7 +8,7 @@ import { UsbPanel } from "./UsbPanel";
 import { Field, PageHeader, Panel, Pill } from "./ui";
 import { Button } from "@/components/ui/button";
 import { useUsb } from "@/lib/usb";
-import { useStore } from "@/lib/store";
+import { isOpen, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 type Tool = { id: string; label: string; icon: React.ElementType; critical?: boolean; desc: string };
@@ -104,7 +104,7 @@ export function DeviceArea({ platform }: { platform: "android" | "apple" }) {
       <Panel title={`Aparelhos ${isApple ? "Apple" : "Android"} cadastrados`}>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {devices.map((d) => {
-            const active = orders.find((o) => o.deviceId === d.id && !["Entregue", "Cancelado"].includes(o.status));
+            const active = orders.find((o) => o.deviceId === d.id && isOpen(o));
             return (
               <div key={d.id} className="flex items-center justify-between rounded-lg border border-border/70 p-3">
                 <div><div className="text-sm font-medium">{d.brand} {d.model}</div><div className="font-mono text-xs text-muted-foreground">{d.os || "—"} · {d.imei || d.serial}</div></div>

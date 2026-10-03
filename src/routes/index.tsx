@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Activity, Apple, CheckCircle2, ClipboardList, FilePlus2, Info, Smartphone, TriangleAlert, Users, BarChart3, Wrench, Clock, Wallet } from "lucide-react";
 import { UsbPanel } from "@/components/hangar/UsbPanel";
 import { Panel, Pill, Stat, type Tone } from "@/components/hangar/ui";
-import { brl, budgetTotal, fmtDate, fmtTime, osNum, statusTone, useStore, type Activity as Act } from "@/lib/store";
+import { brl, budgetTotal, fmtDate, fmtTime, osNum, statusTone, useStore, type Activity as Act, indexById, isOpen } from "@/lib/store";
 import { NewOrderDialog } from "@/components/hangar/NewOrderDialog";
 import { cn } from "@/lib/utils";
 
@@ -32,10 +32,11 @@ function Dashboard() {
   const devices = useStore((s) => s.devices);
   const activity = useStore((s) => s.activity);
 
-  const open = orders.filter((o) => !["Entregue", "Cancelado"].includes(o.status));
+  const open = orders.filter(isOpen);
   const ready = orders.filter((o) => o.status === "Pronto");
   const revenue = orders.filter((o) => ["Pronto", "Entregue"].includes(o.status)).reduce((a, o) => a + budgetTotal(o), 0);
-  const dev = (id: string) => devices.find((d) => d.id === id);
+  const devById = indexById(devices); const custById = indexById(customers);
+  const dev = (id: string) => devById.get(id);
   const plat = { android: 0, apple: 0, outro: 0 };
   orders.forEach((o) => { const p = dev(o.deviceId)?.platform ?? "outro"; plat[p]++; });
   const total = orders.length || 1;
@@ -118,7 +119,7 @@ function Dashboard() {
             </tr></thead>
             <tbody>
               {[...orders].sort((a, b) => b.number - a.number).slice(0, 6).map((o) => {
-                const c = customers.find((x) => x.id === o.customerId); const d = dev(o.deviceId);
+                const c = custById.get(o.customerId); const d = dev(o.deviceId);
                 return (
                   <tr key={o.id} className="border-b border-border/50 last:border-0 hover:bg-muted/40">
                     <td className="px-3 py-3"><Link to="/ordens/$id" params={{ id: o.id }} className="font-mono text-primary hover:underline">{osNum(o.number)}</Link></td>

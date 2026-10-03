@@ -5,7 +5,8 @@ import { Checklist } from "@/components/hangar/Checklist";
 import { Empty, PageHeader, Panel, Pill } from "@/components/hangar/ui";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { osNum, setState, statusTone, useStore } from "@/lib/store";
+import { indexById, isOpen, osNum, setState, statusTone, useStore } from "@/lib/store";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/diagnostico")({
@@ -20,9 +21,11 @@ export const Route = createFileRoute("/diagnostico")({
 
 function Diag() {
   const allOrders = useStore((s) => s.orders);
-  const orders = allOrders.filter((o) => !["Entregue", "Cancelado"].includes(o.status));
+  const orders = useMemo(() => allOrders.filter(isOpen), [allOrders]);
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
+  const devById = useMemo(() => indexById(devices), [devices]);
+  const custById = useMemo(() => indexById(customers), [customers]);
   const [sel, setSel] = useState<string | null>(null);
   const cur = orders.find((o) => o.id === sel) ?? orders[0];
   const upd = (patch: Partial<typeof cur>) => cur && setState((s) => ({ ...s, orders: s.orders.map((o) => (o.id === cur.id ? { ...o, ...patch } : o)) }));
@@ -34,7 +37,7 @@ function Diag() {
         <Panel title="Em atendimento" className="p-3">
           <ul className="space-y-1">
             {orders.map((o) => {
-              const d = devices.find((x) => x.id === o.deviceId);
+              const d = devById.get(o.deviceId);
               const done = Object.keys(o.checklist).length;
               return (
                 <li key={o.id}><button onClick={() => setSel(o.id)} className={cn("w-full rounded-lg px-3 py-2.5 text-left", cur?.id === o.id ? "bg-primary/12 ring-1 ring-primary/30" : "hover:bg-muted/50")}>
@@ -48,7 +51,7 @@ function Diag() {
         </Panel>
         {cur ? (
           <div className="space-y-6">
-            <Panel title={`${osNum(cur.number)} · ${devices.find((d) => d.id === cur.deviceId)?.model} · ${customers.find((c) => c.id === cur.customerId)?.name}`}
+            <Panel title={`${osNum(cur.number)} · ${devById.get(cur.deviceId)?.model ?? "—"} · ${custById.get(cur.customerId)?.name ?? "—"}`}
               action={<Button asChild size="sm" variant="outline"><Link to="/ordens/$id" params={{ id: cur.id }}>Abrir OS</Link></Button>}>
               <p className="mb-4 rounded-lg border border-border bg-muted/30 p-3 text-sm"><span className="label-tech mr-2">Relato</span>{cur.problem}</p>
               <Checklist value={cur.checklist} onChange={(v) => upd({ checklist: v })} />
