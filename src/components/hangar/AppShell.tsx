@@ -3,7 +3,7 @@ import { HangarLogo } from "./Logo";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   LayoutDashboard, Smartphone, Apple, Users, Tablet, ClipboardList, Stethoscope, Receipt, Package,
-  BarChart3, Shield, ChevronsLeft, Search, Bell, Settings, Usb, Circle,
+  BarChart3, Shield, ChevronsLeft, Search, Bell, Settings, Usb, Circle, Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { digits, hydrate, indexById, osNum, statusTone, useStore } from "@/lib/store";
@@ -19,7 +19,7 @@ const NAV = [
   { to: "/clientes", label: "Clientes", icon: Users },
   { to: "/aparelhos", label: "Aparelhos", icon: Tablet },
   { to: "/ordens", label: "Ordens de serviço", icon: ClipboardList },
-  { to: "/diagnostico", label: "Diagnóstico", icon: Stethoscope },
+  { to: "/diagnostico", label: "Diagnóstico", icon: Stethoscope },\n  { to: "/tecnico", label: "Central Técnica", icon: Wrench },
   { to: "/orcamentos", label: "Orçamentos", icon: Receipt },
   { to: "/estoque", label: "Estoque", icon: Package },
   { to: "/relatorios", label: "Relatórios", icon: BarChart3 },
