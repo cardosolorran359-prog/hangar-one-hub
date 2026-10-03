@@ -1,4 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { HangarLogo } from "./Logo";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   LayoutDashboard, Smartphone, Apple, Users, Tablet, ClipboardList, Stethoscope, Receipt, Package,
@@ -44,7 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex h-screen overflow-hidden">
       <aside className={cn("flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200", collapsed ? "w-[68px]" : "w-60")}>
         <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
-          <img src="/icon-192.png" alt="" width={32} height={32} className="size-8 rounded-lg" />
+          <HangarLogo size={34} className="shrink-0 drop-shadow-[0_0_6px_rgba(255,32,96,0.45)]" />
           {!collapsed && (
             <div className="leading-none">
               <div className="font-display text-base font-bold tracking-[0.18em]">HANGAR ONE</div>
