@@ -446,6 +446,7 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
 
       <div className="cabin" />
       <div className="leds" />
+      <div className="hud-grid-motion" aria-hidden="true" />
       <canvas ref={canvasRef} id="hud-source-canvas" aria-hidden />
       <div className="vig" />
       <HudDetails />
