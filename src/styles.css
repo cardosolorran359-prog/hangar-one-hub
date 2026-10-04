@@ -4472,11 +4472,20 @@
 
 /* o body deixa de pintar fundo sólido (o <html> já pinta a cor), assim
    as camadas animadas atrás do conteúdo ficam visíveis */
-body { background-color: transparent; }
+html {
+  position: relative;
+  background: var(--color-background);
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  background-color: transparent;
+}
 
 html::before,
 body::before {
-  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-size: 32px 32px;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
@@ -4521,6 +4530,13 @@ html::before {
   0%   { -webkit-mask-size: 0 0; mask-size: 0 0; opacity: 1; }
   80%  { -webkit-mask-size: 190vmax 190vmax; mask-size: 190vmax 190vmax; opacity: .85; }
   100% { -webkit-mask-size: 190vmax 190vmax; mask-size: 190vmax 190vmax; opacity: 0; }
+}
+
+/* Mantém o conteúdo do aplicativo acima das camadas animadas. */
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
 }
 
 @media (prefers-reduced-motion: reduce) {
