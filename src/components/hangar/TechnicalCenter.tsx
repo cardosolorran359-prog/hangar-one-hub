@@ -152,7 +152,7 @@ export function TechnicalCenter() {
 
   const indexedAsDocs = useMemo<Doc[]>(() => libraryDocs.map((d) => ({
     id: d.id, title: d.title, source: d.source, scope: d.scope, brand: d.brand, model: d.model, kind: d.kind,
-    tags: d.tags, excerpt: d.excerpt, page: d.page,
+    tags: d.tags, excerpt: d.excerpt, ...(d.page !== undefined ? { page: d.page } : {}),
   })), [libraryDocs]);
   const allDocs = useMemo(() => [...DOCS, ...indexedAsDocs], [indexedAsDocs]);
   const results = useMemo(() => {

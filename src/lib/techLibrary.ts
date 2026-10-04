@@ -113,7 +113,7 @@ export async function indexTechFile(file: File, meta: { title: string; source: s
   const doc: IndexedTechDocument = {
     id: crypto.randomUUID(), title: meta.title.trim() || file.name.replace(/\.[^.]+$/, ""), source: meta.source.trim() || "Acervo local",
     scope: meta.scope, brand: meta.brand.trim() || "Multimarca", model: meta.model.trim() || "—", kind: meta.kind.trim() || "Documento",
-    tags: meta.tags.filter(Boolean), excerpt: firstText.slice(0, 360), page: pages[0]?.page, fileName: file.name, fileSize: file.size,
+    tags: meta.tags.filter(Boolean), excerpt: firstText.slice(0, 360), ...(pages[0] ? { page: pages[0].page } : {}), fileName: file.name, fileSize: file.size,
     pageCount: pages.length, pages, importedAt: new Date().toISOString(),
   };
   await saveIndexedDocument(doc);
