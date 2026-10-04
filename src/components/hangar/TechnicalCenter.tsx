@@ -118,7 +118,8 @@ function loadJson<T>(key: string, fallback: T): T {
   }
 }
 
-// Technical Center: imported content is rendered as native Hangar One knowledge pages.\nexport function TechnicalCenter() {
+// Technical Center: imported content is rendered as native Hangar One knowledge pages.
+export function TechnicalCenter() {
   const [mode, setMode] = useState<Mode>("buscar");
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<Scope>("todos");
@@ -151,7 +152,7 @@ function loadJson<T>(key: string, fallback: T): T {
 
   const indexedAsDocs = useMemo<Doc[]>(() => libraryDocs.map((d) => ({
     id: d.id, title: d.title, source: d.source, scope: d.scope, brand: d.brand, model: d.model, kind: d.kind,
-    tags: d.tags, excerpt: d.excerpt, page: d.page,
+    tags: d.tags, excerpt: d.excerpt, ...(d.page !== undefined ? { page: d.page } : {}),
   })), [libraryDocs]);
   const allDocs = useMemo(() => [...DOCS, ...indexedAsDocs], [indexedAsDocs]);
   const results = useMemo(() => {

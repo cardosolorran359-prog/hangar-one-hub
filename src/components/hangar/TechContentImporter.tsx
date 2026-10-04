@@ -29,7 +29,7 @@ export function TechContentImporter({ open, onClose, onChanged }: Props) {
     setBusy(true); setProgress(0);
     try {
       for (let i = 0; i < list.length; i++) {
-        const file = list[i];
+        const file = list[i]!;
         const currentTitle = title.trim() || (list.length === 1 ? "" : file.name.replace(/\.[^.]+$/, ""));
         await indexTechFile(file, { title: currentTitle, source, scope, brand, model, kind, tags: tags.split(",").map((x) => x.trim()).filter(Boolean) });
         setProgress(Math.round(((i + 1) / list.length) * 100));

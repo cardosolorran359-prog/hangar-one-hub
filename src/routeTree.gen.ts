@@ -19,6 +19,7 @@ import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as EstoqueRouteImport } from './routes/estoque'
 import { Route as OrcamentosRouteImport } from './routes/orcamentos'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as TecnicoRouteImport } from './routes/tecnico'
 import { Route as OrdensIndexRouteImport } from './routes/ordens.index'
 import { Route as OrdensIdRouteImport } from './routes/ordens.$id'
 
@@ -72,6 +73,11 @@ const RelatoriosRoute = RelatoriosRouteImport.update({
   path: '/relatorios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TecnicoRoute = TecnicoRouteImport.update({
+  id: '/tecnico',
+  path: '/tecnico',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdensIndexRoute = OrdensIndexRouteImport.update({
   id: '/ordens/',
   path: '/ordens/',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens': typeof OrdensIndexRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
 }
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/tecnico'
     | '/ordens/$id'
     | '/ordens'
   id:
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
   fileRoutesById: FileRoutesById
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   EstoqueRoute: typeof EstoqueRoute
   OrcamentosRoute: typeof OrcamentosRoute
   RelatoriosRoute: typeof RelatoriosRoute
+  TecnicoRoute: typeof TecnicoRoute
   OrdensIdRoute: typeof OrdensIdRoute
   OrdensIndexRoute: typeof OrdensIndexRoute
 }
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RelatoriosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tecnico': {
+      id: '/tecnico'
+      path: '/tecnico'
+      fullPath: '/tecnico'
+      preLoaderRoute: typeof TecnicoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ordens/': {
       id: '/ordens/'
       path: '/ordens'
@@ -286,6 +306,7 @@ const rootRouteChildren: RootRouteChildren = {
   EstoqueRoute: EstoqueRoute,
   OrcamentosRoute: OrcamentosRoute,
   RelatoriosRoute: RelatoriosRoute,
+  TecnicoRoute: TecnicoRoute,
   OrdensIdRoute: OrdensIdRoute,
   OrdensIndexRoute: OrdensIndexRoute,
 }
