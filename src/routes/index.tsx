@@ -42,7 +42,8 @@ function Dashboard() {
   const total = orders.length || 1;
 
   return (
-    <div className="space-y-6">
+    <div className="dashboard-page space-y-6">
+      <div className="dashboard-grid-motion" aria-hidden="true" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="label-tech text-primary">Estação de bancada</div>
