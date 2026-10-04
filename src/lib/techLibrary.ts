@@ -1,4 +1,3 @@
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
 export type LibraryPage = { page: number; text: string };
 export type IndexedTechDocument = {
@@ -96,6 +95,7 @@ export async function extractFilePages(file: File): Promise<LibraryPage[]> {
   if (file.type === "application/json" || lower.endsWith(".json")) return [{ page: 1, text: await file.text() }];
   if (file.type !== "application/pdf" && !lower.endsWith(".pdf")) throw new Error("Formato não suportado. Use PDF, TXT, MD, HTML, JSON ou CSV.");
   const data = new Uint8Array(await file.arrayBuffer());
+  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
   const pdf = await getDocument({ data }).promise;
   const pages: LibraryPage[] = [];
   for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
