@@ -33,7 +33,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = useStore((s) => s.user);
   const usb = useUsb();
-  const lowStock = useStore((s) => s.parts.filter((p) => p.qty <= p.min).length);
+  const parts = useStore((s) => s.parts);
+  const lowStock = useMemo(() => parts.filter((p) => p.qty <= p.min).length, [parts]);
 
   useEffect(() => { hydrate(); }, []);
   useEffect(() => {
