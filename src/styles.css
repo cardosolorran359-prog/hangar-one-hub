@@ -4528,3 +4528,5 @@
   .dashboard-page > .dashboard-grid-motion::before,
   .dashboard-page > .dashboard-grid-motion::after { animation: none; }
 }
+
+/* Hangar One sync marker: dashboard grid scope */
