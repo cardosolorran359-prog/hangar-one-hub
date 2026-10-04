@@ -4463,4 +4463,24 @@
   .receipt p { margin: 2px 0; }
   .receipt hr { border: 0; border-top: 1px dashed #000; margin: 6px 0; }
 }
-/* Hangar One: grid animation reverted per request */
+/* ---- Hangar One: entrada animada da grade do dashboard ---- */
+@keyframes grid-rise {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.grid-stagger > * {
+  animation: grid-rise 0.55s cubic-bezier(0.22, 0.7, 0.3, 1) both;
+}
+.grid-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.grid-stagger > *:nth-child(2) { animation-delay: 0.13s; }
+.grid-stagger > *:nth-child(3) { animation-delay: 0.21s; }
+.grid-stagger > *:nth-child(4) { animation-delay: 0.29s; }
+.grid-stagger > *:nth-child(5) { animation-delay: 0.37s; }
+.grid-stagger > *:nth-child(6) { animation-delay: 0.45s; }
+.panel-rise {
+  animation: grid-rise 0.55s cubic-bezier(0.22, 0.7, 0.3, 1) both;
+  animation-delay: 0.5s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid-stagger > *, .panel-rise { animation: none; }
+}
