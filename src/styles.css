@@ -4463,3 +4463,67 @@
   .receipt p { margin: 2px 0; }
   .receipt hr { border: 0; border-top: 1px dashed #000; margin: 6px 0; }
 }
+
+/* =====================================================================
+   GRADE DE FUNDO ANIMADA
+   • holofote que passeia pela tela
+   • pulso de radar que expande do centro a cada 7s
+   ===================================================================== */
+
+/* o body deixa de pintar fundo sólido (o <html> já pinta a cor), assim
+   as camadas animadas atrás do conteúdo ficam visíveis */
+body { background-color: transparent; }
+
+html::before,
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-size: 32px 32px;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+
+/* holofote */
+body::before {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--primary) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--primary) 55%, transparent) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0, rgba(0,0,0,.5) 45%, transparent 100%);
+          mask-image: radial-gradient(closest-side, #000 0, rgba(0,0,0,.5) 45%, transparent 100%);
+  -webkit-mask-size: 680px 680px; mask-size: 680px 680px;
+  animation: hg-roam 24s ease-in-out infinite;
+}
+
+/* pulso de radar */
+html::before {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--primary) 78%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--primary) 78%, transparent) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 72%, #000 98%, transparent 100%);
+          mask-image: radial-gradient(closest-side, transparent 72%, #000 98%, transparent 100%);
+  -webkit-mask-position: 50% 50%; mask-position: 50% 50%;
+  -webkit-mask-size: 0 0; mask-size: 0 0;
+  animation: hg-pulse 7s cubic-bezier(.25,.6,.3,1) infinite;
+}
+
+/* painéis em "vidro": deixam a grade animada aparecer por trás */
+.panel {
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--panel-2) 74%, transparent),
+    color-mix(in oklab, var(--panel) 80%, transparent));
+}
+
+@keyframes hg-roam {
+  0%, 100% { -webkit-mask-position: 4% 12%;  mask-position: 4% 12%; }
+  25%      { -webkit-mask-position: 96% 8%;  mask-position: 96% 8%; }
+  50%      { -webkit-mask-position: 78% 100%; mask-position: 78% 100%; }
+  75%      { -webkit-mask-position: 12% 86%; mask-position: 12% 86%; }
+}
+@keyframes hg-pulse {
+  0%   { -webkit-mask-size: 0 0; mask-size: 0 0; opacity: 1; }
+  80%  { -webkit-mask-size: 190vmax 190vmax; mask-size: 190vmax 190vmax; opacity: .85; }
+  100% { -webkit-mask-size: 190vmax 190vmax; mask-size: 190vmax 190vmax; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html::before, body::before { display: none; }
+}
+
