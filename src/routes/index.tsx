@@ -51,14 +51,14 @@ function Dashboard() {
         <NewOrderDialog />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid-stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Stat label="OS em andamento" value={open.length} tone="blue" icon={<Wrench className="size-4" />} hint="Abertas até entrega" />
         <Stat label="Prontas p/ retirada" value={ready.length} tone="green" icon={<CheckCircle2 className="size-4" />} hint="Avisar cliente" />
         <Stat label="Clientes" value={customers.length} tone="violet" icon={<Users className="size-4" />} hint={`${devices.length} aparelhos cadastrados`} />
         <Stat label="Faturamento" value={brl(revenue)} tone="orange" icon={<Wallet className="size-4" />} hint="Serviços prontos e entregues" />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+      <div className="grid-stagger grid gap-6 xl:grid-cols-[1fr_360px]">
         <UsbPanel />
         <Panel title="Atividade recente" icon={<Activity className="size-3.5 text-primary" />}>
           <ul className="space-y-1">
@@ -76,7 +76,7 @@ function Dashboard() {
         </Panel>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid-stagger grid gap-6 lg:grid-cols-3">
         <Panel title="Estatísticas" icon={<BarChart3 className="size-3.5 text-primary" />}>
           <div className="flex items-center gap-6">
             <Donut parts={[[plat.android, "var(--success)"], [plat.apple, "var(--violet)"], [plat.outro, "var(--warning)"]]} total={orders.length} />
@@ -111,7 +111,7 @@ function Dashboard() {
         </Panel>
       </div>
 
-      <Panel title="Últimos serviços" action={<Link to="/ordens" className="text-xs text-primary hover:underline">Ver todas</Link>}>
+      <Panel className="panel-rise" title="Últimos serviços" action={<Link to="/ordens" className="text-xs text-primary hover:underline">Ver todas</Link>}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="label-tech border-b border-border text-left">
