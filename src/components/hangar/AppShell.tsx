@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const tenant = useTenant();
   const visibleNav = NAV.filter((item) => canAccessModule(item.module, tenant?.role) && tenant?.modules[item.module] !== false);
   const currentModule = NAV.find((item) => item.to === "/" ? path === "/" : path.startsWith(item.to))?.module;
-  const allowed = !currentModule || canAccessModule(currentModule, tenant?.role);
+  const allowed = !currentModule || (canAccessModule(currentModule, tenant?.role) && tenant?.modules[currentModule] !== false);
   const usb = useUsb();
   const parts = useStore((s) => s.parts);
   const lowStock = useMemo(() => parts.filter((p) => p.qty <= p.min).length, [parts]);
