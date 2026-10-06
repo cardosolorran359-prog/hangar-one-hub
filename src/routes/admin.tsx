@@ -369,7 +369,7 @@ function Admin() {
                 </div>
                 <div className="divide-y divide-border/70">
                   {members.map((member) => {
-                    const isOwner = member.user_id === tenant?.organization.owner_id;
+                    const isOwner = member.role === "Owner";
                     const isSelf = member.user_id === tenant?.userId;
                     return (
                       <div key={member.id} className="grid gap-3 px-3 py-3 lg:grid-cols-[1fr_125px_auto] lg:items-center">
