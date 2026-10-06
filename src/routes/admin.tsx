@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Database, Download, Plug, RotateCcw, Shield, Upload, Users } from "lucide-react";
+import { Database, Download, Plug, RotateCcw, Shield, Upload, Users, Building2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Field, PageHeader, Panel, Pill } from "@/components/hangar/ui";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getState, logActivity, resetData, setState, useStore, type State } from "@/lib/store";
+import { getState, logActivity, resetData, useStore } from "@/lib/store";
+import { renameOrganization, useTenant } from "@/lib/tenant";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [
@@ -17,12 +18,13 @@ export const Route = createFileRoute("/admin")({
 });
 
 const ROLES = [
-  ["Admin", "Acesso total"], ["Gerente", "Gestão operacional e financeira"], ["Técnico", "Diagnóstico, reparo e aparelhos"], ["Atendente", "Clientes, aparelhos e OS"],
+  ["Owner", "Proprietário da empresa"], ["Admin", "Acesso total"], ["Gerente", "Gestão operacional e financeira"], ["Técnico", "Diagnóstico, reparo e aparelhos"], ["Atendente", "Clientes, aparelhos e OS"],
 ] as const;
 const PLUGINS = [["Android", true], ["Apple", true], ["Samsung", false], ["Xiaomi", false], ["Motorola", false], ["Backup", true]] as const;
 
 function Admin() {
   const user = useStore((s) => s.user);
+  const tenant = useTenant();
   const customers = useStore((s) => s.customers);
   const devices = useStore((s) => s.devices);
   const orders = useStore((s) => s.orders);
@@ -52,15 +54,34 @@ function Admin() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Sessão e perfil" icon={<Users className="size-3.5 text-primary" />}>
           <Field label="Usuário" value={user.name} />
-          <div className="flex items-center justify-between py-2">
-            <span className="text-xs text-muted-foreground">Perfil ativo</span>
-            <Select value={user.role} onValueChange={(v) => setState((s) => ({ ...s, user: { ...s.user, role: v as State["user"]["role"] } }))}>
-              <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
-              <SelectContent>{ROLES.map(([r]) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
-            </Select>
+          <div className="space-y-2">
+            <Field label="Empresa" value={tenant?.organization.name ?? "Carregando…"} />
+            <Field label="Perfil ativo" value={tenant?.role ?? user.role} />
+            <Field label="Plano" value={tenant?.organization.plan ?? "trial"} />
           </div>
           <div className="mt-3 space-y-2">
             {ROLES.map(([r, d]) => <div key={r} className="flex items-center justify-between rounded-lg border border-border/70 px-3 py-2 text-sm"><span className="font-medium">{r}</span><span className="text-xs text-muted-foreground">{d}</span></div>)}
+          </div>
+        </Panel>
+
+        <Panel title="Workspace da empresa" icon={<Building2 className="size-3.5 text-primary" />}>
+          <div className="space-y-3">
+            <Field label="Nome atual" value={tenant?.organization.name ?? "—"} />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  const name = prompt("Nome da empresa", tenant?.organization.name ?? "");
+                  if (!name?.trim() || name.trim() === tenant?.organization.name) return;
+                  try { await renameOrganization(name); toast.success("Empresa atualizada"); }
+                  catch { toast.error("Não foi possível atualizar a empresa."); }
+                }}
+              >Renomear empresa</Button>
+              <div className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs text-muted-foreground">
+                <CreditCard className="size-3.5" /> Plano {tenant?.organization.plan ?? "trial"}
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">Este workspace é isolado dos demais clientes do Hangar One. Usuários, dados e permissões pertencem a esta empresa.</p>
           </div>
         </Panel>
 
