@@ -90,11 +90,11 @@ function Admin() {
               <div key={l} className="rounded-lg border border-border bg-muted/20 p-3"><div className="font-mono text-xl font-semibold">{v}</div><div className="label-tech text-[9px]">{l}</div></div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">Os dados ficam guardados neste computador. Crie backups regularmente.</p>
+          <p className="mt-4 text-sm text-muted-foreground">Os dados deste workspace ficam sincronizados na nuvem. Ainda é possível exportar um backup manual a qualquer momento.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button onClick={exportBackup}><Download className="size-4" /> Criar backup</Button>
             <Button variant="outline" asChild><label className="cursor-pointer"><Upload className="size-4" /> Restaurar<input type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files?.[0] && importBackup(e.target.files[0])} /></label></Button>
-            <Button variant="ghost" className="text-destructive" onClick={() => { if (confirm("Apagar todos os dados desta estação? Esta ação não pode ser desfeita.")) { resetData(); toast.success("Dados apagados"); } }}><RotateCcw className="size-4" /> Limpar todos os dados</Button>
+            <Button variant="ghost" className="text-destructive" onClick={() => { if (confirm("Apagar todos os dados desta empresa? Esta ação não pode ser desfeita.")) { resetData(); toast.success("Dados apagados"); } }}><RotateCcw className="size-4" /> Limpar todos os dados</Button>
           </div>
         </Panel>
 
