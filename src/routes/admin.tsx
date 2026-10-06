@@ -54,7 +54,7 @@ const PLUGIN_FALLBACKS = [
   ["backup", "Backup", true],
 ] as const;
 
-type TeamMember = {\ntype TeamMember = {
+type TeamMember = {
   id: string;
   user_id: string;
   role: TenantRole;
