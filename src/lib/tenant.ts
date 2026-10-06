@@ -153,10 +153,33 @@ export async function initializeTenant(force = false) {
     let memberships = await loadMemberships(data.user.id);
     let selected = memberships[0];
 
+    // A new account may have been invited to an existing company.
+    // The RPC only accepts an invite whose email exactly matches auth.jwt().email.
+    if (!selected) {
+      const { error: inviteError } = await supabase.rpc("accept_org_invite");
+      if (inviteError) throw inviteError;
+
+      memberships = await loadMemberships(data.user.id);
+      selected = memberships[0];
+    }
+
+    // No membership and no matching invite means this is the first owner account.
     if (!selected) {
       selected = await createFirstOrganization(data.user.id, data.user.email ?? "");
       memberships = [selected];
     }
+
+    await supabase
+      .from("organization_member_profiles")
+      .upsert(
+        {
+          user_id: data.user.id,
+          display_name: data.user.user_metadata?.name ?? null,
+          email: data.user.email ?? "",
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" },
+      );
 
     const { data: moduleRows, error: moduleError } = await supabase
       .from("organization_modules")
