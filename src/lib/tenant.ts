@@ -20,6 +20,7 @@ export interface TenantOrganization {
   id: string;
   name: string;
   slug: string;
+  owner_id: string;
   logo_url: string | null;
   plan: string;
   status: string;
@@ -85,7 +86,7 @@ function displayNameFromEmail(email: string) {
 async function loadMemberships(userId: string) {
   const { data, error: queryError } = await supabase
     .from("organization_members")
-    .select("organization_id, role, organizations(id, name, slug, logo_url, plan, status)")
+    .select("organization_id, role, organizations(id, name, slug, owner_id, logo_url, plan, status)")
     .eq("user_id", userId)
     .eq("active", true);
 
@@ -108,7 +109,7 @@ async function createFirstOrganization(userId: string, email: string) {
   const { data: organization, error: organizationError } = await supabase
     .from("organizations")
     .insert({ name, slug: safeSlug(name), owner_id: userId })
-    .select("id, name, slug, logo_url, plan, status")
+    .select("id, name, slug, owner_id, logo_url, plan, status")
     .single();
 
   if (organizationError) throw organizationError;
