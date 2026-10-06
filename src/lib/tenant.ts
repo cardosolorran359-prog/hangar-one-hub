@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isPlatformAdmin } from "@/lib/platform";
 
 export type TenantRole = "Owner" | "Admin" | "Gerente" | "Técnico" | "Atendente";
 export type TenantModule =
@@ -139,6 +140,11 @@ async function createFirstOrganization(userId: string, email: string) {
 }
 
 export async function initializeTenant(force = false) {
+  if (await isPlatformAdmin()) {
+    context = null;
+    emit();
+    return null;
+  }
   if (context && !force) return context;
   if (loading) return context;
 
@@ -192,6 +198,14 @@ export async function initializeTenant(force = false) {
       memberships = [selected];
     }
 
+    if (selected.organization.status !== "active") {
+      throw new Error(
+        selected.organization.status === "suspended"
+          ? "O acesso desta empresa está temporariamente bloqueado pelo operador do Hangar One."
+          : "O acesso desta empresa foi encerrado pelo operador do Hangar One.",
+      );
+    }
+
     await supabase
       .from("organization_member_profiles")
       .upsert(
@@ -240,6 +254,7 @@ export async function initializeTenant(force = false) {
 export async function signIn(email: string, password: string) {
   const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
   if (authError) throw authError;
+  if (await isPlatformAdmin()) return null;
   return initializeTenant(true);
 }
 
