@@ -436,7 +436,8 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           position:fixed;
           left:50%;
           top:50%;
-          z-index:7;
+          z-index:100;
+          pointer-events:auto;
           width:min(430px,calc(100vw - 32px));
           transform:translate(-50%,-50%);
           padding:28px;
