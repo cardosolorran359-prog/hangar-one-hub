@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode, type FormEvent } from "react";
 import { HudDetails } from "./HudDetails";
+import { initializeTenant, signIn, signUp } from "@/lib/tenant";
+import { supabase } from "@/integrations/supabase/client";
 
 const BUTTON_DELAY = 2200;
 const EXIT_DELAY = 650;
@@ -430,6 +432,85 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           0%,100%{box-shadow:0 0 18px rgba(255,60,40,.10),inset 0 0 18px rgba(255,60,40,.025)}
           50%{box-shadow:0 0 28px rgba(255,60,40,.18),inset 0 0 22px rgba(255,60,40,.045)}
         }
+        .hud-auth-panel {
+          position:fixed;
+          left:50%;
+          top:50%;
+          z-index:7;
+          width:min(430px,calc(100vw - 32px));
+          transform:translate(-50%,-50%);
+          padding:28px;
+          border:1px solid rgba(235,245,245,.24);
+          background:linear-gradient(180deg,rgba(11,14,16,.92),rgba(4,5,6,.95));
+          box-shadow:0 0 55px rgba(0,0,0,.48),inset 0 0 30px rgba(255,60,40,.025);
+          clip-path:polygon(0 0,97% 0,100% 8%,100% 92%,97% 100%,0 100%);
+          color:rgba(245,252,252,.96);
+        }
+        .hud-auth-kicker {
+          color:rgba(255,90,64,.9);
+          font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.28em;
+        }
+        .hud-auth-panel h1 {
+          margin:10px 0 6px;
+          font:600 26px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.02em;
+        }
+        .hud-auth-panel p {
+          margin:0 0 20px;
+          color:rgba(210,220,220,.68);
+          font:400 12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+        }
+        .hud-auth-panel form { display:grid; gap:12px; }
+        .hud-auth-panel label {
+          display:grid;
+          gap:6px;
+          color:rgba(210,220,220,.72);
+          font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.12em;
+          text-transform:uppercase;
+        }
+        .hud-auth-panel input {
+          height:42px;
+          border:1px solid rgba(235,245,245,.18);
+          border-radius:6px;
+          background:rgba(255,255,255,.025);
+          padding:0 12px;
+          color:#f5fcfc;
+          outline:none;
+          font:400 13px ui-monospace,SFMono-Regular,Menlo,monospace;
+        }
+        .hud-auth-panel input:focus { border-color:rgba(255,90,64,.62); box-shadow:0 0 18px rgba(255,60,40,.10); }
+        .hud-auth-panel form > button {
+          height:44px;
+          margin-top:4px;
+          border:1px solid rgba(255,90,64,.48);
+          background:rgba(255,60,40,.09);
+          color:#fff;
+          font:600 12px ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.24em;
+          cursor:pointer;
+        }
+        .hud-auth-panel form > button:hover:not(:disabled) { background:rgba(255,60,40,.15); border-color:rgba(255,90,64,.8); }
+        .hud-auth-panel form > button:disabled { opacity:.6; cursor:wait; }
+        .hud-auth-switch {
+          width:100%;
+          margin-top:14px;
+          border:0;
+          background:transparent;
+          color:rgba(210,220,220,.56);
+          cursor:pointer;
+          font:500 10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.08em;
+        }
+        .hud-auth-switch:hover { color:#fff; }
+        .hud-auth-message {
+          border:1px solid rgba(255,90,64,.25);
+          background:rgba(255,60,40,.06);
+          padding:9px 10px;
+          color:rgba(255,210,202,.9);
+          font:400 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+        }
         @media (max-width:720px) {
           .hud-source-login__enter {
             min-width:calc(100vw - 48px);
@@ -438,6 +519,8 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
             letter-spacing:.20em;
             text-indent:.20em;
           }
+          .hud-auth-panel { padding:22px; }
+          .hud-auth-panel h1 { font-size:21px; }
         }
         :root {
           --hud-source-red:255,60,40;
@@ -465,25 +548,79 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
 
 const GATE_KEY = "hangar-one:gate";
 
+function AuthPanel({ onSuccess }: { onSuccess: () => void }) {
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    setBusy(true);
+    setMessage("");
+    try {
+      if (mode === "login") {
+        await signIn(email, password);
+      } else {
+        await signUp(email, password);
+      }
+      onSuccess();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível concluir o acesso.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="hud-auth-panel">
+      <div className="hud-auth-kicker">IDENTIDADE · WORKSPACE</div>
+      <h1>{mode === "login" ? "Acessar o Hangar One" : "Criar acesso"}</h1>
+      <p>{mode === "login" ? "Entre para abrir seu ambiente de trabalho." : "Sua primeira conta cria automaticamente uma empresa no Hangar One."}</p>
+      <form onSubmit={submit}>
+        <label>E-mail<input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+        <label>Senha<input type="password" minLength={6} autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+        {message && <div className="hud-auth-message">{message}</div>}
+        <button disabled={busy} type="submit">{busy ? "VALIDANDO..." : mode === "login" ? "ENTRAR" : "CRIAR CONTA"}</button>
+      </form>
+      <button className="hud-auth-switch" type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setMessage(""); }}>
+        {mode === "login" ? "Primeiro acesso · criar conta" : "Já tenho conta · entrar"}
+      </button>
+    </div>
+  );
+}
+
 export function HangarGate({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<"checking" | "gate" | "leaving" | "done">("checking");
+  const [phase, setPhase] = useState<"checking" | "gate" | "auth" | "leaving" | "done">("checking");
 
   useEffect(() => {
-    let seen = false;
-    try {
-      seen = window.sessionStorage.getItem(GATE_KEY) === "1";
-    } catch {
-      seen = false;
-    }
-    setPhase(seen ? "done" : "gate");
+    let alive = true;
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!alive) return;
+      if (data.session) {
+        try {
+          await initializeTenant();
+          if (alive) setPhase("done");
+          return;
+        } catch {
+          // fall through to the login gate
+        }
+      }
+      try {
+        const seen = window.sessionStorage.getItem(GATE_KEY) === "1";
+        setPhase(seen ? "auth" : "gate");
+      } catch {
+        setPhase("gate");
+      }
+    });
+    return () => { alive = false; };
   }, []);
 
-  const enter = () => {
-    try {
-      window.sessionStorage.setItem(GATE_KEY, "1");
-    } catch {
-      /* ignore */
-    }
+  const enter = () => setPhase("auth");
+
+  const authenticated = () => {
+    try { window.sessionStorage.setItem(GATE_KEY, "1"); } catch { /* ignore */ }
     setPhase("leaving");
     window.setTimeout(() => setPhase("done"), EXIT_DELAY);
   };
@@ -491,7 +628,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      {(phase === "gate" || phase === "leaving") && (
+      {(phase === "gate" || phase === "leaving" || phase === "auth") && (
         <div
           style={{
             opacity: phase === "leaving" ? 0 : 1,
@@ -499,6 +636,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
           }}
         >
           <HudLoginBackground onEnter={enter} />
+          {phase === "auth" && <AuthPanel onSuccess={authenticated} />}
         </div>
       )}
     </>
