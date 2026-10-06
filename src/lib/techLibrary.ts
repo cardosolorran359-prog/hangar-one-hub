@@ -1,4 +1,6 @@
 
+import { getTenant } from "@/lib/tenant";
+
 export type LibraryPage = { page: number; text: string };
 export type IndexedTechDocument = {
   id: string; title: string; source: string; scope: "celular" | "computador"; brand: string; model: string; kind: string;
@@ -9,8 +11,12 @@ const DB_NAME = "hangar-one-tech-library";
 const DB_VERSION = 1;
 const STORE = "documents";
 
+function scopedDbName() {
+  return `${DB_NAME}:${getTenant()?.organization.id ?? "local"}`;
+}
+
 const openDb = () => new Promise<IDBDatabase>((resolve, reject) => {
-  const request = indexedDB.open(DB_NAME, DB_VERSION);
+  const request = indexedDB.open(scopedDbName(), DB_VERSION);
   request.onupgradeneeded = () => request.result.createObjectStore(STORE, { keyPath: "id" });
   request.onsuccess = () => resolve(request.result);
   request.onerror = () => reject(request.error);
