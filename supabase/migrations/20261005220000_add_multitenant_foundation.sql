@@ -53,6 +53,9 @@ create table if not exists public.audit_logs (
 create index if not exists organization_members_user_idx on public.organization_members(user_id, active);
 create index if not exists organization_members_org_idx on public.organization_members(organization_id, active);
 create index if not exists audit_logs_org_created_idx on public.audit_logs(organization_id, created_at desc);
+create index if not exists organizations_owner_idx on public.organizations(owner_id);
+create index if not exists organization_state_updated_by_idx on public.organization_state(updated_by);
+create index if not exists audit_logs_actor_idx on public.audit_logs(actor_id);
 
 create or replace function private.is_org_member(target_org uuid)
 returns boolean
@@ -117,13 +120,20 @@ drop policy if exists "organization_members_select_member" on public.organizatio
 create policy "organization_members_select_member" on public.organization_members for select to authenticated using (private.is_org_member(organization_id) or user_id = auth.uid());
 
 drop policy if exists "organization_members_insert_admin_or_self" on public.organization_members;
-create policy "organization_members_insert_admin_or_self" on public.organization_members for insert to authenticated with check (user_id = auth.uid() or private.is_org_admin(organization_id));
+create policy "organization_members_insert_admin_or_self" on public.organization_members for insert to authenticated with check (
+  (user_id = auth.uid() and exists (select 1 from public.organizations o where o.id = organization_id and o.owner_id = auth.uid()))
+  or
+  (private.is_org_admin(organization_id) and (role <> 'Owner' or exists (select 1 from public.organizations o where o.id = organization_id and o.owner_id = auth.uid())))
+);
 
 drop policy if exists "organization_members_update_admin" on public.organization_members;
-create policy "organization_members_update_admin" on public.organization_members for update to authenticated using (private.is_org_admin(organization_id)) with check (private.is_org_admin(organization_id));
+create policy "organization_members_update_admin" on public.organization_members for update to authenticated
+using (private.is_org_admin(organization_id))
+with check (private.is_org_admin(organization_id) and (role <> 'Owner' or exists (select 1 from public.organizations o where o.id = organization_id and o.owner_id = auth.uid())));
 
 drop policy if exists "organization_members_delete_admin" on public.organization_members;
-create policy "organization_members_delete_admin" on public.organization_members for delete to authenticated using (private.is_org_admin(organization_id));
+create policy "organization_members_delete_admin" on public.organization_members for delete to authenticated
+using (private.is_org_admin(organization_id) and not exists (select 1 from public.organizations o where o.id = organization_id and o.owner_id = user_id));
 
 drop policy if exists "organization_modules_select_member" on public.organization_modules;
 create policy "organization_modules_select_member" on public.organization_modules for select to authenticated using (private.is_org_member(organization_id));
