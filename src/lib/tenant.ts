@@ -261,7 +261,7 @@ export async function appendAuditLog(action: string, entity?: string, entityId?:
     action,
     entity: entity ?? null,
     entity_id: entityId ?? null,
-    metadata,
+    metadata: metadata as never,
   });
   if (auditError) console.warn("[Hangar One] Falha ao registrar auditoria", auditError);
 }
