@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTenant } from "@/lib/tenant";
 import { Panel } from "./ui";
 import { TechContentImporter } from "./TechContentImporter";
 import { TechDocumentReader } from "./TechDocumentReader";
@@ -120,6 +121,10 @@ function loadJson<T>(key: string, fallback: T): T {
 
 // Technical Center: imported content is rendered as native Hangar One knowledge pages.
 export function TechnicalCenter() {
+  const tenant = useTenant();
+  const tenantId = tenant?.organization.id ?? "local";
+  const favoritesKey = `hangar-one-tech-favorites:${tenantId}`;
+  const historyKey = `hangar-one-tech-history:${tenantId}`;
   const [mode, setMode] = useState<Mode>("buscar");
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<Scope>("todos");
@@ -133,22 +138,22 @@ export function TechnicalCenter() {
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
   useEffect(() => {
-    setFavorites(loadJson("hangar-one-tech-favorites", []));
-    setHistory(loadJson("hangar-one-tech-history", []));
+    setFavorites(loadJson(favoritesKey, []));
+    setHistory(loadJson(historyKey, []));
     void refreshLibrary();
-  }, []);
+  }, [favoritesKey, historyKey]);
 
   const refreshLibrary = async () => {
     try { setLibraryDocs(await listIndexedDocuments()); } catch { toast.error("Não foi possível carregar o índice local."); }
   };
 
   useEffect(() => {
-    localStorage.setItem("hangar-one-tech-favorites", JSON.stringify(favorites));
-  }, [favorites]);
+    localStorage.setItem(favoritesKey, JSON.stringify(favorites));
+  }, [favoritesKey, favorites]);
 
   useEffect(() => {
-    localStorage.setItem("hangar-one-tech-history", JSON.stringify(history));
-  }, [history]);
+    localStorage.setItem(historyKey, JSON.stringify(history));
+  }, [historyKey, history]);
 
   const indexedAsDocs = useMemo<Doc[]>(() => libraryDocs.map((d) => ({
     id: d.id, title: d.title, source: d.source, scope: d.scope, brand: d.brand, model: d.model, kind: d.kind,
