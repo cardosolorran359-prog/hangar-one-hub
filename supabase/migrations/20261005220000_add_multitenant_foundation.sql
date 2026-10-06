@@ -84,6 +84,8 @@ $$;
 grant usage on schema private to authenticated;
 revoke all on function private.is_org_member(uuid) from public, anon, authenticated;
 revoke all on function private.is_org_admin(uuid) from public, anon, authenticated;
+grant execute on function private.is_org_member(uuid) to authenticated;
+grant execute on function private.is_org_admin(uuid) to authenticated;
 
 alter table public.organizations enable row level security;
 alter table public.organization_members enable row level security;
@@ -97,6 +99,7 @@ grant select, insert, update, delete on table public.organization_members to aut
 grant select, insert, update, delete on table public.organization_modules to authenticated;
 grant select, insert, update, delete on table public.organization_state to authenticated;
 grant select, insert on table public.audit_logs to authenticated;
+grant all on table public.organizations, public.organization_members, public.organization_modules, public.organization_state, public.audit_logs to service_role;
 
 drop policy if exists "organizations_select_member" on public.organizations;
 create policy "organizations_select_member" on public.organizations for select to authenticated using (private.is_org_member(id) or owner_id = auth.uid());
