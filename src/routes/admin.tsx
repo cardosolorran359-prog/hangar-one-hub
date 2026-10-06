@@ -3,7 +3,6 @@ import { Database, Download, Plug, RotateCcw, Shield, Upload, Users, Building2, 
 import { toast } from "sonner";
 import { Field, PageHeader, Panel, Pill } from "@/components/hangar/ui";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getState, logActivity, resetData, useStore } from "@/lib/store";
 import { renameOrganization, useTenant } from "@/lib/tenant";
 
