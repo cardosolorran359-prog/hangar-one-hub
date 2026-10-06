@@ -302,6 +302,27 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_admins: {
+        Row: {
+          active: boolean
+          created_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tech_bookmarks: {
         Row: {
           created_at: string
