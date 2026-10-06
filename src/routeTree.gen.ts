@@ -176,6 +176,7 @@ export interface FileRouteTypes {
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens'
+    | '/supremo'
   id:
     | '__root__'
     | '/'
@@ -301,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/ordens/$id'
       fullPath: '/ordens/$id'
       preLoaderRoute: typeof OrdensIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supremo': {
+      id: '/supremo'
+      path: '/supremo'
+      fullPath: '/supremo'
+      preLoaderRoute: typeof SupremoRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
