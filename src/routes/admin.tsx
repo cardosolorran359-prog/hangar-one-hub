@@ -45,16 +45,16 @@ const ROLES = [
 ] as const;
 
 const MANAGEABLE_ROLES: TenantRole[] = ["Admin", "Gerente", "Técnico", "Atendente"];
-const PLUGINS = [
-  ["Android", true],
-  ["Apple", true],
-  ["Samsung", false],
-  ["Xiaomi", false],
-  ["Motorola", false],
-  ["Backup", true],
+const PLUGIN_FALLBACKS = [
+  ["android", "Android", true],
+  ["apple", "Apple", true],
+  ["samsung", "Samsung", true],
+  ["xiaomi", "Xiaomi", true],
+  ["motorola", "Motorola", true],
+  ["backup", "Backup", true],
 ] as const;
 
-type TeamMember = {
+type TeamMember = {\ntype TeamMember = {
   id: string;
   user_id: string;
   role: TenantRole;
@@ -73,6 +73,15 @@ type TeamInvite = {
   created_at: string;
 };
 
+type WorkspacePlugin = {
+  plugin_key: string;
+  name: string;
+  category: string;
+  enabled: boolean;
+  version: string;
+  description: string | null;
+};
+
 function Admin() {
   const user = useStore((s) => s.user);
   const tenant = useTenant();
@@ -87,6 +96,16 @@ function Admin() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<TenantRole>("Atendente");
   const [teamBusy, setTeamBusy] = useState(false);
+  const [plugins, setPlugins] = useState<WorkspacePlugin[]>(
+    PLUGIN_FALLBACKS.map(([plugin_key, name, enabled]) => ({
+      plugin_key,
+      name,
+      category: plugin_key === "backup" ? "system" : plugin_key === "android" || plugin_key === "apple" ? "platform" : "manufacturer",
+      enabled,
+      version: "1.0.0",
+      description: null,
+    })),
+  );
 
   const canManageTeam = tenant?.role === "Owner" || tenant?.role === "Admin";
 
@@ -154,6 +173,25 @@ function Admin() {
   useEffect(() => {
     void loadTeam();
   }, [tenant?.organization.id, tenant?.role]);
+
+  useEffect(() => {
+    const loadPlugins = async () => {
+      if (!tenant) return;
+      const { data, error } = await supabase
+        .from("organization_plugins")
+        .select("plugin_key, name, category, enabled, version, description")
+        .eq("organization_id", tenant.organization.id)
+        .order("category", { ascending: true })
+        .order("name", { ascending: true });
+
+      if (error) {
+        console.warn("[Hangar One] Falha ao carregar plugins", error);
+        return;
+      }
+      if (data?.length) setPlugins(data as WorkspacePlugin[]);
+    };
+    void loadPlugins();
+  }, [tenant?.organization.id]);
 
   const activeMembers = useMemo(() => members.filter((member) => member.active).length, [members]);
 
@@ -483,13 +521,25 @@ function Admin() {
         </Panel>
 
         <Panel title="Plugins" icon={<Plug className="size-3.5 text-primary" />}>
-          <div className="grid grid-cols-2 gap-2">
-            {PLUGINS.map(([n, on]) => (
-              <div key={n} className="flex items-center justify-between rounded-lg border border-border/70 px-3 py-2.5 text-sm">
-                <span>{n}</span>{on ? <Pill tone="green">Ativo</Pill> : <Pill>Em breve</Pill>}
+          <div className="grid gap-2 sm:grid-cols-2">
+            {plugins.map((plugin) => (
+              <div key={plugin.plugin_key} className="rounded-lg border border-border/70 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium">{plugin.name}</span>
+                  {plugin.enabled ? <Pill tone="green">Ativo</Pill> : <Pill>Desativado</Pill>}
+                </div>
+                <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {plugin.category} · v{plugin.version}
+                </div>
+                {plugin.description && (
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{plugin.description}</p>
+                )}
               </div>
             ))}
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Todos os plugins-base do Hangar One estão registrados neste workspace: Android, Apple, Samsung, Xiaomi, Motorola e Backup.
+          </p>
         </Panel>
 
         <Panel title="Segurança" icon={<Shield className="size-3.5 text-primary" />}>
