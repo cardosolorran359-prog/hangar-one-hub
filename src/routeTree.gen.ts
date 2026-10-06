@@ -192,6 +192,7 @@ export interface FileRouteTypes {
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
+    | '/supremo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
