@@ -1,4 +1,5 @@
 import { useCallback, useRef, useSyncExternalStore } from "react";
+import { appendAuditLog, getTenant, initializeTenant, loadOrganizationState, saveOrganizationState } from "@/lib/tenant";
 
 export type Platform = "android" | "apple" | "outro";
 export type TestResult = "ok" | "falha" | "nt" | "na";
@@ -62,27 +63,108 @@ function seed(): State {
   return { customers: [], devices: [], orders: [], parts: [], activity: [], user: { name: "Lorran", role: "Admin" } };
 }
 
-const KEY = "hangar-one:v2";
+const LEGACY_KEY = "hangar-one:v2";
 let state: State = seed();
 let hydrated = false;
+let hydrationPromise: Promise<void> | null = null;
+let remoteWriteQueue = Promise.resolve();
 const listeners = new Set<() => void>();
 
-export function hydrate() {
-  if (hydrated || typeof window === "undefined") return;
-  hydrated = true;
+function notify() {
+  listeners.forEach((l) => l());
+}
+
+function tenantStorageKey(organizationId: string) {
+  return `hangar-one:v3:${organizationId}`;
+}
+
+function normalizeStoredState(raw: string | null) {
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) { state = { ...seed(), ...JSON.parse(raw) }; listeners.forEach((l) => l()); }
-  } catch { /* ignore */ }
+    const parsed = JSON.parse(raw) as Partial<State>;
+    if (!parsed || !Array.isArray(parsed.customers) || !Array.isArray(parsed.orders)) return null;
+    return { ...seed(), ...parsed };
+  } catch {
+    return null;
+  }
+}
+
+function displayNameFromEmail(email: string) {
+  const value = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
+  return value ? value.replace(/\\b\\w/g, (c) => c.toUpperCase()) : "Usuário";
+}
+
+function roleForStore(role: string): State["user"]["role"] {
+  return role === "Owner" ? "Admin" : (["Admin", "Gerente", "Técnico", "Atendente"].includes(role) ? role as State["user"]["role"] : "Admin");
+}
+
+async function hydrateFromTenant() {
+  const tenant = await initializeTenant();
+  const localKey = tenantStorageKey(tenant.organization.id);
+  const cached = normalizeStoredState(window.localStorage.getItem(localKey));
+  const legacy = normalizeStoredState(window.localStorage.getItem(LEGACY_KEY));
+  const remote = await loadOrganizationState<Partial<State>>(tenant.organization.id);
+
+  if (remote?.state && typeof remote.state === "object" && Object.keys(remote.state).length) {
+    state = { ...seed(), ...remote.state };
+  } else if (cached) {
+    state = cached;
+    await saveOrganizationState(tenant.organization.id, state);
+  } else if (legacy) {
+    state = legacy;
+    await saveOrganizationState(tenant.organization.id, state);
+    try { window.localStorage.setItem(localKey, JSON.stringify(state)); } catch { /* ignore */ }
+    window.localStorage.removeItem(LEGACY_KEY);
+    void appendAuditLog("legacy_state_migrated", "organization", tenant.organization.id);
+  }
+
+  state = {
+    ...state,
+    user: {
+      ...state.user,
+      role: roleForStore(tenant.role),
+      name: state.user.name || displayNameFromEmail(tenant.email),
+    },
+  };
+
+  try { window.localStorage.setItem(localKey, JSON.stringify(state)); } catch { /* ignore */ }
+  notify();
+}
+
+export function hydrate() {
+  if (hydrated || typeof window === "undefined") return hydrationPromise;
+  hydrated = true;
+  hydrationPromise = hydrateFromTenant().catch((error) => {
+    console.warn("[Hangar One] Não foi possível hidratar o workspace remoto.", error);
+    try {
+      const legacy = normalizeStoredState(window.localStorage.getItem(LEGACY_KEY));
+      if (legacy) { state = legacy; notify(); }
+    } catch { /* ignore */ }
+  });
+  return hydrationPromise;
 }
 
 export function setState(fn: (s: State) => State) {
   state = fn(state);
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ }
-  listeners.forEach((l) => l());
+  try {
+    const tenant = getTenant();
+    if (tenant && typeof window !== "undefined") {
+      window.localStorage.setItem(tenantStorageKey(tenant.organization.id), JSON.stringify(state));
+      remoteWriteQueue = remoteWriteQueue
+        .then(() => saveOrganizationState(tenant.organization.id, state))
+        .catch((error) => console.warn("[Hangar One] Falha ao sincronizar workspace.", error));
+    }
+  } catch {
+    /* local state remains usable */
+  }
+  notify();
 }
 
-export function resetData() { setState(() => seed()); }
+export function resetData() {
+  setState(() => seed());
+  const tenant = getTenant();
+  if (tenant) void appendAuditLog("workspace_reset", "organization", tenant.organization.id);
+}
 
 const subscribe = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };
 
