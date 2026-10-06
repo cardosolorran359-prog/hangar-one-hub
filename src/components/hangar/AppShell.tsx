@@ -3,28 +3,29 @@ import { HangarLogo } from "./Logo";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   LayoutDashboard, Smartphone, Apple, Users, Tablet, ClipboardList, Stethoscope, Receipt, Package,
-  BarChart3, Shield, ChevronsLeft, Search, Bell, Settings, Usb, Circle, Wrench,
+  BarChart3, Shield, ChevronsLeft, Search, Bell, Settings, Usb, Circle, Wrench, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { digits, hydrate, indexById, osNum, statusTone, useStore } from "@/lib/store";
+import { canAccessModule, signOut, useTenant } from "@/lib/tenant";
 import { useUsb } from "@/lib/usb";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Pill } from "./ui";
 import { Toaster } from "@/components/ui/sonner";
 
 const NAV = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/android", label: "Android", icon: Smartphone },
-  { to: "/apple", label: "Apple", icon: Apple },
-  { to: "/clientes", label: "Clientes", icon: Users },
-  { to: "/aparelhos", label: "Aparelhos", icon: Tablet },
-  { to: "/ordens", label: "Ordens de serviço", icon: ClipboardList },
-  { to: "/diagnostico", label: "Diagnóstico", icon: Stethoscope },
-  { to: "/tecnico", label: "Central Técnica", icon: Wrench },
-  { to: "/orcamentos", label: "Orçamentos", icon: Receipt },
-  { to: "/estoque", label: "Estoque", icon: Package },
-  { to: "/relatorios", label: "Relatórios", icon: BarChart3 },
-  { to: "/admin", label: "Administração", icon: Shield },
+  { module: "dashboard", to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { module: "android", to: "/android", label: "Android", icon: Smartphone },
+  { module: "apple", to: "/apple", label: "Apple", icon: Apple },
+  { module: "clientes", to: "/clientes", label: "Clientes", icon: Users },
+  { module: "aparelhos", to: "/aparelhos", label: "Aparelhos", icon: Tablet },
+  { module: "ordens", to: "/ordens", label: "Ordens de serviço", icon: ClipboardList },
+  { module: "diagnostico", to: "/diagnostico", label: "Diagnóstico", icon: Stethoscope },
+  { module: "tecnico", to: "/tecnico", label: "Central Técnica", icon: Wrench },
+  { module: "orcamentos", to: "/orcamentos", label: "Orçamentos", icon: Receipt },
+  { module: "estoque", to: "/estoque", label: "Estoque", icon: Package },
+  { module: "relatorios", to: "/relatorios", label: "Relatórios", icon: BarChart3 },
+  { module: "admin", to: "/admin", label: "Administração", icon: Shield },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -32,6 +33,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = useStore((s) => s.user);
+  const tenant = useTenant();
+  const visibleNav = NAV.filter((item) => canAccessModule(item.module, tenant?.role) && tenant?.modules[item.module] !== false);
+  const currentModule = NAV.find((item) => item.to === "/" ? path === "/" : path.startsWith(item.to))?.module;
+  const allowed = !currentModule || canAccessModule(currentModule, tenant?.role);
   const usb = useUsb();
   const parts = useStore((s) => s.parts);
   const lowStock = useMemo(() => parts.filter((p) => p.qty <= p.min).length, [parts]);
@@ -56,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           )}
         </div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
-          {NAV.map(({ to, label, icon: Icon }) => {
+          {visibleNav.map(({ to, label, icon: Icon }) => {
             const active = to === "/" ? path === "/" : path.startsWith(to);
             return (
               <Link key={to} to={to} title={label}
@@ -96,17 +101,39 @@ export function AppShell({ children }: { children: ReactNode }) {
               {lowStock > 0 && <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-warning font-mono text-[9px] font-bold text-primary-foreground">{lowStock}</span>}
             </Link>
             <Link to="/admin" className="grid size-9 place-items-center rounded-lg border border-border bg-panel hover:border-primary/40" title="Configurações"><Settings className="size-4" /></Link>
-            <div className="flex items-center gap-2 pl-1">
+            <div className="hidden max-w-[220px] items-center rounded-lg border border-border bg-panel px-3 py-1.5 xl:flex">
+              <div className="min-w-0">
+                <div className="truncate text-[11px] font-medium">{tenant?.organization.name ?? "Workspace"}</div>
+                <div className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground">Ambiente da empresa</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => void signOut().then(() => window.location.reload())}
+              className="group flex items-center gap-2 pl-1"
+              title="Sair do Hangar One"
+            >
               <div className="grid size-9 place-items-center rounded-lg bg-primary/15 font-display font-bold text-primary">{user.name[0]}</div>
               <div className="hidden leading-tight lg:block">
                 <div className="text-sm font-medium">{user.name}</div>
-                <div className="text-[11px] text-muted-foreground">{user.role}</div>
+                <div className="text-[11px] text-muted-foreground">{tenant?.role === "Owner" ? "Owner" : tenant?.role ?? user.role}</div>
               </div>
-            </div>
+              <LogOut className="ml-1 hidden size-3.5 text-muted-foreground transition-colors group-hover:text-primary lg:block" />
+            </button>
           </div>
         </header>
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-[1500px] p-6">{children}</div>
+          <div className="mx-auto max-w-[1500px] p-6">
+            {!allowed ? (
+              <section className="flex min-h-[60vh] items-center justify-center">
+                <div className="max-w-md rounded-xl border border-border bg-panel p-8 text-center">
+                  <Shield className="mx-auto size-9 text-primary" />
+                  <h1 className="mt-4 font-display text-xl font-semibold">Acesso restrito</h1>
+                  <p className="mt-2 text-sm text-muted-foreground">Seu perfil não possui permissão para acessar este módulo.</p>
+                </div>
+              </section>
+            ) : children}
+          </div>
         </main>
       </div>
       <GlobalSearch open={open} setOpen={setOpen} />
