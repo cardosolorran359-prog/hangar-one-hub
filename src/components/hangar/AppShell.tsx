@@ -32,6 +32,7 @@ const NAV = [
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = useStore((s) => s.user);
   const tenant = useTenant();
