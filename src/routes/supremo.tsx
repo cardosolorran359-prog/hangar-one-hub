@@ -85,7 +85,6 @@ function SupremoPage() {
   }
 
   const runAction = async (
-    organizationId: string,
     action: () => Promise<void>,
     successMessage: string,
   ) => {
@@ -110,7 +109,6 @@ function SupremoPage() {
     };
     if (!confirm(`Confirma ${labels[status]} o acesso de “${organization.name}”?`)) return;
     void runAction(
-      organization.id,
       () => setPlatformOrganizationStatus(organization.id, status),
       `Empresa ${labels[status]}.`,
     );
@@ -126,7 +124,6 @@ function SupremoPage() {
       return;
     }
     void runAction(
-      organization.id,
       () => setPlatformOrganizationPlan(organization.id, value),
       "Plano atualizado.",
     );
@@ -136,7 +133,6 @@ function SupremoPage() {
     const value = prompt("Nome da empresa", organization.name)?.trim();
     if (!value || value === organization.name) return;
     void runAction(
-      organization.id,
       () => setPlatformOrganizationName(organization.id, value),
       "Empresa renomeada.",
     );
