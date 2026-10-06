@@ -627,7 +627,7 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {children}
+      {phase === "done" && children}
       {(phase === "gate" || phase === "leaving" || phase === "auth") && (
         <div
           style={{
