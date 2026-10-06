@@ -135,10 +135,14 @@ function Admin() {
         .order("created_at", { ascending: false });
 
       if (inviteError) throw inviteError;
-      setInvites((inviteRows ?? []).map((row) => ({
-        ...row,
-        role: row.role as TenantRole,
-      })));
+      const memberEmails = new Set(
+        (memberRows ?? []).map((row) => profiles.get(row.user_id)?.email?.toLowerCase()).filter(Boolean),
+      );
+      setInvites(
+        (inviteRows ?? [])
+          .filter((row) => !memberEmails.has(row.email.toLowerCase()))
+          .map((row) => ({ ...row, role: row.role as TenantRole })),
+      );
     } catch (error) {
       console.error("[Hangar One] Falha ao carregar equipe", error);
       toast.error("Não foi possível carregar a equipe.");
