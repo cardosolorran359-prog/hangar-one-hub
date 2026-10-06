@@ -22,6 +22,7 @@ import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as TecnicoRouteImport } from './routes/tecnico'
 import { Route as OrdensIndexRouteImport } from './routes/ordens.index'
 import { Route as OrdensIdRouteImport } from './routes/ordens.$id'
+import { Route as SupremoRouteImport } from './routes/supremo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +89,11 @@ const OrdensIdRoute = OrdensIdRouteImport.update({
   path: '/ordens/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupremoRoute = SupremoRouteImport.update({
+  id: '/supremo',
+  path: '/supremo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
+  '/supremo': typeof SupremoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens': typeof OrdensIndexRoute
+  '/supremo': typeof SupremoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
+  '/supremo': typeof SupremoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
+    | '/supremo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +207,7 @@ export interface RootRouteChildren {
   TecnicoRoute: typeof TecnicoRoute
   OrdensIdRoute: typeof OrdensIdRoute
   OrdensIndexRoute: typeof OrdensIndexRoute
+  SupremoRoute: typeof SupremoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -309,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   TecnicoRoute: TecnicoRoute,
   OrdensIdRoute: OrdensIdRoute,
   OrdensIndexRoute: OrdensIndexRoute,
+  SupremoRoute: SupremoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
