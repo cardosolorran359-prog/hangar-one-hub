@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode, type FormEvent } from "react";
 import { HudDetails } from "./HudDetails";
 import { initializeTenant, signIn, signUp } from "@/lib/tenant";
+import { isPlatformAdmin } from "@/lib/platform";
 import { supabase } from "@/integrations/supabase/client";
 
 const BUTTON_DELAY = 2200;
@@ -601,6 +602,10 @@ export function HangarGate({ children }: { children: ReactNode }) {
       if (!alive) return;
       if (data.session) {
         try {
+          if (await isPlatformAdmin()) {
+            if (alive) setPhase("done");
+            return;
+          }
           await initializeTenant();
           if (alive) setPhase("done");
           return;
