@@ -100,6 +100,7 @@ function roleForStore(role: string): State["user"]["role"] {
 
 async function hydrateFromTenant() {
   const tenant = await initializeTenant();
+  if (!tenant) return;
   const localKey = tenantStorageKey(tenant.organization.id);
   const cached = normalizeStoredState(window.localStorage.getItem(localKey));
   const legacy = normalizeStoredState(window.localStorage.getItem(LEGACY_KEY));
