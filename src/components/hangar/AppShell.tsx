@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { digits, hydrate, indexById, osNum, statusTone, useStore } from "@/lib/store";
 import { canAccessModule, signOut, useTenant } from "@/lib/tenant";
+import { usePlatform } from "@/lib/platform";
 import { useUsb } from "@/lib/usb";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Pill } from "./ui";
@@ -34,6 +35,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = useStore((s) => s.user);
   const tenant = useTenant();
+  const platform = usePlatform();
   const visibleNav = NAV.filter((item) => canAccessModule(item.module, tenant?.role) && tenant?.modules[item.module] !== false);
   const currentModule = NAV.find((item) => item.to === "/" ? path === "/" : path.startsWith(item.to))?.module;
   const allowed = !currentModule || (canAccessModule(currentModule, tenant?.role) && tenant?.modules[currentModule] !== false);
@@ -43,10 +45,46 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => { hydrate(); }, []);
   useEffect(() => {
+    if (platform && path !== "/supremo") {
+      void navigate({ to: "/supremo", replace: true });
+    }
+  }, [platform, path, navigate]);
+  useEffect(() => {
     const k = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen((o) => !o); } };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
   }, []);
+
+  if (platform) {
+    if (path !== "/supremo") {
+      return <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">Abrindo o Console Supremo…</div>;
+    }
+
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="flex min-h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur md:px-6">
+          <div className="flex items-center gap-3">
+            <HangarLogo size={34} className="shrink-0 drop-shadow-[0_0_6px_rgba(255,32,96,0.45)]" />
+            <div>
+              <div className="font-display text-base font-bold tracking-[0.18em]">HANGAR ONE</div>
+              <div className="text-[9px] uppercase tracking-[0.26em] text-primary">CONSOLE SUPREMO</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => void signOut().then(() => window.location.reload())}
+            className="flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs text-muted-foreground hover:border-primary/40 hover:text-foreground"
+          >
+            <LogOut className="size-3.5" /> Sair
+          </button>
+        </header>
+        <main className="mx-auto max-w-[1500px] p-4 md:p-6">
+          {children}
+        </main>
+        <Toaster theme="dark" position="bottom-right" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
