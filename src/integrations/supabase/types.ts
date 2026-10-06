@@ -652,13 +652,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      accept_org_invite: {
-        Args: never
-        Returns: {
-          organization_id: string
-          role: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
