@@ -588,7 +588,7 @@ function AuthPanel({ onSuccess }: { onSuccess: () => void }) {
     try {
       if (mode === "forgot") {
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-          redirectTo: \`\${window.location.origin}/?recovery=true\`,
+          redirectTo: `${window.location.origin}/?recovery=true`,
         });
         if (error) throw error;
         setMessageKind("success");
