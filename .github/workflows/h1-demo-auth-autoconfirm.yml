@@ -1,11 +1,7 @@
 name: H1 Demo — desativar confirmação obrigatória de e-mail
 
 on:
-  push:
-    branches:
-      - h1-demo-password-recovery
-    paths:
-      - .github/workflows/h1-demo-auth-autoconfirm.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
