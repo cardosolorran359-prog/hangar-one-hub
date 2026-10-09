@@ -513,6 +513,11 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           color:rgba(255,210,202,.9);
           font:400 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
         }
+        .hud-auth-message[data-kind="success"] {
+          border-color:rgba(235,245,245,.24);
+          background:rgba(235,245,245,.045);
+          color:rgba(235,245,245,.92);
+        }
         @media (max-width:720px) {
           .hud-source-login__enter {
             min-width:calc(100vw - 48px);
@@ -550,18 +555,62 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
 
 const GATE_KEY = "hangar-one:gate";
 
+type AuthMode = "login" | "signup" | "forgot" | "reset";
+
 function AuthPanel({ onSuccess }: { onSuccess: () => void }) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<AuthMode>(() =>
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("recovery") === "true"
+      ? "reset"
+      : "login",
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageKind, setMessageKind] = useState<"error" | "success">("error");
+
+  const changeMode = (nextMode: AuthMode) => {
+    setMode(nextMode);
+    setMessage("");
+    setPassword("");
+    setConfirmPassword("");
+    if (nextMode !== "reset" && typeof window !== "undefined") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  };
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setBusy(true);
     setMessage("");
+    setMessageKind("error");
     try {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: \`\${window.location.origin}/?recovery=true\`,
+        });
+        if (error) throw error;
+        setMessageKind("success");
+        setMessage("Se este e-mail estiver cadastrado, você receberá um link para redefinir sua senha.");
+        return;
+      }
+
+      if (mode === "reset") {
+        if (password.length < 6) throw new Error("A nova senha deve ter pelo menos 6 caracteres.");
+        if (password !== confirmPassword) throw new Error("As senhas não coincidem.");
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        await supabase.auth.signOut();
+        window.history.replaceState({}, "", window.location.pathname);
+        setMode("login");
+        setPassword("");
+        setConfirmPassword("");
+        setMessageKind("success");
+        setMessage("Senha redefinida com sucesso. Entre com sua nova senha.");
+        return;
+      }
+
       if (mode === "login") {
         await signIn(email, password);
       } else {
@@ -569,26 +618,95 @@ function AuthPanel({ onSuccess }: { onSuccess: () => void }) {
       }
       onSuccess();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Não foi possível concluir o acesso.");
+      setMessageKind("error");
+      setMessage(error instanceof Error ? error.message : "Não foi possível concluir a solicitação.");
     } finally {
       setBusy(false);
     }
   };
 
+  const title = {
+    login: "Acessar o Hangar One",
+    signup: "Criar acesso",
+    forgot: "Recuperar senha",
+    reset: "Definir nova senha",
+  }[mode];
+  const description = {
+    login: "Entre para abrir seu ambiente de trabalho.",
+    signup: "Sua primeira conta cria automaticamente uma empresa no Hangar One.",
+    forgot: "Informe seu e-mail para receber as instruções de recuperação.",
+    reset: "Escolha uma nova senha para sua conta.",
+  }[mode];
+  const submitLabel = {
+    login: "ENTRAR",
+    signup: "CRIAR CONTA",
+    forgot: "ENVIAR LINK",
+    reset: "SALVAR NOVA SENHA",
+  }[mode];
+
   return (
     <div className="hud-auth-panel">
       <div className="hud-auth-kicker">IDENTIDADE · WORKSPACE</div>
-      <h1>{mode === "login" ? "Acessar o Hangar One" : "Criar acesso"}</h1>
-      <p>{mode === "login" ? "Entre para abrir seu ambiente de trabalho." : "Sua primeira conta cria automaticamente uma empresa no Hangar One."}</p>
+      <h1>{title}</h1>
+      <p>{description}</p>
       <form onSubmit={submit}>
-        <label>E-mail<input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-        <label>Senha<input type="password" minLength={6} autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
-        {message && <div className="hud-auth-message">{message}</div>}
-        <button disabled={busy} type="submit">{busy ? "VALIDANDO..." : mode === "login" ? "ENTRAR" : "CRIAR CONTA"}</button>
+        {mode !== "reset" && (
+          <label>
+            E-mail
+            <input
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+        )}
+        {(mode === "login" || mode === "signup" || mode === "reset") && (
+          <label>
+            {mode === "reset" ? "Nova senha" : "Senha"}
+            <input
+              type="password"
+              minLength={6}
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+        )}
+        {mode === "reset" && (
+          <label>
+            Confirmar nova senha
+            <input
+              type="password"
+              minLength={6}
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </label>
+        )}
+        {message && <div className="hud-auth-message" data-kind={messageKind} role="status">{message}</div>}
+        <button disabled={busy} type="submit">{busy ? "PROCESSANDO..." : submitLabel}</button>
       </form>
-      <button className="hud-auth-switch" type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setMessage(""); }}>
-        {mode === "login" ? "Primeiro acesso · criar conta" : "Já tenho conta · entrar"}
-      </button>
+
+      {mode === "login" && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode("forgot")}>
+          Esqueci minha senha
+        </button>
+      )}
+      {(mode === "login" || mode === "signup") && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode(mode === "login" ? "signup" : "login")}>
+          {mode === "login" ? "Primeiro acesso · criar conta" : "Já tenho conta · entrar"}
+        </button>
+      )}
+      {(mode === "forgot" || mode === "reset") && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode("login")}>
+          Voltar ao login
+        </button>
+      )}
     </div>
   );
 }
@@ -598,8 +716,21 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let alive = true;
+    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+      if (alive && event === "PASSWORD_RECOVERY") setPhase("auth");
+    });
+
     supabase.auth.getSession().then(async ({ data }) => {
       if (!alive) return;
+
+      const query = new URLSearchParams(window.location.search);
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const isRecovery = query.get("recovery") === "true" || hash.get("type") === "recovery";
+      if (isRecovery) {
+        setPhase("auth");
+        return;
+      }
+
       if (data.session) {
         try {
           if (await isPlatformAdmin()) {
@@ -619,8 +750,15 @@ export function HangarGate({ children }: { children: ReactNode }) {
       } catch {
         setPhase("gate");
       }
+    }).catch(() => {
+      if (!alive) return;
+      setPhase("gate");
     });
-    return () => { alive = false; };
+
+    return () => {
+      alive = false;
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   const enter = () => setPhase("auth");
