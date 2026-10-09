@@ -598,7 +598,14 @@ function authErrorMessage(cause: unknown) {
   if (text.includes("failed to fetch") || text.includes("network request failed")) return "Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.";
   if (text.includes("invalid email")) return "Digite um endereço de e-mail válido.";
   if (text.includes("captcha")) return "Não foi possível validar a solicitação. Atualize a página e tente novamente.";
-  if (raw && !/^[\w\s-]+$/.test(raw)) return raw;
+  if (text.includes("auth session missing") || text.includes("token has expired") || text.includes("invalid token")) {
+    return "O link de recuperação expirou ou já foi usado. Solicite um novo link.";
+  }
+  if (raw === "A nova senha deve ter pelo menos 6 caracteres." ||
+      raw === "As senhas não coincidem." ||
+      raw === "Informe seu e-mail." ||
+      raw === "Informe seu e-mail para receber as instruções.") return raw;
+  if (raw.startsWith("Conta criada.")) return raw;
   return "Não foi possível concluir o acesso. Confira os dados e tente novamente.";
 }
 
