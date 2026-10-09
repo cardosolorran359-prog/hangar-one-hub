@@ -22,6 +22,13 @@
       "when": 1791509043133,
       "tag": "0002_restore_secure_invite_rpc_wrapper",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791509070685,
+      "tag": "0003_harden_owner_role_and_register_plugins",
+      "breakpoints": true
     }
   ]
 }

@@ -190,6 +190,50 @@ export type Database = {
           },
         ]
       }
+      organization_plugins: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          enabled: boolean
+          name: string
+          organization_id: string
+          plugin_key: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          name: string
+          organization_id: string
+          plugin_key: string
+          updated_at?: string
+          version?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          name?: string
+          organization_id?: string
+          plugin_key?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_plugins_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_state: {
         Row: {
           organization_id: string
