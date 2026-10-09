@@ -193,7 +193,8 @@ function Admin() {
     void loadPlugins();
   }, [tenant?.organization.id]);
 
-  const activeMembers = useMemo(() => members.filter((member) => member.active).length, [members]);
+  const teamMembers = useMemo(() => members.filter((member) => member.role !== "Owner"), [members]);
+  const activeMembers = useMemo(() => teamMembers.filter((member) => member.active).length, [teamMembers]);
 
   const createInvite = async () => {
     if (!tenant || !canManageTeam) return;
@@ -401,12 +402,12 @@ function Admin() {
                 <div className="flex items-center justify-between border-b border-border/70 px-3 py-2.5">
                   <div>
                     <div className="text-sm font-medium">Membros da empresa</div>
-                    <div className="text-[11px] text-muted-foreground">{activeMembers} ativos · {members.length} cadastrados</div>
+                    <div className="text-[11px] text-muted-foreground">{activeMembers} ativos · {teamMembers.length} cadastrados</div>
                   </div>
                   <Button variant="ghost" size="sm" disabled={teamBusy} onClick={() => void loadTeam()}>Atualizar</Button>
                 </div>
                 <div className="divide-y divide-border/70">
-                  {members.filter((member) => member.role !== "Owner").map((member) => {
+                  {teamMembers.map((member) => {
                     const isOwner = false;
                     const isSelf = member.user_id === tenant?.userId;
                     return (
