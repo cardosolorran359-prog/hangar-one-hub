@@ -29,6 +29,13 @@
       "when": 1791509070685,
       "tag": "0003_harden_owner_role_and_register_plugins",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791509090173,
+      "tag": "0004_platform_supremo_layer",
+      "breakpoints": true
     }
   ]
 }
