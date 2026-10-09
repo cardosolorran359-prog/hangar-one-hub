@@ -211,7 +211,7 @@ export async function initializeTenant(force = false) {
       .upsert(
         {
           user_id: data.user.id,
-          display_name: data.user.user_metadata?.name ?? null,
+          display_name: data.user.user_metadata?.["name"] ?? null,
           email: data.user.email ?? "",
           updated_at: new Date().toISOString(),
         },

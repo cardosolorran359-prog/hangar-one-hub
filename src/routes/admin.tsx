@@ -193,7 +193,8 @@ function Admin() {
     void loadPlugins();
   }, [tenant?.organization.id]);
 
-  const activeMembers = useMemo(() => members.filter((member) => member.active).length, [members]);
+  const teamMembers = useMemo(() => members.filter((member) => member.role !== "Owner"), [members]);
+  const activeMembers = useMemo(() => teamMembers.filter((member) => member.active).length, [teamMembers]);
 
   const createInvite = async () => {
     if (!tenant || !canManageTeam) return;
@@ -401,13 +402,13 @@ function Admin() {
                 <div className="flex items-center justify-between border-b border-border/70 px-3 py-2.5">
                   <div>
                     <div className="text-sm font-medium">Membros da empresa</div>
-                    <div className="text-[11px] text-muted-foreground">{activeMembers} ativos · {members.length} cadastrados</div>
+                    <div className="text-[11px] text-muted-foreground">{activeMembers} ativos · {teamMembers.length} cadastrados</div>
                   </div>
                   <Button variant="ghost" size="sm" disabled={teamBusy} onClick={() => void loadTeam()}>Atualizar</Button>
                 </div>
                 <div className="divide-y divide-border/70">
-                  {members.map((member) => {
-                    const isOwner = member.role === "Owner";
+                  {teamMembers.map((member) => {
+                    const isOwner = false;
                     const isSelf = member.user_id === tenant?.userId;
                     return (
                       <div key={member.id} className="grid gap-3 px-3 py-3 lg:grid-cols-[1fr_125px_auto] lg:items-center">
@@ -444,7 +445,7 @@ function Admin() {
                       </div>
                     );
                   })}
-                  {!members.length && (
+                  {!teamMembers.length && (
                     <div className="px-3 py-5 text-center text-xs text-muted-foreground">Nenhum membro encontrado.</div>
                   )}
                 </div>
@@ -479,7 +480,7 @@ function Admin() {
 
               <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-xs leading-relaxed text-muted-foreground">
                 <div className="mb-1 flex items-center gap-2 font-medium text-foreground"><CheckCircle2 className="size-4 text-primary" /> Permissões aplicadas por função</div>
-                Owner e Admin possuem acesso administrativo; Gerente cuida da operação; Técnico fica focado em aparelhos, OS, diagnóstico e centro técnico; Atendente fica com clientes, aparelhos, OS e orçamentos. O Owner não pode ser removido ou desativado.
+                Owner e Admin possuem acesso administrativo; Gerente cuida da operação; Técnico fica focado em aparelhos, OS, diagnóstico e centro técnico; Atendente fica com clientes, aparelhos, OS e orçamentos. O Owner é o dono da empresa e não aparece nesta lista.
               </div>
             </div>
           </Panel>

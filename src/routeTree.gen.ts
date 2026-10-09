@@ -19,10 +19,10 @@ import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as EstoqueRouteImport } from './routes/estoque'
 import { Route as OrcamentosRouteImport } from './routes/orcamentos'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as SupremoRouteImport } from './routes/supremo'
 import { Route as TecnicoRouteImport } from './routes/tecnico'
 import { Route as OrdensIndexRouteImport } from './routes/ordens.index'
 import { Route as OrdensIdRouteImport } from './routes/ordens.$id'
-import { Route as SupremoRouteImport } from './routes/supremo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -74,6 +74,11 @@ const RelatoriosRoute = RelatoriosRouteImport.update({
   path: '/relatorios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupremoRoute = SupremoRouteImport.update({
+  id: '/supremo',
+  path: '/supremo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TecnicoRoute = TecnicoRouteImport.update({
   id: '/tecnico',
   path: '/tecnico',
@@ -89,11 +94,6 @@ const OrdensIdRoute = OrdensIdRouteImport.update({
   path: '/ordens/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SupremoRoute = SupremoRouteImport.update({
-  id: '/supremo',
-  path: '/supremo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -106,10 +106,10 @@ export interface FileRoutesByFullPath {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/supremo': typeof SupremoRoute
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
-  '/supremo': typeof SupremoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -122,10 +122,10 @@ export interface FileRoutesByTo {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/supremo': typeof SupremoRoute
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens': typeof OrdensIndexRoute
-  '/supremo': typeof SupremoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,10 +139,10 @@ export interface FileRoutesById {
   '/estoque': typeof EstoqueRoute
   '/orcamentos': typeof OrcamentosRoute
   '/relatorios': typeof RelatoriosRoute
+  '/supremo': typeof SupremoRoute
   '/tecnico': typeof TecnicoRoute
   '/ordens/$id': typeof OrdensIdRoute
   '/ordens/': typeof OrdensIndexRoute
-  '/supremo': typeof SupremoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,10 +157,10 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/supremo'
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
-    | '/supremo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -173,10 +173,10 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/supremo'
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens'
-    | '/supremo'
   id:
     | '__root__'
     | '/'
@@ -189,10 +189,10 @@ export interface FileRouteTypes {
     | '/estoque'
     | '/orcamentos'
     | '/relatorios'
+    | '/supremo'
     | '/tecnico'
     | '/ordens/$id'
     | '/ordens/'
-    | '/supremo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -206,10 +206,10 @@ export interface RootRouteChildren {
   EstoqueRoute: typeof EstoqueRoute
   OrcamentosRoute: typeof OrcamentosRoute
   RelatoriosRoute: typeof RelatoriosRoute
+  SupremoRoute: typeof SupremoRoute
   TecnicoRoute: typeof TecnicoRoute
   OrdensIdRoute: typeof OrdensIdRoute
   OrdensIndexRoute: typeof OrdensIndexRoute
-  SupremoRoute: typeof SupremoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -284,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RelatoriosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supremo': {
+      id: '/supremo'
+      path: '/supremo'
+      fullPath: '/supremo'
+      preLoaderRoute: typeof SupremoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tecnico': {
       id: '/tecnico'
       path: '/tecnico'
@@ -305,13 +312,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdensIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/supremo': {
-      id: '/supremo'
-      path: '/supremo'
-      fullPath: '/supremo'
-      preLoaderRoute: typeof SupremoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -326,10 +326,10 @@ const rootRouteChildren: RootRouteChildren = {
   EstoqueRoute: EstoqueRoute,
   OrcamentosRoute: OrcamentosRoute,
   RelatoriosRoute: RelatoriosRoute,
+  SupremoRoute: SupremoRoute,
   TecnicoRoute: TecnicoRoute,
   OrdensIdRoute: OrdensIdRoute,
   OrdensIndexRoute: OrdensIndexRoute,
-  SupremoRoute: SupremoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
