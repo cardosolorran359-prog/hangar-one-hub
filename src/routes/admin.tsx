@@ -406,8 +406,8 @@ function Admin() {
                   <Button variant="ghost" size="sm" disabled={teamBusy} onClick={() => void loadTeam()}>Atualizar</Button>
                 </div>
                 <div className="divide-y divide-border/70">
-                  {members.map((member) => {
-                    const isOwner = member.role === "Owner";
+                  {members.filter((member) => member.role !== "Owner").map((member) => {
+                    const isOwner = false;
                     const isSelf = member.user_id === tenant?.userId;
                     return (
                       <div key={member.id} className="grid gap-3 px-3 py-3 lg:grid-cols-[1fr_125px_auto] lg:items-center">
