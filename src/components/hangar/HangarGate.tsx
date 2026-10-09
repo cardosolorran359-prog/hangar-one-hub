@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode, type FormEvent } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { HudDetails } from "./HudDetails";
 import { initializeTenant, signIn, signUp } from "@/lib/tenant";
 import { isPlatformAdmin } from "@/lib/platform";
@@ -464,6 +465,31 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           font:400 12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
         }
         .hud-auth-panel form { display:grid; gap:12px; }
+        .hud-auth-social { display:grid; gap:12px; margin-bottom:14px; }
+        .hud-auth-google {
+          display:flex; align-items:center; justify-content:center; gap:10px;
+          width:100%; min-height:44px; padding:0 14px;
+          border:1px solid rgba(235,245,245,.24); border-radius:6px;
+          background:rgba(235,245,245,.045); color:#f5fcfc;
+          font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.08em; cursor:pointer; transition:background .2s,border-color .2s;
+        }
+        .hud-auth-google:hover:not(:disabled) { background:rgba(235,245,245,.09); border-color:rgba(235,245,245,.48); }
+        .hud-auth-google:disabled { opacity:.6; cursor:wait; }
+        .hud-auth-divider { display:flex; align-items:center; gap:10px; color:rgba(210,220,220,.42); font:500 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.14em; }
+        .hud-auth-divider::before,.hud-auth-divider::after { content:""; height:1px; flex:1; background:rgba(235,245,245,.12); }
+        .hud-password-field { position:relative; display:flex; align-items:center; width:100%; }
+        .hud-auth-panel .hud-password-field input { width:100%; padding-right:44px; }
+        .hud-password-toggle {
+          position:absolute; right:5px; top:50%; transform:translateY(-50%);
+          display:grid; place-items:center; width:34px; height:34px;
+          border:0; border-radius:4px; background:transparent;
+          color:rgba(210,220,220,.62); cursor:pointer;
+        }
+        .hud-password-toggle:hover { color:#fff; background:rgba(235,245,245,.06); }
+        .hud-password-toggle:focus-visible,.hud-auth-google:focus-visible,.hud-auth-switch:focus-visible {
+          outline:2px solid rgba(255,90,64,.8); outline-offset:2px;
+        }
         .hud-auth-panel label {
           display:grid;
           gap:6px;
@@ -473,6 +499,9 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           text-transform:uppercase;
         }
         .hud-auth-panel input {
+          width:100%;
+          min-width:0;
+          box-sizing:border-box;
           height:42px;
           border:1px solid rgba(235,245,245,.18);
           border-radius:6px;
@@ -513,6 +542,11 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
           color:rgba(255,210,202,.9);
           font:400 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
         }
+        .hud-auth-message[data-kind="success"] {
+          border-color:rgba(235,245,245,.24);
+          background:rgba(235,245,245,.045);
+          color:rgba(235,245,245,.92);
+        }
         @media (max-width:720px) {
           .hud-source-login__enter {
             min-width:calc(100vw - 48px);
@@ -550,45 +584,253 @@ function HudLoginBackground({ onEnter }: { onEnter: () => void }) {
 
 const GATE_KEY = "hangar-one:gate";
 
+type AuthMode = "login" | "signup" | "forgot" | "reset";
+
+function authErrorMessage(cause: unknown) {
+  const raw = cause instanceof Error ? cause.message : String(cause ?? "");
+  const text = raw.toLowerCase();
+
+  if (text.includes("invalid login credentials")) return "E-mail ou senha incorretos. Confira os dados e tente novamente.";
+  if (text.includes("email not confirmed")) return "Esta conta ainda precisa confirmar o e-mail para entrar.";
+  if (text.includes("email logins are disabled") || text.includes("email provider is disabled")) return "O acesso por e-mail ainda não está habilitado neste ambiente.";
+  if (text.includes("user already registered") || text.includes("already been registered")) return "Já existe uma conta com esse e-mail. Entre ou use “Esqueci minha senha”.";
+  if (text.includes("password should be at least") || text.includes("weak_password") || text.includes("password is too weak")) return "A senha precisa ter pelo menos 6 caracteres e atender aos requisitos de segurança.";
+  if (text.includes("provider is not enabled") || text.includes("unsupported provider")) return "O login Google ainda não foi ativado nas configurações deste ambiente.";
+  if (text.includes("email address not authorized")) return "O serviço de e-mail deste ambiente ainda não está autorizado a enviar mensagens para esse endereço.";
+  if (text.includes("rate limit") || text.includes("too many requests")) return "Muitas tentativas em pouco tempo. Aguarde um pouco e tente novamente.";
+  if (text.includes("failed to fetch") || text.includes("network request failed")) return "Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.";
+  if (text.includes("invalid email")) return "Digite um endereço de e-mail válido.";
+  if (text.includes("captcha")) return "Não foi possível validar a solicitação. Atualize a página e tente novamente.";
+  if (text.includes("auth session missing") || text.includes("token has expired") || text.includes("invalid token")) {
+    return "O link de recuperação expirou ou já foi usado. Solicite um novo link.";
+  }
+  if (raw === "A nova senha deve ter pelo menos 6 caracteres." ||
+      raw === "As senhas não coincidem." ||
+      raw === "Informe seu e-mail." ||
+      raw === "Informe seu e-mail para receber as instruções de recuperação.") return raw;
+  if (raw.startsWith("Conta criada.")) return raw;
+  return "Não foi possível concluir o acesso. Confira os dados e tente novamente.";
+}
+
 function AuthPanel({ onSuccess }: { onSuccess: () => void }) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<AuthMode>(() =>
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("recovery") === "true"
+      ? "reset"
+      : "login",
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageKind, setMessageKind] = useState<"error" | "success">("error");
 
-  const submit = async (event: FormEvent) => {
-    event.preventDefault();
+  const changeMode = (nextMode: AuthMode) => {
+    setMode(nextMode);
+    setMessage("");
+    setPassword("");
+    setConfirmPassword("");
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+    if (nextMode !== "reset" && typeof window !== "undefined") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  };
+
+  const loginWithGoogle = async () => {
     setBusy(true);
     setMessage("");
+    setMessageKind("error");
     try {
-      if (mode === "login") {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
-      }
-      onSuccess();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Não foi possível concluir o acesso.");
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin },
+      });
+      if (error) throw error;
+    } catch (cause) {
+      setMessage(authErrorMessage(cause));
     } finally {
       setBusy(false);
     }
   };
 
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    setBusy(true);
+    setMessage("");
+    setMessageKind("error");
+    const cleanEmail = email.trim();
+    try {
+      if (mode === "forgot") {
+        if (!cleanEmail) throw new Error("Informe seu e-mail para receber as instruções.");
+        const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+          redirectTo: window.location.origin + "/?recovery=true",
+        });
+        if (error) throw error;
+        setMessageKind("success");
+        setMessage("Se este e-mail estiver cadastrado, você receberá um link para redefinir sua senha.");
+        return;
+      }
+
+      if (mode === "reset") {
+        if (password.length < 6) throw new Error("A nova senha deve ter pelo menos 6 caracteres.");
+        if (password !== confirmPassword) throw new Error("As senhas não coincidem.");
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        await supabase.auth.signOut();
+        window.history.replaceState({}, "", window.location.pathname);
+        setMode("login");
+        setPassword("");
+        setConfirmPassword("");
+        setShowPassword(false);
+        setShowConfirmPassword(false);
+        setMessageKind("success");
+        setMessage("Senha redefinida com sucesso. Entre com sua nova senha.");
+        return;
+      }
+
+      if (!cleanEmail) throw new Error("Informe seu e-mail.");
+      if (mode === "login") {
+        await signIn(cleanEmail, password);
+      } else {
+        await signUp(cleanEmail, password);
+      }
+      onSuccess();
+    } catch (cause) {
+      setMessageKind("error");
+      setMessage(authErrorMessage(cause));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const title = {
+    login: "Acessar o Hangar One",
+    signup: "Criar acesso",
+    forgot: "Recuperar senha",
+    reset: "Definir nova senha",
+  }[mode];
+  const description = {
+    login: "Entre para abrir seu ambiente de trabalho.",
+    signup: "Sua primeira conta cria automaticamente uma empresa no Hangar One.",
+    forgot: "Informe seu e-mail para receber as instruções de recuperação.",
+    reset: "Escolha uma nova senha para sua conta.",
+  }[mode];
+  const submitLabel = {
+    login: "ENTRAR",
+    signup: "CRIAR CONTA",
+    forgot: "ENVIAR LINK",
+    reset: "SALVAR NOVA SENHA",
+  }[mode];
+
   return (
     <div className="hud-auth-panel">
       <div className="hud-auth-kicker">IDENTIDADE · WORKSPACE</div>
-      <h1>{mode === "login" ? "Acessar o Hangar One" : "Criar acesso"}</h1>
-      <p>{mode === "login" ? "Entre para abrir seu ambiente de trabalho." : "Sua primeira conta cria automaticamente uma empresa no Hangar One."}</p>
+      <h1>{title}</h1>
+      <p>{description}</p>
+
+      {(mode === "login" || mode === "signup") && (
+        <div className="hud-auth-social">
+          <button className="hud-auth-google" type="button" onClick={loginWithGoogle} disabled={busy}>
+            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.01 13.22l7.98 6.19C11.93 13.72 17.48 9.5 24 9.5Z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.73 7.18l7.63 5.92c4.45-4.11 7.14-10.16 7.14-17.57Z"/>
+              <path fill="#FBBC05" d="M10.64 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.78l-7.63-5.92c-2.12 1.42-4.84 2.27-8.27 2.27-6.52 0-12.07-4.22-14.01-10.09l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/>
+            </svg>
+            {mode === "login" ? "CONTINUAR COM GOOGLE" : "CRIAR CONTA COM GOOGLE"}
+          </button>
+          <div className="hud-auth-divider"><span>OU USE SEU E-MAIL</span></div>
+        </div>
+      )}
+
       <form onSubmit={submit}>
-        <label>E-mail<input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-        <label>Senha<input type="password" minLength={6} autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
-        {message && <div className="hud-auth-message">{message}</div>}
-        <button disabled={busy} type="submit">{busy ? "VALIDANDO..." : mode === "login" ? "ENTRAR" : "CRIAR CONTA"}</button>
+        {mode !== "reset" && (
+          <label>
+            E-mail
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmail((value) => value.trim())}
+              required
+            />
+          </label>
+        )}
+        {(mode === "login" || mode === "signup" || mode === "reset") && (
+          <label>
+            {mode === "reset" ? "Nova senha" : "Senha"}
+            <div className="hud-password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                minLength={6}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                className="hud-password-toggle"
+                type="button"
+                onClick={() => setShowPassword((shown) => !shown)}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+              </button>
+            </div>
+          </label>
+        )}
+        {mode === "reset" && (
+          <label>
+            Confirmar nova senha
+            <div className="hud-password-field">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                minLength={6}
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              <button
+                className="hud-password-toggle"
+                type="button"
+                onClick={() => setShowConfirmPassword((shown) => !shown)}
+                aria-label={showConfirmPassword ? "Ocultar confirmação de senha" : "Mostrar confirmação de senha"}
+                title={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showConfirmPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+              </button>
+            </div>
+          </label>
+        )}
+        {message && <div className="hud-auth-message" data-kind={messageKind} role={messageKind === "error" ? "alert" : "status"} aria-live="polite">{message}</div>}
+        <button disabled={busy} type="submit">{busy ? "PROCESSANDO..." : submitLabel}</button>
       </form>
-      <button className="hud-auth-switch" type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setMessage(""); }}>
-        {mode === "login" ? "Primeiro acesso · criar conta" : "Já tenho conta · entrar"}
-      </button>
+
+      {mode === "login" && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode("forgot")}>
+          Esqueci minha senha
+        </button>
+      )}
+      {(mode === "login" || mode === "signup") && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode(mode === "login" ? "signup" : "login")}>
+          {mode === "login" ? "Primeiro acesso · criar conta" : "Já tenho conta · entrar"}
+        </button>
+      )}
+      {(mode === "forgot" || mode === "reset") && (
+        <button className="hud-auth-switch" type="button" onClick={() => changeMode("login")}>
+          Voltar ao login
+        </button>
+      )}
     </div>
   );
 }
@@ -598,8 +840,21 @@ export function HangarGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let alive = true;
+    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+      if (alive && event === "PASSWORD_RECOVERY") setPhase("auth");
+    });
+
     supabase.auth.getSession().then(async ({ data }) => {
       if (!alive) return;
+
+      const query = new URLSearchParams(window.location.search);
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const isRecovery = query.get("recovery") === "true" || hash.get("type") === "recovery";
+      if (isRecovery) {
+        setPhase("auth");
+        return;
+      }
+
       if (data.session) {
         try {
           if (await isPlatformAdmin()) {
@@ -619,8 +874,15 @@ export function HangarGate({ children }: { children: ReactNode }) {
       } catch {
         setPhase("gate");
       }
+    }).catch(() => {
+      if (!alive) return;
+      setPhase("gate");
     });
-    return () => { alive = false; };
+
+    return () => {
+      alive = false;
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   const enter = () => setPhase("auth");

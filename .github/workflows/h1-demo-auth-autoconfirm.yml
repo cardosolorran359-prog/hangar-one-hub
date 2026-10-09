@@ -1,0 +1,36 @@
+name: H1 Demo — desativar confirmação obrigatória de e-mail
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enable-demo-email-autoconfirm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Supabase secret
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::Cadastre o secret SUPABASE_ACCESS_TOKEN nas configurações de Actions do repositório e execute novamente este workflow."
+            exit 1
+          fi
+
+      - name: Enable auto-confirm on the H1 Demo project only
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --request PATCH \
+            --url 'https://api.supabase.com/v1/projects/eqjzxhsucjijgkpawihn/config/auth' \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data '{"mailer_autoconfirm":true}')"
+          case "$status" in
+            2*) echo "Confirmação automática habilitada no Supabase do H1 Demo." ;;
+            *) echo "::error::O Supabase recusou a alteração (HTTP $status). Verifique o token e as permissões do projeto."; exit 1 ;;
+          esac

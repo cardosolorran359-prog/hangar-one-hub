@@ -1,0 +1,39 @@
+name: Configure Google OAuth — Hangar One + Demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  configure-google-oauth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || { echo "::error::Missing repository secret SUPABASE_ACCESS_TOKEN."; exit 1; }
+          [ -n "$GOOGLE_OAUTH_CLIENT_ID" ] || { echo "::error::Missing repository secret GOOGLE_OAUTH_CLIENT_ID."; exit 1; }
+          [ -n "$GOOGLE_OAUTH_CLIENT_SECRET" ] || { echo "::error::Missing repository secret GOOGLE_OAUTH_CLIENT_SECRET."; exit 1; }
+
+      - name: Enable Google provider on both Supabase projects
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          body="$(jq -n             --arg client_id "$GOOGLE_OAUTH_CLIENT_ID"             --arg client_secret "$GOOGLE_OAUTH_CLIENT_SECRET"             '{external_google_enabled: true, external_google_client_id: $client_id, external_google_secret: $client_secret}')"
+
+          for project_ref in jtbnibpomxqhfnjgpwqi eqjzxhsucjijgkpawihn; do
+            status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}'               --request PATCH               --url "https://api.supabase.com/v1/projects/${project_ref}/config/auth"               --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}"               --header 'Content-Type: application/json'               --data "$body")"
+            case "$status" in
+              2*) echo "Google OAuth configurado no projeto ${project_ref}." ;;
+              *) echo "::error::O Supabase recusou a configuração do projeto ${project_ref} (HTTP $status). Confirme permissões e ref do projeto."; exit 1 ;;
+            esac
+          done
