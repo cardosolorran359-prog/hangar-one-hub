@@ -445,7 +445,7 @@ function Admin() {
                       </div>
                     );
                   })}
-                  {!members.length && (
+                  {!teamMembers.length && (
                     <div className="px-3 py-5 text-center text-xs text-muted-foreground">Nenhum membro encontrado.</div>
                   )}
                 </div>
@@ -480,7 +480,7 @@ function Admin() {
 
               <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-xs leading-relaxed text-muted-foreground">
                 <div className="mb-1 flex items-center gap-2 font-medium text-foreground"><CheckCircle2 className="size-4 text-primary" /> Permissões aplicadas por função</div>
-                Owner e Admin possuem acesso administrativo; Gerente cuida da operação; Técnico fica focado em aparelhos, OS, diagnóstico e centro técnico; Atendente fica com clientes, aparelhos, OS e orçamentos. O Owner não pode ser removido ou desativado.
+                Owner e Admin possuem acesso administrativo; Gerente cuida da operação; Técnico fica focado em aparelhos, OS, diagnóstico e centro técnico; Atendente fica com clientes, aparelhos, OS e orçamentos. O Owner é o dono da empresa e não aparece nesta lista.
               </div>
             </div>
           </Panel>
