@@ -36,6 +36,13 @@
       "when": 1791509090173,
       "tag": "0004_platform_supremo_layer",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791509104711,
+      "tag": "0005_enforce_active_tenant_access",
+      "breakpoints": true
     }
   ]
 }
