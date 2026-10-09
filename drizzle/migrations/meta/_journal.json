@@ -8,6 +8,13 @@
       "when": 1791509010148,
       "tag": "0000_add_team_management",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791509025245,
+      "tag": "0001_secure_team_invite_acceptance",
+      "breakpoints": true
     }
   ]
 }
