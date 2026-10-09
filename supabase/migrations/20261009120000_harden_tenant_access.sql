@@ -19,6 +19,7 @@ using (
       and target.active = true
       and viewer.user_id = (select auth.uid())
       and viewer.active = true
+      and private.is_org_member(target.organization_id)
   )
 );
 
